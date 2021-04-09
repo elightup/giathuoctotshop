@@ -122,14 +122,14 @@ class PostType {
 		$type_args   = [
 			'label'             => __( 'Nhóm thuốc', 'gtt-shop' ),
 			'labels'            => $type_labels,
-			'show_ui'           => true,
+			'hierarchical'      => true,
 			'show_admin_column' => true,
 		];
 		$options  = get_option( 'gtt_shop' );
 		$type_slug = isset( $options[ 'product_type_slug' ] ) ? $options[ 'product_type_slug' ] : 'product-type';
 		register_taxonomy( $type_slug, 'product', $type_args );
 
-		$producer_labels = [
+		$manufacturers_labels = [
 			'name'                       => __( 'Nhà sản xuất', 'gtt-shop' ),
 			'singular_name'              => __( 'Nhà sản xuất', 'gtt-shop' ),
 			'all_items'                  => __( 'All Nhà sản xuất', 'gtt-shop' ),
@@ -148,15 +148,44 @@ class PostType {
 			'not_found'                  => __( 'No Nhà sản xuất found', 'gtt-shop' ),
 			'back_to_items'              => __( '&larr; Back to Nhà sản xuất', 'gtt-shop' ),
 		];
-		$producer_args   = [
+		$manufacturers_args   = [
 			'label'             => __( 'Nhà sản xuất', 'gtt-shop' ),
-			'labels'            => $producer_labels,
-			'show_ui'           => true,
+			'labels'            => $manufacturers_labels,
+			'hierarchical'      => true,
 			'show_admin_column' => true,
 		];
 		$options  = get_option( 'gtt_shop' );
-		$producer_slug = isset( $options[ 'producer_slug' ] ) ? $options[ 'producer_slug' ] : 'producer';
-		register_taxonomy( $producer_slug, 'product', $producer_args );
+		$manufacturers_slug = isset( $options[ 'manufacturers_slug' ] ) ? $options[ 'manufacturers_slug' ] : 'manufacturers';
+		register_taxonomy( $manufacturers_slug, 'product', $manufacturers_args );
+
+		$ingredients_labels = [
+			'name'                       => __( 'Hoạt chất', 'gtt-shop' ),
+			'singular_name'              => __( 'Hoạt chất', 'gtt-shop' ),
+			'all_items'                  => __( 'All Hoạt chất', 'gtt-shop' ),
+			'edit_item'                  => __( 'Edit Hoạt chất', 'gtt-shop' ),
+			'view_item'                  => __( 'View Hoạt chất', 'gtt-shop' ),
+			'update_item'                => __( 'Update Hoạt chất', 'gtt-shop' ),
+			'add_new_item'               => __( 'Add New Hoạt chất', 'gtt-shop' ),
+			'new_item_name'              => __( 'New Hoạt chất Name', 'gtt-shop' ),
+			'parent_item'                => __( 'Parent Hoạt chất', 'gtt-shop' ),
+			'parent_item_colon'          => __( 'Parent Hoạt chất:', 'gtt-shop' ),
+			'search_items'               => __( 'Search Hoạt chất', 'gtt-shop' ),
+			'popular_items'              => __( 'Popular Hoạt chất', 'gtt-shop' ),
+			'separate_items_with_commas' => __( 'Separate Hoạt chất with commas', 'gtt-shop' ),
+			'add_or_remove_items'        => __( 'Add or remove Hoạt chất', 'gtt-shop' ),
+			'choose_from_most_used'      => __( 'Choose from the most used Hoạt chất', 'gtt-shop' ),
+			'not_found'                  => __( 'No Hoạt chất found', 'gtt-shop' ),
+			'back_to_items'              => __( '&larr; Back to Hoạt chất', 'gtt-shop' ),
+		];
+		$ingredients_args   = [
+			'label'             => __( 'Hoạt chất', 'gtt-shop' ),
+			'labels'            => $ingredients_labels,
+			'hierarchical'      => true,
+			'show_admin_column' => true,
+		];
+		$options  = get_option( 'gtt_shop' );
+		$ingredients_slug = isset( $options[ 'ingredients_slug' ] ) ? $options[ 'ingredients_slug' ] : 'ingredients';
+		register_taxonomy( $ingredients_slug, 'product', $ingredients_args );
 	}
 
 	public function register_meta_boxes( $meta_boxes ) {
