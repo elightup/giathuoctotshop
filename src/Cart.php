@@ -75,7 +75,6 @@ class Cart {
 			]
 		);
 		$quantity         = '<div class="quantity">
-		<label class="reader-text" for="quantity_products">' . __( 'Amount', 'gtt-shop' ) . ':</label>
 		<input type="number" id="quantity_products" class="quantity_products input-text qty text" step="1" min="1" max="" name="quantity" value="1" title="Qty" size="4" pattern="[0-9]*" inputmode="numeric">
 		</div>';
 		$button_view_cart = sprintf(
@@ -100,21 +99,23 @@ class Cart {
 			]
 		);
 		$quantity = '<div class="quantity">
-		<label class="reader-text" for="quantity_products">' . __( 'Amount', 'gtt-shop' ) . ':</label>
-		<input type="number" id="quantity_products" class="quantity_products input-text qty text" step="1" min="1" max="" name="quantity" value="1" title="Qty" size="4" pattern="[0-9]*" inputmode="numeric">
+		<input type="button" value="-" class="button-minus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">
+		<input type="number" id="quantity_products" class="quantity_products input-text qty text" step="1" min="1" max="" name="quantity" value="0" title="Qty" size="4" pattern="[0-9]*" inputmode="numeric">
+		<input type="button" value="+" class="button-plus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">
 		</div>';
 
 		$button_add_cart = sprintf(
-			'<a class="add-to-cart btn btn-primary" data-info="%s" data-type="%s">%s</a>',
+			'<a class="add-to-cart btn-primary wp-block-button__link" data-info="%s" data-type="%s">%s</a>',
 			esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ),
 			esc_attr( $args['type'] ),
 			esc_attr( $args['text'] )
 		);
 		$cart_page = get_permalink( ps_setting( 'cart_page' ) );
 		if ( $args['echo'] ) {
-			echo '<div class="cart-button">' . $quantity . $button_add_cart . '
-				<a class="view-cart btn btn-primary" href="' . $cart_page . '" title="' . __( 'View cart', 'gtt-shop' ) . '">'. __( 'View cart', 'gtt-shop' ) .'</a>
-			</div>';
+			// echo '<div class="cart-button">' . $quantity . $button_add_cart . '
+			// 	<a class="view-cart btn-primary wp-block-button__link" href="' . $cart_page . '" title="' . __( 'View cart', 'gtt-shop' ) . '">'. __( 'View cart', 'gtt-shop' ) .'</a>
+			// </div>';
+			echo '<div class="cart-button">' . $quantity . '</div>';
 		}
 	}
 

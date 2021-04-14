@@ -65,14 +65,14 @@
 
 		// add count to minicart when click add to cart button.
 		mini_cart_count += parseInt( quantity );
-		$( '.mini-cart-count' ).html( mini_cart_count );
+		$( '.mini-cart-count span' ).html( mini_cart_count );
 
 		// Notify when click add to cart button
 		var add_success = $( this ).data('type');
         setTimeout(function(){
 			$( '.load-icon', '.add-to-cart' ).remove();
 			new $.notification('<i class="fa fa-shopping-cart"></i> ' + add_success , {"class" : 'alert-notification', timeout : 2000, click : null, close : false});
-			$( '.view-cart', add_cart_group ).css( 'display', 'inline-block' );
+			// $( '.view-cart', add_cart_group ).css( 'display', 'inline-block' );
 		}, 1000);
 
 		// $( this ).addClass('view-cart');
@@ -81,11 +81,11 @@
 		// 	$( this, '.view-cart' ).attr('title','Xem giỏ hàng');
 		// }
 	}
-	function clickviewcart( e ) {
-		e.preventDefault();
-		var link = `${CartParams.cartUrl}`;
-		location.href = link;
-	}
+	// function clickviewcart( e ) {
+	// 	e.preventDefault();
+	// 	var link = `${CartParams.cartUrl}`;
+	// 	location.href = link;
+	// }
 
 	cart.load();
 
@@ -94,14 +94,13 @@
 	$.each( cart['data'], function( key, value ) {
 		$mini_cart_count += parseInt( value['quantity'] );
 	});
-	$( '.mini-cart-count' ).html( $mini_cart_count );
+	$( '.mini-cart-count span' ).html( $mini_cart_count );
 
-	$( function() {
-		$( '.cart-button .view-cart' ).css( 'display', 'none' );
-		$( document ).on( 'click', '.add-to-cart.buy-now', clickviewcart );
-		$( document ).on( 'click', '.add-to-cart', clickHandle );
-
-	} );
+	// $( function() {
+	// 	// $( '.cart-button .view-cart' ).css( 'display', 'none' );
+	// 	// $( document ).on( 'click', '.add-to-cart.buy-now', clickviewcart );
+	// 	$( document ).on( 'click', '.add-to-cart', clickHandle );
+	// } );
 
 
     $('<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>').insertAfter('.cart__quantity input');
@@ -136,6 +135,45 @@
 		});
 
 	});
+
+	function incrementValue( e ) {
+	  e.preventDefault();
+	  var fieldName = $( e.target ).data( 'field' );
+	  var parent = $( e.target ).closest( 'div' );
+	  var currentVal = parseInt( parent.find( 'input[name=' + fieldName + ']' ).val(), 10 );
+
+	  if ( ! isNaN( currentVal ) ) {
+	    parent.find( 'input[name=' + fieldName + ']' ).val( currentVal + 1 );
+	  } else {
+	    parent.find( 'input[name=' + fieldName + ']' ).val( 0 );
+	  }
+	}
+
+	function decrementValue( e ) {
+		e.preventDefault();
+		var fieldName = $( e.target ).data( 'field' );
+		var parent = $( e.target ).closest( 'div' );
+		var currentVal = parseInt( parent.find( 'input[name=' + fieldName + ']' ).val(), 10 );
+
+		if ( ! isNaN( currentVal ) && currentVal > 0 ) {
+			parent.find( 'input[name=' + fieldName + ']' ).val( currentVal - 1 );
+		} else {
+			parent.find( 'input[name=' + fieldName + ']' ).val( 0 );
+		}
+	}
+
+	$( '.quantity' ).on( 'click', '.button-plus', function(e) {
+		incrementValue(e);
+	} );
+	$( document ).on( 'click', '.button-plus', clickHandle );
+
+	$( '.quantity' ).on('click', '.button-minus', function(e) {
+		decrementValue(e);
+		// setTimeout(function() {
+		// 	clickHandle(e);
+		// }, 1000);
+	} );
+	$( document ).on( 'click', '.button-minus', clickHandle );
 
 	// Export cart object.
 	window.cart = cart;
