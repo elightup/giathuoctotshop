@@ -43,3 +43,9 @@ if ( is_admin() ) {
 	( new Assets() )->init();
 }
 
+function is_cart_page() {
+	return is_page() && get_the_ID() == ps_setting( 'cart_page' );
+}
+function is_checkout_page() {
+	return is_page() && get_the_ID() == ps_setting( 'checkout_page' );
+}

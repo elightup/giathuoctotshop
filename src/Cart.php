@@ -12,7 +12,10 @@ class Cart {
 	}
 
 	public function register_scripts() {
-		wp_register_style( 'cart', ELU_SHOP_URL . 'assets/css/cart.css' );
+		if ( is_cart_page() ) {
+			wp_register_style( 'cart', ELU_SHOP_URL . 'assets/css/cart.css' );
+		}
+
 		wp_register_script( 'notification', ELU_SHOP_URL . 'assets/js/notification.min.js', [ 'jquery' ], '', true );
 		wp_register_script( 'alertify', ELU_SHOP_URL . 'assets/js/alertify.min.js', [ 'jquery' ], '1.11.1', true );
 		wp_register_script( 'cart', ELU_SHOP_URL . 'assets/js/cart.js', [ 'jquery', 'notification', 'alertify' ], ELU_SHOP_VER, true );

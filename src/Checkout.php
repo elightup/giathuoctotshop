@@ -13,10 +13,12 @@ class Checkout {
 	}
 
 	public function enqueue() {
-		if ( ( ! $this->is_cart_page() ) && ( ! $this->is_checkout_page() ) ) {
+		if ( ( ! is_cart_page() ) && ( ! is_checkout_page() ) ) {
 			return;
 		}
-		wp_enqueue_style( 'checkout', ELU_SHOP_URL . 'assets/css/checkout.css' );
+		if ( is_checkout_page() ) {
+			wp_enqueue_style( 'checkout', ELU_SHOP_URL . 'assets/css/checkout.css' );
+		}
 		wp_enqueue_script( 'checkout', ELU_SHOP_URL . 'assets/js/checkout.js', [ 'cart', 'wp-util' ], '', true );
 		wp_localize_script(
 			'checkout',
@@ -28,14 +30,14 @@ class Checkout {
 	}
 
 	public function filter_content( $content ) {
-		if ( ! $this->is_cart_page() && ! $this->is_checkout_page() ) {
+		if ( ! is_cart_page() && ! is_checkout_page() ) {
 			return $content;
 		}
 		ob_start();
-		if ( $this->is_cart_page() ) {
+		if ( is_cart_page() ) {
 			TemplateLoader::instance()->get_template_part( 'cart' );
 		}
-		if ( $this->is_checkout_page() ) {
+		if ( is_checkout_page() ) {
 			TemplateLoader::instance()->get_template_part( 'checkout' );
 		}
 		return ob_get_clean();
@@ -88,12 +90,5 @@ class Checkout {
 			get_permalink( ps_setting( 'confirmation_page' ) )
 		);
 		wp_send_json_success( $url );
-	}
-
-	protected function is_cart_page() {
-		return is_page() && get_the_ID() == ps_setting( 'cart_page' );
-	}
-	protected function is_checkout_page() {
-		return is_page() && get_the_ID() == ps_setting( 'checkout_page' );
 	}
 }

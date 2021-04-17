@@ -19,7 +19,6 @@ class Notification {
 			return;
 		}
 		wp_enqueue_script( 'order-notification', ELU_SHOP_URL . 'assets/js/order-notification.js', [ 'jquery' ], '', true );
-		wp_enqueue_style( 'order-notification', ELU_SHOP_URL . 'assets/css/order-notification.css' );
 		wp_localize_script(
 			'order-notification',
 			'OrderNotification',

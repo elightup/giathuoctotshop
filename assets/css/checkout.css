@@ -32,6 +32,9 @@
 .template-checkout {
 	overflow: hidden;
 }
+.template-checkout .row {
+    margin: 0;
+}
 .radio-info.hidden {
 	display: none;
 }

@@ -44,11 +44,13 @@
 		var add_cart_group  = $(this).parent();
 			cart_id         = [];
 			mini_cart_count = 0;
+			price_total     = 0;
 			quantity        = $( '.quantity_products', add_cart_group ).val();
 		const productInfo = $( this ).data( 'info' );
 
 		$.each( cart['data'], function( key, value ) {
 			mini_cart_count += parseInt( value['quantity'] );
+			price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
 			cart_id.push( value['id'] );
 			if ( value['id'] == productInfo['id'] ) {
 				$old_quantity = value['quantity'];
@@ -65,36 +67,35 @@
 
 		// add count to minicart when click add to cart button.
 		mini_cart_count += parseInt( quantity );
+		price_total += parseInt( quantity ) * productInfo['price'];
 		$( '.mini-cart-count span' ).html( mini_cart_count );
+		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) ) {
+			$( '.product-cart__detail .color-secondary' ).html( mini_cart_count );
+			$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( price_total )) );
+		}
 
 		// Notify when click add to cart button
 		var add_success = $( this ).data('type');
         setTimeout(function(){
 			$( '.load-icon', '.add-to-cart' ).remove();
 			new $.notification('<i class="fa fa-shopping-cart"></i> ' + add_success , {"class" : 'alert-notification', timeout : 2000, click : null, close : false});
-			// $( '.view-cart', add_cart_group ).css( 'display', 'inline-block' );
 		}, 1000);
-
-		// $( this ).addClass('view-cart');
-		// var button = $( this ).data('type')
-		// if ( button ) {
-		// 	$( this, '.view-cart' ).attr('title','Xem giỏ hàng');
-		// }
 	}
-	// function clickviewcart( e ) {
-	// 	e.preventDefault();
-	// 	var link = `${CartParams.cartUrl}`;
-	// 	location.href = link;
-	// }
 
 	cart.load();
 
 	// add mini cart count.
 	$mini_cart_count = 0;
+	$price_total = 0;
 	$.each( cart['data'], function( key, value ) {
 		$mini_cart_count += parseInt( value['quantity'] );
+		$price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
 	});
 	$( '.mini-cart-count span' ).html( $mini_cart_count );
+	if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) ) {
+		$( '.product-cart__detail .color-secondary' ).html( $mini_cart_count );
+		$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( $price_total )) );
+	}
 
 	// $( function() {
 	// 	// $( '.cart-button .view-cart' ).css( 'display', 'none' );
@@ -103,50 +104,17 @@
 	// } );
 
 
-    $('<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>').insertAfter('.cart__quantity input');
-    $('.cart__quantity').each(function() {
-		var spinner = $(this),
-			input = spinner.find('input[type="number"]'),
-			btnUp = spinner.find('.quantity-up'),
-			btnDown = spinner.find('.quantity-down'),
-			min = input.attr('min'),
-			max = input.attr('max');
-
-		btnUp.click(function() {
-			var oldValue = parseFloat(input.val());
-			if (oldValue >= max) {
-				var newVal = oldValue;
-			} else {
-				var newVal = oldValue + 1;
-			}
-			spinner.find("input").val(newVal);
-			spinner.find("input").trigger("change");
-		});
-
-		btnDown.click(function() {
-			var oldValue = parseFloat(input.val());
-			if (oldValue <= min) {
-				var newVal = oldValue;
-			} else {
-				var newVal = oldValue - 1;
-			}
-			spinner.find("input").val(newVal);
-			spinner.find("input").trigger("change");
-		});
-
-	});
-
 	function incrementValue( e ) {
-	  e.preventDefault();
-	  var fieldName = $( e.target ).data( 'field' );
-	  var parent = $( e.target ).closest( 'div' );
-	  var currentVal = parseInt( parent.find( 'input[name=' + fieldName + ']' ).val(), 10 );
+		e.preventDefault();
+		var fieldName = $( e.target ).data( 'field' );
+		var parent = $( e.target ).closest( 'div' );
+		var currentVal = parseInt( parent.find( 'input[name=' + fieldName + ']' ).val(), 10 );
 
-	  if ( ! isNaN( currentVal ) ) {
-	    parent.find( 'input[name=' + fieldName + ']' ).val( currentVal + 1 );
-	  } else {
-	    parent.find( 'input[name=' + fieldName + ']' ).val( 0 );
-	  }
+		if ( ! isNaN( currentVal ) ) {
+			parent.find( 'input[name=' + fieldName + ']' ).val( currentVal + 1 );
+		} else {
+			parent.find( 'input[name=' + fieldName + ']' ).val( 0 );
+		}
 	}
 
 	function decrementValue( e ) {
@@ -169,9 +137,6 @@
 
 	$( '.quantity' ).on('click', '.button-minus', function(e) {
 		decrementValue(e);
-		// setTimeout(function() {
-		// 	clickHandle(e);
-		// }, 1000);
 	} );
 	$( document ).on( 'click', '.button-minus', clickHandle );
 
