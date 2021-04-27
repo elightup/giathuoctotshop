@@ -204,8 +204,8 @@ class PostType {
 					'size' => 10,
 				],
 				[
-					'id'   => 'price_before_sale',
-					'name' => __( 'Price before sale', 'gtt-shop' ),
+					'id'   => 'price_sale',
+					'name' => __( 'Price sale', 'gtt-shop' ),
 					'type' => 'number',
 					'min'  => 0,
 					'desc' => sprintf( __( 'In %s. Leave blank if the product has no discount.', 'gtt-shop' ), $currency ),

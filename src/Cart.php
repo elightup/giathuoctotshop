@@ -38,7 +38,7 @@ class Cart {
 	public function enqueue_struger_data() {
 		$currency = ! empty( ps_setting( 'currency' ) ) ? ps_setting( 'currency' ) : 'USD';
 		$price =  ! empty( rwmb_meta( 'price', get_the_ID() ) ) ? rwmb_meta( 'price', get_the_ID() ) : 0;
-		$price_before_sale = ! empty( rwmb_meta( 'price_before_sale', get_the_ID() ) ) ? rwmb_meta( 'price_before_sale', get_the_ID() ) : 0;
+		$price_sale = ! empty( rwmb_meta( 'price_sale', get_the_ID() ) ) ? rwmb_meta( 'price_sale', get_the_ID() ) : 0;
 	?>
 	<script type="application/ld+json">
 	{
