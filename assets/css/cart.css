@@ -91,6 +91,9 @@
 }
 
 /* Voucher */
+.vouchers {
+    margin-top: 10px;
+}
 .vouchers button {
     border-radius: 0;
 }

@@ -7,6 +7,7 @@
 		function updateCartHtml() {
 			$cart.html( cartTemplate( {
 				products: Object.values( cart.data ),
+				voucher: JSON.parse( localStorage.getItem( 'voucher' ) ),
 				budget: parseInt( CheckoutParams.budget )
 			} ) );
 		}
@@ -85,6 +86,25 @@
 
 				// Redirect user to confirmation page.
 				location.href = response.data;
+			}, 'json' );
+		} );
+
+		// Check vouchers.
+		$( document ).on( 'click', '.voucher_button', function( e ) {
+			e.preventDefault();
+			var voucher = $( '.voucher_input' ).val();
+			$.post( CheckoutParams.ajaxUrl, {
+				action: 'check_voucher',
+				voucher: voucher,
+			}, function ( response ) {
+					console.log( response.data);
+				if ( response.success ) {
+					$( '.vouchers_message' ).html( 'Đã áp dụng mã voucher thành công' );
+					localStorage.setItem( 'voucher', JSON.stringify( response.data ) );
+					updateCartHtml();
+				} else {
+					$( '.vouchers_message' ).html( 'Mã voucher không khớp' );
+				}
 			}, 'json' );
 		} );
 	} );

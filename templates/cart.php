@@ -43,6 +43,13 @@
 				</tr>
 				<#
 			} );
+			if( data.voucher ) {
+				if( data.voucher.voucher_type == 'by_price' ) {
+					total = total - data.voucher.voucher_price;
+				} else {
+					total = total - ( data.voucher.voucher_price * total / 100 );
+				}
+			}
 			#>
 			</tbody>
 		</table>
@@ -51,8 +58,9 @@
 				<?php esc_html_e( 'Total:', 'gtt-shop' ) ?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }} <?= $symbol; ?></span>
 			</div>
 			<div class="vouchers">
-				<input type="text" name="voucher_code" class="" value placeholder="Mã ưu đãi">
-				<button type="submit" class="btn" name="apply_voucher" value="Áp dụng"><?php esc_html_e( 'Áp dụng', 'gtt-shop' ); ?></button>
+				<input type="text" name="voucher_code" class="voucher_input" value placeholder="Mã ưu đãi">
+				<button type="submit" class="btn voucher_button" name="apply_voucher" value="Áp dụng"><?php esc_html_e( 'Áp dụng', 'gtt-shop' ); ?></button>
+				<div class="vouchers_message"></div>
 			</div>
 		</div>
 		<div class="submit-cart-shop text-right">

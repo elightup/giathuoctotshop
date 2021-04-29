@@ -6,7 +6,7 @@ use WP_Query;
 class Cart {
 	public function init() {
 		// Register scripts to make sure 'cart' is available everywhere and can be used in other scripts.
-		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ], 0 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_struger_data' ] );
 	}

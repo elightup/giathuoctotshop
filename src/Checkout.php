@@ -10,6 +10,9 @@ class Checkout {
 		add_action( 'wp_ajax_nopriv_place_order', [ $this, 'place_order' ] );
 		add_action( 'wp_ajax_place_checkout', [ $this, 'place_checkout' ] );
 		add_action( 'wp_ajax_nopriv_place_checkout', [ $this, 'place_checkout' ] );
+
+		add_action( 'wp_ajax_check_voucher', [ $this, 'check_voucher' ] );
+		add_action( 'wp_ajax_nopriv_check_voucher', [ $this, 'check_voucher' ] );
 	}
 
 	public function enqueue() {
@@ -90,5 +93,23 @@ class Checkout {
 			get_permalink( ps_setting( 'confirmation_page' ) )
 		);
 		wp_send_json_success( $url );
+	}
+	public function check_voucher() {
+		$voucher_choice = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
+
+		$result = [];
+		$vouchers = ps_setting( 'vouchers_group' );
+		foreach ( $vouchers as $voucher ) {
+			if ( $voucher_choice == $voucher['voucher_id'] ) {
+				$result['voucher_id'] = $voucher['voucher_id'];
+				$result['voucher_type'] = $voucher['voucher_type'];
+				$result['voucher_price'] = $voucher['voucher_price'];
+			}
+		}
+		if ( empty( $result ) ) {
+			wp_send_json_error();
+		}
+
+		wp_send_json_success( $result );
 	}
 }
