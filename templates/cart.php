@@ -46,8 +46,15 @@
 			#>
 			</tbody>
 		</table>
-		<div class="total-pay-product text-right"><?php esc_html_e( 'Total:', 'gtt-shop' ) ?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }} <?= $symbol; ?></span>
-				</div>
+		<div class="col-12" style="display: flex; justify-content: space-between; padding: 0;">
+			<div class="total-pay-product text-right">
+				<?php esc_html_e( 'Total:', 'gtt-shop' ) ?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }} <?= $symbol; ?></span>
+			</div>
+			<div class="vouchers">
+				<input type="text" name="voucher_code" class="" value placeholder="Mã ưu đãi">
+				<button type="submit" class="btn" name="apply_voucher" value="Áp dụng"><?php esc_html_e( 'Áp dụng', 'gtt-shop' ); ?></button>
+			</div>
+		</div>
 		<div class="submit-cart-shop text-right">
 			<button class="place-order btn btn-success"><?= __( 'Checkout', 'gtt-shop' );?></button>
 		</div>

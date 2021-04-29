@@ -21,6 +21,7 @@ class Settings {
 				'payment'  => __( 'Payment', 'gtt-shop' ),
 				'shipping' => __( 'Shipping', 'gtt-shop' ),
 				'support'  => __( 'Support', 'gtt-shop' ),
+				'vouchers'  => __( 'Vouchers', 'gtt-shop' ),
 			],
 		];
 		return $settings_pages;
@@ -139,6 +140,53 @@ class Settings {
 					'type' => 'custom_html',
 					'name' => __( 'Buy fast', 'gtt-shop' ),
 					'std'  => '<code>ELUSHOP\Cart::cart();</code>',
+				],
+			],
+		];
+
+		$meta_boxes[] = [
+			'id'             => 'voucher',
+			'title'          => ' ',
+			'settings_pages' => 'gtt-shop',
+			'tab'            => 'vouchers',
+			'fields'         => [
+				[
+					'id'          => 'vouchers_group',
+					'type'        => 'group',
+					'collapsible' => true,
+					'clone'       => true,
+					'group_title' => 'Voucher {#}',
+					'fields'      => [
+						[
+							'name' => __( 'Mã voucher', 'gtt-shop' ),
+							'id'   => 'voucher_id',
+							'type' => 'text',
+						],
+						[
+							'name'    => __( 'Loại voucher', 'gtt-shop' ),
+							'id'      => 'voucher_type',
+							'type'    => 'select_advanced',
+							'options' => [
+								'by_price'   => __( 'Theo giá', 'gtt-shop' ),
+								'by_percent' => __( 'Theo phần trăm', 'gtt-shop' ),
+							],
+						],
+						[
+							'name' => __( 'Mức giá', 'gtt-shop' ),
+							'id'   => 'voucher_price',
+							'type' => 'number',
+						],
+						[
+							'name' => __( 'Ngày hết hạn', 'gtt-shop' ),
+							'id'   => 'voucher_expiration_date',
+							'type' => 'date',
+						],
+						[
+							'name' => __( 'Số lượng giới hạn', 'gtt-shop' ),
+							'id'   => 'voucher_soluong',
+							'type' => 'number',
+						],
+					],
 				],
 			],
 		];
