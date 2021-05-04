@@ -124,6 +124,35 @@ class Cart {
 
 	protected static function get_product_info( $id ) {
 		$price_original = ! empty( get_post_meta( $id, 'price', true ) ) ? get_post_meta( $id, 'price', true ) : 0;
+		$price_vip2 = get_post_meta( $id, 'price_vip2', true );
+		$price_vip3 = get_post_meta( $id, 'price_vip3', true );
+		$price_vip4 = get_post_meta( $id, 'price_vip4', true );
+		$price_vip5 = get_post_meta( $id, 'price_vip5', true );
+		$price_vip6 = get_post_meta( $id, 'price_vip6', true );
+		$price_sale = get_post_meta( $id, 'price_sale', true );
+		$role = wp_get_current_user()->roles;
+		switch ( $role[0] ) {
+			case 'vip2':
+				$price_original = $price_vip2 ? $price_vip2 : $price_original;
+				break;
+			case 'vip3':
+				$price_original = $price_vip3 ? $price_vip3 : $price_original;
+				break;
+			case 'vip4':
+				$price_original = $price_vip4 ? $price_vip4 : $price_original;
+				break;
+			case 'vip5':
+				$price_original = $price_vip5 ? $price_vip5 : $price_original;
+				break;
+			case 'vip6':
+				$price_original = $price_vip6 ? $price_vip6 : $price_original;
+				break;
+			default:
+				$price_original = $price_original;
+				break;
+		}
+
+
 		$price = ! empty( get_post_meta( $id, 'price_sale', true ) ) ? get_post_meta( $id, 'price_sale', true ) : $price_original;
 		return [
 			'id'    => $id,
