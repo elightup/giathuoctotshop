@@ -123,10 +123,12 @@ class Cart {
 	}
 
 	protected static function get_product_info( $id ) {
+		$price_original = ! empty( get_post_meta( $id, 'price', true ) ) ? get_post_meta( $id, 'price', true ) : 0;
+		$price = ! empty( get_post_meta( $id, 'price_sale', true ) ) ? get_post_meta( $id, 'price_sale', true ) : $price_original;
 		return [
 			'id'    => $id,
 			'title' => get_the_title( $id ),
-			'price' => ! empty( get_post_meta( $id, 'price', true ) ) ? get_post_meta( $id, 'price', true ) : 0,
+			'price' => $price,
 			'url'   => get_the_post_thumbnail_url( $id, 'thumbnail' ),
 			'link'  => get_permalink( $id ),
 		];
