@@ -97,13 +97,28 @@
 				action: 'check_voucher',
 				voucher: voucher,
 			}, function ( response ) {
-					console.log( response.data);
 				if ( response.success ) {
-					$( '.vouchers_message' ).html( 'Đã áp dụng mã voucher thành công' );
 					localStorage.setItem( 'voucher', JSON.stringify( response.data ) );
 					updateCartHtml();
+					$( '.vouchers_message' ).html( 'Đã áp dụng mã voucher thành công' );
 				} else {
 					$( '.vouchers_message' ).html( 'Mã voucher không khớp' );
+				}
+				$( '.vouchers_message' ).addClass( 'vouchers_repsonse' );
+			}, 'json' );
+		} );
+		$( document ).on( 'click', '.remove-voucher', function( e ) {
+			e.preventDefault();
+			voucher = localStorage.getItem( 'voucher' )
+			$.post( CheckoutParams.ajaxUrl, {
+				action: 'check_remove_voucher',
+				voucher: voucher,
+			}, function ( response ) {
+				if ( response.success ) {
+					localStorage.removeItem( 'voucher' );
+					updateCartHtml();
+					$( '.vouchers_message' ).addClass( 'vouchers_repsonse' );
+					$( '.vouchers_message' ).html( 'Mã ưu đãi đã được gỡ bỏ' );
 				}
 			}, 'json' );
 		} );

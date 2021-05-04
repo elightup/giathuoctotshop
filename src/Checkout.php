@@ -13,6 +13,8 @@ class Checkout {
 
 		add_action( 'wp_ajax_check_voucher', [ $this, 'check_voucher' ] );
 		add_action( 'wp_ajax_nopriv_check_voucher', [ $this, 'check_voucher' ] );
+		add_action( 'wp_ajax_check_remove_voucher', [ $this, 'check_remove_voucher' ] );
+		add_action( 'wp_ajax_nopriv_check_remove_voucher', [ $this, 'check_remove_voucher' ] );
 	}
 
 	public function enqueue() {
@@ -109,6 +111,16 @@ class Checkout {
 		if ( empty( $result ) ) {
 			wp_send_json_error();
 		}
+
+		wp_send_json_success( $result );
+	}
+	public function check_remove_voucher() {
+		$voucher = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
+
+		if ( empty( $voucher ) ) {
+			wp_send_json_error();
+		}
+		$result = 'Đã xoá thành công';
 
 		wp_send_json_success( $result );
 	}

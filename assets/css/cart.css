@@ -32,8 +32,11 @@
 }
 .total-pay-product {
     margin-bottom: 15px;
-    font-size: 2em;
+    font-size: 24px;
     color: red;
+}
+.total-pay-product p {
+    margin-bottom: 0;
 }
 /* order list */
 .info-order.text-center {
@@ -59,6 +62,12 @@
 }
 .clear {
     clear: both;
+}
+.vouchers_repsonse {
+    padding: 1em 2em 1em 3.5em;
+    margin: 5px 0 0;
+    background-color: #f7f6f7;
+    border-top: 3px solid #00b46e;
 }
 
 #notification {
