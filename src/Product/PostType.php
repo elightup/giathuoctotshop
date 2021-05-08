@@ -7,6 +7,7 @@ class PostType {
 		add_action( 'init', [ $this, 'register_post_type' ] );
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
 		add_filter( 'rwmb_meta_boxes', [ $this, 'register_meta_boxes' ] );
+		add_filter( 'rwmb_product_info_before_save_post', [ $this, 'save_old_price' ] );
 	}
 
 	public function register_post_type() {
@@ -191,57 +192,89 @@ class PostType {
 	public function register_meta_boxes( $meta_boxes ) {
 		$options  = get_option( 'gtt_shop' );
 		$currency = $options[ 'currency' ];
+		$product_id = isset( $_REQUEST['post'] ) ? $_REQUEST['post'] : '';
 		$meta_boxes[] = [
+			'id'         => 'product_info',
 			'title'      => __( 'Product Information', 'gtt-shop' ),
 			'post_types' => [ 'product' ],
 			'fields'     => [
 				[
 					'id'   => 'price',
-					'name' => __( 'Price Vip 1', 'gtt-shop' ),
+					'name' => __( 'Giá Vip 1', 'gtt-shop' ),
 					'type' => 'number',
 					'min'  => 0,
 					'desc' => sprintf( __( 'In %s.', 'gtt-shop' ), $currency ),
 					'size' => 10,
+				],
+				[
+					'name' => __( 'Giá Vip 1 cũ', 'gtt-shop' ),
+					'type' => 'custom_html',
+					'std'  =>  get_post_meta( $product_id , 'price_old', true ),
 				],
 				[
 					'id'   => 'price_vip2',
-					'name' => __( 'Price Vip 2', 'gtt-shop' ),
+					'name' => __( 'Giá Vip 2', 'gtt-shop' ),
 					'type' => 'number',
 					'min'  => 0,
 					'desc' => sprintf( __( 'In %s.', 'gtt-shop' ), $currency ),
 					'size' => 10,
+				],
+				[
+					'name' => __( 'Giá Vip 2 cũ', 'gtt-shop' ),
+					'type' => 'custom_html',
+					'std'  =>  get_post_meta( $product_id , 'price_vip2_old', true ),
 				],
 				[
 					'id'   => 'price_vip3',
-					'name' => __( 'Price Vip 3', 'gtt-shop' ),
+					'name' => __( 'Giá Vip 3', 'gtt-shop' ),
 					'type' => 'number',
 					'min'  => 0,
 					'desc' => sprintf( __( 'In %s.', 'gtt-shop' ), $currency ),
 					'size' => 10,
+				],
+				[
+					'name' => __( 'Giá Vip 3 cũ', 'gtt-shop' ),
+					'type' => 'custom_html',
+					'std'  =>  get_post_meta( $product_id , 'price_vip3_old', true ),
 				],
 				[
 					'id'   => 'price_vip4',
-					'name' => __( 'Price Vip 4', 'gtt-shop' ),
+					'name' => __( 'Giá Vip 4', 'gtt-shop' ),
 					'type' => 'number',
 					'min'  => 0,
 					'desc' => sprintf( __( 'In %s.', 'gtt-shop' ), $currency ),
 					'size' => 10,
+				],
+				[
+					'name' => __( 'Giá Vip 4 cũ', 'gtt-shop' ),
+					'type' => 'custom_html',
+					'std'  =>  get_post_meta( $product_id , 'price_vip4_old', true ),
 				],
 				[
 					'id'   => 'price_vip5',
-					'name' => __( 'Price Vip 5', 'gtt-shop' ),
+					'name' => __( 'Giá Vip 5', 'gtt-shop' ),
 					'type' => 'number',
 					'min'  => 0,
 					'desc' => sprintf( __( 'In %s.', 'gtt-shop' ), $currency ),
 					'size' => 10,
 				],
 				[
+					'name' => __( 'Giá Vip 5 cũ', 'gtt-shop' ),
+					'type' => 'custom_html',
+					'std'  =>  get_post_meta( $product_id , 'price_vip5_old', true ),
+				],
+				[
 					'id'   => 'price_vip6',
-					'name' => __( 'Price Vip 6', 'gtt-shop' ),
+					'name' => __( 'Giá Vip 6', 'gtt-shop' ),
 					'type' => 'number',
 					'min'  => 0,
 					'desc' => sprintf( __( 'In %s.', 'gtt-shop' ), $currency ),
 					'size' => 10,
+				],
+				[
+					'name' => __( 'Giá Vip 6 cũ', 'gtt-shop' ),
+					'type' => 'custom_html',
+					'std'  =>  get_post_meta( $product_id , 'price_vip6_old', true ),
 				],
 				[
 					'id'   => 'price_sale',
@@ -254,5 +287,30 @@ class PostType {
 			],
 		];
 		return $meta_boxes;
+	}
+
+	/**
+	 * Lưu giá cũ của giá thường, vip1, vip2
+	 *
+	 */
+	public function save_old_price( $post_id ) {
+
+		$old_price = get_post_meta( $post_id, 'price', true );
+		update_post_meta( $post_id, 'price_old', $old_price );
+
+		$old_price_vip2 = get_post_meta( $post_id, 'price_vip2', true );
+		update_post_meta( $post_id, 'price_vip2_old', $old_price_vip2 );
+
+		$old_price_vip3 = get_post_meta( $post_id, 'price_vip3', true );
+		update_post_meta( $post_id, 'price_vip3_old', $old_price_vip3 );
+
+		$old_price_vip4 = get_post_meta( $post_id, 'price_vip4', true );
+		update_post_meta( $post_id, 'price_vip4_old', $old_price_vip4 );
+
+		$old_price_vip5 = get_post_meta( $post_id, 'price_vip5', true );
+		update_post_meta( $post_id, 'price_vip5_old', $old_price_vip5 );
+
+		$old_price_vip6 = get_post_meta( $post_id, 'price_vip6', true );
+		update_post_meta( $post_id, 'price_vip6_old', $old_price_vip6 );
 	}
 }
