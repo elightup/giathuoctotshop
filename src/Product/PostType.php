@@ -294,23 +294,40 @@ class PostType {
 	 *
 	 */
 	public function save_old_price( $post_id ) {
-
+		$submit_price = rwmb_request()->post( 'price' );
 		$old_price = get_post_meta( $post_id, 'price', true );
-		update_post_meta( $post_id, 'price_old', $old_price );
+		if ( $submit_price != $old_price ) {
+			update_post_meta( $post_id, 'price_old', $old_price );
+		}
 
+		$submit_price_vip2 = rwmb_request()->post( 'price_vip2' );
 		$old_price_vip2 = get_post_meta( $post_id, 'price_vip2', true );
-		update_post_meta( $post_id, 'price_vip2_old', $old_price_vip2 );
+		if ( $submit_price_vip2 != $old_price_vip2 ) {
+			update_post_meta( $post_id, 'price_vip2_old', $old_price_vip2 );
+		}
 
+		$submit_price_vip3 = rwmb_request()->post( 'price_vip3' );
 		$old_price_vip3 = get_post_meta( $post_id, 'price_vip3', true );
-		update_post_meta( $post_id, 'price_vip3_old', $old_price_vip3 );
+		if ( $submit_price_vip3 != $old_price_vip3 ) {
+			update_post_meta( $post_id, 'price_vip3_old', $old_price_vip3 );
+		}
 
+		$submit_price_vip4 = rwmb_request()->post( 'price_vip4' );
 		$old_price_vip4 = get_post_meta( $post_id, 'price_vip4', true );
-		update_post_meta( $post_id, 'price_vip4_old', $old_price_vip4 );
+		if ( $submit_price_vip4 != $old_price_vip4 ) {
+			update_post_meta( $post_id, 'price_vip4_old', $old_price_vip4 );
+		}
 
+		$submit_price_vip5 = rwmb_request()->post( 'price_vip5' );
 		$old_price_vip5 = get_post_meta( $post_id, 'price_vip5', true );
-		update_post_meta( $post_id, 'price_vip5_old', $old_price_vip5 );
+		if ( $submit_price_vip5 != $old_price_vip5 ) {
+			update_post_meta( $post_id, 'price_vip5_old', $old_price_vip5 );
+		}
 
+		$submit_price_vip6 = rwmb_request()->post( 'price_vip6' );
 		$old_price_vip6 = get_post_meta( $post_id, 'price_vip6', true );
-		update_post_meta( $post_id, 'price_vip6_old', $old_price_vip6 );
+		if ( $submit_price_vip6 != $old_price_vip6 ) {
+			update_post_meta( $post_id, 'price_vip6_old', $old_price_vip6 );
+		}
 	}
 }
