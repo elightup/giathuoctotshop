@@ -50,8 +50,9 @@
     font-size: 1.5em;
     font-weight: 600;
     color: red;
-    margin-bottom: 20px;
     text-transform: uppercase;
     text-align: right;
 }
-
+.template-checkout__cart .total p {
+    margin-bottom: 0;
+}

@@ -81,7 +81,7 @@
 				if ( ! response.success ) {
 					return;
 				}
-
+				localStorage.removeItem( 'voucher' );
 				cart.clear();
 
 				// Redirect user to confirmation page.

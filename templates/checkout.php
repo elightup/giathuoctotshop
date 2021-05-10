@@ -5,6 +5,7 @@
 	<#
 	let total = 0;
 	let id = 0;
+	let giam_gia = 0;
 	if ( data.products.length == 0 ) {
 		#>
 		<div class="alert"><?= __( 'There are no products in your cart.', 'gtt-shop' );?> <a href="<?= home_url( '/' ); ?>"><?php esc_html_e( 'Go to home', 'gtt-shop' );?></a></div>
@@ -97,9 +98,26 @@
 							</tr>
 							<#
 						} );
+
 						#>
 					</table>
-					<div class="total"><?= __( 'Total:', 'gtt-shop' );?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }}</span> <?= $symbol; ?></div>
+					<#
+					if( data.voucher ) {
+						if( data.voucher.voucher_type == 'by_price' ) {
+							giam_gia = data.voucher.voucher_price;
+						} else {
+							giam_gia = data.voucher.voucher_price * total / 100;
+						}
+						#>
+						<div class="total">
+							<p><?php esc_html_e( 'Tạm tính:', 'gtt-shop' ) ?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }} <?= $symbol; ?></span></p>
+							<p><?php esc_html_e( 'Giảm giá:', 'gtt-shop' ) ?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( giam_gia )) }} <?= $symbol; ?></span></p>
+						</div>
+						<#
+					}
+					cart_subtotal = total - giam_gia;
+					#>
+					<div class="total"><?= __( 'Total:', 'gtt-shop' );?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( cart_subtotal )) }}</span> <?= $symbol; ?></div>
 					<p class="order-note">
 						<label for="order-note"><?= __( 'Order note', 'gtt-shop' );?></label>
 						<textarea id="order-note"></textarea>
