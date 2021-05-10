@@ -61,6 +61,9 @@ class Checkout {
 	public function place_checkout() {
 		$data = isset( $_POST['cart'] ) ? $_POST['cart'] : [];
 		$info = isset( $_POST['info'] ) ? $_POST['info'] : '';
+		$voucher = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
+		$voucher = json_decode( wp_unslash( $voucher ), true );
+		$giam_gia = 0;
 		$note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 		$data = wp_unslash( $data );
 		$data = json_decode( $data, true );
@@ -73,6 +76,14 @@ class Checkout {
 			$amount += $product['price'] * $product['quantity'];
 		}
 
+		if ( ! empty( $voucher ) ) {
+			if( $voucher['voucher_type'] == 'by_price' ) {
+				$giam_gia = $voucher['voucher_price'];
+			} else {
+				$giam_gia = $voucher['voucher_price'] * $amount / 100;
+			}
+			$amount = $amount - $giam_gia;
+		}
 		global $wpdb;
 		$wpdb->insert(
 			$wpdb->orders,

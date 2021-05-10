@@ -70,11 +70,13 @@
 					address,
 					payment_method,
 					shipping_method
-				};
+				},
+				voucher = localStorage.getItem( 'voucher' );
 
 			$.post( CheckoutParams.ajaxUrl, {
 				action: 'place_checkout',
 				cart: localStorage.getItem( 'cart' ),
+				voucher: voucher,
 				note: $( '#order-note' ).val(),
 				info: info,
 			}, function ( response ) {
@@ -109,7 +111,7 @@
 		} );
 		$( document ).on( 'click', '.remove-voucher', function( e ) {
 			e.preventDefault();
-			voucher = localStorage.getItem( 'voucher' )
+			voucher = localStorage.getItem( 'voucher' );
 			$.post( CheckoutParams.ajaxUrl, {
 				action: 'check_remove_voucher',
 				voucher: voucher,
