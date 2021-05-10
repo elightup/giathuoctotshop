@@ -155,7 +155,7 @@ class Cart {
 			'id'    => $id,
 			'title' => get_the_title( $id ),
 			'price' => $price,
-			'url'   => get_the_post_thumbnail_url( $id, 'thumbnail' ),
+			'url'   => 'http://demo1.elightup.com/images/' . $id . '.jpg',
 			'link'  => get_permalink( $id ),
 		];
 	}
