@@ -38,7 +38,6 @@ class Cart {
 	public function enqueue_struger_data() {
 		$currency = ! empty( ps_setting( 'currency' ) ) ? ps_setting( 'currency' ) : 'USD';
 		$price =  ! empty( rwmb_meta( 'price', get_the_ID() ) ) ? rwmb_meta( 'price', get_the_ID() ) : 0;
-		$price_sale = ! empty( rwmb_meta( 'price_sale', get_the_ID() ) ) ? rwmb_meta( 'price_sale', get_the_ID() ) : 0;
 	?>
 	<script type="application/ld+json">
 	{
@@ -129,7 +128,6 @@ class Cart {
 		$price_vip4 = get_post_meta( $id, 'price_vip4', true );
 		$price_vip5 = get_post_meta( $id, 'price_vip5', true );
 		$price_vip6 = get_post_meta( $id, 'price_vip6', true );
-		$price_sale = get_post_meta( $id, 'price_sale', true );
 		$role = wp_get_current_user()->roles;
 		switch ( $role[0] ) {
 			case 'vip2':
@@ -152,8 +150,7 @@ class Cart {
 				break;
 		}
 
-
-		$price = ! empty( get_post_meta( $id, 'price_sale', true ) ) ? get_post_meta( $id, 'price_sale', true ) : $price_original;
+		$price = $price_original;
 		return [
 			'id'    => $id,
 			'title' => get_the_title( $id ),

@@ -276,14 +276,6 @@ class PostType {
 					'type' => 'custom_html',
 					'std'  =>  get_post_meta( $product_id , 'price_vip6_old', true ),
 				],
-				[
-					'id'   => 'price_sale',
-					'name' => __( 'Price sale', 'gtt-shop' ),
-					'type' => 'number',
-					'min'  => 0,
-					'desc' => sprintf( __( 'In %s. Leave blank if the product has no discount.', 'gtt-shop' ), $currency ),
-					'size' => 10,
-				],
 			],
 		];
 		return $meta_boxes;
