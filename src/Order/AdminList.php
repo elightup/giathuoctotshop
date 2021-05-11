@@ -16,8 +16,8 @@ class AdminList {
 	public function add_menu() {
 		$page = add_submenu_page(
 			'edit.php?post_type=product',
-			__( 'Orders', 'gtt-shop' ),
-			__( 'Orders', 'gtt-shop' ),
+			__( 'Đơn hàng', 'gtt-shop' ),
+			__( 'Đơn hàng', 'gtt-shop' ),
 			'edit_posts',
 			'orders',
 			[ $this, 'render' ]
@@ -33,7 +33,7 @@ class AdminList {
 
 	public function add_screen_options() {
 		$args = [
-			'label'   => __( 'Number of lines per page', 'gtt-shop' ),
+			'label'   => __( 'Số đơn hàng trên một trang', 'gtt-shop' ),
 			'default' => 20,
 			'option'  => 'orders_per_page',
 		];

@@ -12,25 +12,25 @@ class PostType {
 
 	public function register_post_type() {
 		$labels = [
-			'name'               => __( 'Products', 'gtt-shop' ),
-			'singular_name'      => __( 'Product', 'gtt-shop' ),
-			'add_new'            => _x( 'Add New', 'Product', 'gtt-shop' ),
-			'add_new_item'       => __( 'Add New Product', 'gtt-shop' ),
-			'edit_item'          => __( 'Edit Product', 'gtt-shop' ),
-			'new_item'           => __( 'New Product', 'gtt-shop' ),
-			'view_item'          => __( 'View Product', 'gtt-shop' ),
-			'view_items'         => __( 'View Products', 'gtt-shop' ),
-			'search_items'       => __( 'Search Products', 'gtt-shop' ),
-			'not_found'          => __( 'No products found.', 'gtt-shop' ),
-			'not_found_in_trash' => __( 'No products found in Trash.', 'gtt-shop' ),
+			'name'               => __( 'Sản phẩm', 'gtt-shop' ),
+			'singular_name'      => __( 'Sản phẩm', 'gtt-shop' ),
+			'add_new'            => _x( 'Thêm Sản phẩm mới', 'Sản phẩm', 'gtt-shop' ),
+			'add_new_item'       => __( 'Thêm Sản phẩm mới', 'gtt-shop' ),
+			'edit_item'          => __( 'Sửa Sản phẩm', 'gtt-shop' ),
+			'new_item'           => __( 'Sản phẩm mới', 'gtt-shop' ),
+			'view_item'          => __( 'Xem Sản phẩm', 'gtt-shop' ),
+			'view_items'         => __( 'Xem Sản phẩm', 'gtt-shop' ),
+			'search_items'       => __( 'Tìm kiếm Sản phẩm', 'gtt-shop' ),
+			'not_found'          => __( 'Không có sản phẩm.', 'gtt-shop' ),
+			'not_found_in_trash' => __( 'Không có sản phẩm trong thùng rác.', 'gtt-shop' ),
 			'parent_item_colon'  => __( 'Parent Products:', 'gtt-shop' ),
-			'all_items'          => __( 'All Products', 'gtt-shop' ),
+			'all_items'          => __( 'Tất cả Sản phẩm', 'gtt-shop' ),
 		];
 		$options = get_option( 'gtt_shop' );
 		$slug    = isset( $options[ 'product_slug' ] ) ? $options[ 'product_slug' ] : 'product';
 
 		$args   = [
-			'label'       => __( 'Products', 'gtt-shop' ),
+			'label'       => __( 'Sản phẩm', 'gtt-shop' ),
 			'labels'      => $labels,
 			'supports'    => [ 'title', 'editor', 'excerpt', 'thumbnail', 'comments' ],
 			'public'      => true,

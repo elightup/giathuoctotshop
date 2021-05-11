@@ -8,17 +8,17 @@
 	let giam_gia = 0;
 	if ( data.products.length == 0 ) {
 		#>
-		<div class="alert"><?= __( 'There are no products in your cart.', 'gtt-shop' );?> <a href="<?= home_url( '/' ); ?>"><?php esc_html_e( 'Go to home', 'gtt-shop' );?></a></div>
+		<div class="alert">Không có sản phẩm trong giỏ hàng <a href="<?= home_url( '/' ); ?>">Trở về trang chủ</a></div>
 		<#
 	} else {
 		#>
 		<div class="template-checkout">
 			<div class="row">
 				<div class="col-lg-6 float-left checkout-info">
-					<div class="checkout-title-cart"><?= __( 'Your Details', 'gtt-shop' );?></div>
+					<div class="checkout-title-cart">Thông tin thanh toán</div>
 					<div class="form-info info-details">
 						<div class="form-info__fields form-info__fields__name">
-							<p><?php esc_html_e( 'Name', 'gtt-shop' );?></p>
+							<p>Họ tên</p>
 							<input class="form-info__name" type="text" name="checkout_info[name]" value="" required>
 						</div>
 						<!-- <div class="form-info__fields">
@@ -26,57 +26,23 @@
 							<input class="form-info__email" type="email" name="checkout_info[email]" value="">
 						</div> -->
 						<div class="form-info__fields form-info__fields__phone">
-							<p><?php esc_html_e( 'Phone', 'gtt-shop' );?></p>
+							<p>Số điện thoại</p>
 							<input class="form-info__phone" type="text" name="checkout_info[phone]" value="" required>
 						</div>
 						<div class="form-info__fields">
-							<p><?= __( 'Address', 'gtt-shop' );?></p>
+							<p>Địa chỉ</p>
 							<textarea class="form-info__address" type="text" name="checkout_info[address]"></textarea>
 						</div>
 					</div>
 				</div>
-				<!-- <div class="col-lg-4 template-checkout__payments float-left">
-					<div class="col-lg-12 custom">
-						<div class="checkout-title-cart"><?= __( 'Payments', 'gtt-shop' );?></div>
-						<div class="form-info check-deliverytype form-info--pay">
-							<?php $payment_methods = ps_setting( 'payment_methods' ); ?>
-							<?php foreach ( $payment_methods as $payment_method ) : ?>
-								<div class="form-info__fields">
-									<label class="form-info__input">
-										<input type="radio" name="pay_form_info" value="<?php echo $payment_method['payment_method_title']; ?>">
-										<?= wp_kses_post( $payment_method['payment_method_title'] ); ?>
-									</label>
-									<div class="radio-info pay-in-cash hidden">
-										<?= wp_kses_post( $payment_method['payment_method_description'] ); ?>
-									</div>
-								</div>
-							<?php endforeach; ?>
-						</div>
-					</div>
-
-					<div class="col-lg-12 ship">
-						<div class="checkout-title-cart"><?= __( 'Shipping', 'gtt-shop' );?></div>
-						<div class="form-info check-deliverytype form-info--ship">
-							<?php $shipping_methods = ps_setting( 'shipping_methods' ); ?>
-							<?php foreach ( $shipping_methods as $shipping_method ) : ?>
-								<div class="form-info__fields">
-									<label class="form-info__input">
-										<input type="radio" name="checkout_info" data-check="ship-agree" value="<?= wp_kses_post( $shipping_method ); ?>">
-										<?= wp_kses_post( $shipping_method ); ?>
-									</label>
-								</div>
-							<?php endforeach; ?>
-						</div>
-					</div>
-				</div> -->
 				<div class="col-lg-6 template-checkout__cart float-left">
 					<table class="cart table">
 						<thead class="thead-dark">
 						    <tr>
 						      <th scope="col"><?= __( '#', 'gtt-shop' );?></th>
-						      <th scope="col"><?= __( 'Product', 'gtt-shop' );?></th>
-						      <th scope="col"><?= __( 'Quantity', 'gtt-shop' );?></th>
-						      <th scope="col"><?= __( 'Total', 'gtt-shop' );?></th>
+						      <th scope="col">Tên sản phẩm</th>
+						      <th scope="col">Số lượng</th>
+						      <th scope="col">Giá</th>
 						    </tr>
 					  	</thead>
 						<#
@@ -117,12 +83,55 @@
 					}
 					cart_subtotal = total - giam_gia;
 					#>
-					<div class="total"><?= __( 'Total:', 'gtt-shop' );?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( cart_subtotal )) }}</span> <?= $symbol; ?></div>
+					<div class="total"><?= __( 'Tổng:', 'gtt-shop' );?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( cart_subtotal )) }}</span> <?= $symbol; ?></div>
+
+				</div>
+				<div class="col-lg-6 template-checkout__payments float-left">
 					<p class="order-note">
-						<label for="order-note"><?= __( 'Order note', 'gtt-shop' );?></label>
+						<label for="order-note">Ghi chú đơn hàng</label>
 						<textarea id="order-note"></textarea>
 					</p>
-					<button class="place-checkout btn-success pay-coins"><?= __( 'Place order', 'gtt-shop' );?></button>
+
+					<?php $payment_methods = ps_setting( 'payment_methods' ); ?>
+					<?php if ( $payment_methods ): ?>
+						<div class="col-lg-12 custom">
+							<div class="checkout-title-cart">Phương thức thanh toán</div>
+							<div class="form-info check-deliverytype form-info--pay">
+								<?php foreach ( $payment_methods as $payment_method ) : ?>
+									<div class="form-info__fields">
+										<label class="form-info__input">
+											<input type="radio" name="pay_form_info" value="<?php echo $payment_method['payment_method_title']; ?>">
+											<?= wp_kses_post( $payment_method['payment_method_title'] ); ?>
+										</label>
+										<?php if ( ! empty( $payment_method['payment_method_description'] ) ): ?>
+											<div class="radio-info pay-in-cash hidden">
+												<?= wp_kses_post( $payment_method['payment_method_description'] ); ?>
+											</div>
+										<?php endif ?>
+									</div>
+								<?php endforeach; ?>
+							</div>
+						</div>
+					<?php endif ?>
+
+					<?php $shipping_methods = ps_setting( 'shipping_methods' ); ?>
+					<?php if ( $shipping_methods ): ?>
+						<div class="col-lg-12 ship">
+							<div class="checkout-title-cart">Phương thức giao hàng</div>
+							<div class="form-info check-deliverytype form-info--ship">
+								<?php foreach ( $shipping_methods as $shipping_method ) : ?>
+									<div class="form-info__fields">
+										<label class="form-info__input">
+											<input type="radio" name="checkout_info" data-check="ship-agree" value="<?= wp_kses_post( $shipping_method ); ?>">
+											<?= wp_kses_post( $shipping_method ); ?>
+										</label>
+									</div>
+								<?php endforeach; ?>
+							</div>
+						</div>
+					<?php endif ?>
+
+					<button class="place-checkout btn-success pay-coins">Đặt hàng</button>
 				</div>
 			</div>
 		</div>

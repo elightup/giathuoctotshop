@@ -12,15 +12,15 @@ class Settings {
 		$settings_pages[] = [
 			'id'          => 'gtt-shop',
 			'option_name' => 'gtt_shop',
-			'menu_title'  => __( 'Settings', 'gtt-shop' ),
+			'menu_title'  => __( 'Cài đặt', 'gtt-shop' ),
 			'parent'      => 'edit.php?post_type=product',
 			'style'       => 'no-boxes',
 			'columns'     => true,
 			'tabs'        => [
-				'general'  => __( 'General', 'gtt-shop' ),
-				'payment'  => __( 'Payment', 'gtt-shop' ),
-				'shipping' => __( 'Shipping', 'gtt-shop' ),
-				'support'  => __( 'Support', 'gtt-shop' ),
+				'general'  => __( 'Chung', 'gtt-shop' ),
+				'payment'  => __( 'Thanh toán', 'gtt-shop' ),
+				'shipping' => __( 'Giao hàng', 'gtt-shop' ),
+				'support'  => __( 'Hỗ trợ', 'gtt-shop' ),
 				'vouchers'  => __( 'Vouchers', 'gtt-shop' ),
 			],
 		];
@@ -57,19 +57,19 @@ class Settings {
 				],
 				[
 					'id'        => 'cart_page',
-					'name'      => __( 'Cart Page', 'gtt-shop' ),
+					'name'      => __( 'Trang giỏ hàng', 'gtt-shop' ),
 					'type'      => 'post',
 					'post_type' => 'page',
 				],
 				[
 					'id'        => 'checkout_page',
-					'name'      => __( 'Checkout Page', 'gtt-shop' ),
+					'name'      => __( 'Trang thanh toán', 'gtt-shop' ),
 					'type'      => 'post',
 					'post_type' => 'page',
 				],
 				[
 					'id'        => 'confirmation_page',
-					'name'      => __( 'Confirmation Page', 'gtt-shop' ),
+					'name'      => __( 'Trang xác nhận', 'gtt-shop' ),
 					'type'      => 'post',
 					'post_type' => 'page',
 				],
@@ -84,12 +84,12 @@ class Settings {
 				[
 					'id'   => 'currency',
 					'type' => 'text',
-					'name' => __( 'Currency', 'gtt-shop' ),
+					'name' => __( 'Đơn vị tiền tệ', 'gtt-shop' ),
 				],
 				[
 					'id'     => 'payment_methods',
 					'type'   => 'group',
-					'name'   => __( 'Payment Methods', 'gtt-shop' ),
+					'name'   => __( 'Phương thức thanh toán', 'gtt-shop' ),
 					'clone'  => true,
 					'fields' => [
 						[
@@ -118,7 +118,7 @@ class Settings {
 			'fields'         => [
 				[
 					'id'    => 'shipping_methods',
-					'name'  => __( 'Shipping Methods', 'gtt-shop' ),
+					'name'  => __( 'Phương thức giao hàng', 'gtt-shop' ),
 					'type'  => 'text',
 					'clone' => true,
 				],

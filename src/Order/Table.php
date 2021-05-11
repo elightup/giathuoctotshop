@@ -22,12 +22,12 @@ class Table extends \WP_List_Table {
 
 		// All items.
 		$class        = $status ? '' : ' class="current"';
-		$links['all'] = "<a href='{$this->base_url}'$class>" . sprintf( 'All <span class="count">(%s)</span>', $this->get_total_items() ) . '</a>';
+		$links['all'] = "<a href='{$this->base_url}'$class>" . sprintf( 'Tất cả <span class="count">(%s)</span>', $this->get_total_items() ) . '</a>';
 
 		$statuses = [
-			'completed'  => __( 'Completed', 'elu-shop' ),
-			'pending' => __( 'Pending', 'elu-shop' ),
-			'trash'   => __( 'Trash', 'elu-shop' ),
+			'completed'  => __( 'Đã hoàn thành', 'elu-shop' ),
+			'pending' => __( 'Đang xử lý', 'elu-shop' ),
+			'trash'   => __( 'Thùng rác', 'elu-shop' ),
 		];
 		foreach ( $statuses as $key => $label ) {
 			$class         = $key === $status ? ' class="current"' : '';
@@ -43,11 +43,11 @@ class Table extends \WP_List_Table {
 			<?php
 			if ( 'top' === $which ) {
 				$this->months_dropdown( 'order' );
-				submit_button( __( 'Filter', 'elu-shop' ), '', 'filter_action', false, [ 'id' => 'post-query-submit' ] );
+				submit_button( __( 'Lọc', 'elu-shop' ), '', 'filter_action', false, [ 'id' => 'post-query-submit' ] );
 			}
 
 			if ( isset( $_GET['status'] ) && 'trash' === $_GET['status'] && $this->get_total_items( 'trash' ) ) {
-				submit_button( __( 'Empty trash', 'elu-shop' ), 'apply', 'delete_all', false );
+				submit_button( __( 'Xoá hết thùng rác', 'elu-shop' ), 'apply', 'delete_all', false );
 			}
 			?>
 		</div>
@@ -158,12 +158,12 @@ class Table extends \WP_List_Table {
 		$columns = [
 			'cb'       => '<input type="checkbox">',
 			'id'       => 'ID',
-			'status'   => __( 'Status', 'elu-shop' ),
-			'customer' => __( 'Customer', 'elu-shop' ),
-			'products' => __( 'Product', 'elu-shop' ),
-			'amount'   => __( 'Total', 'elu-shop' ),
-			'date'     => __( 'Date', 'elu-shop' ),
-			'daily'    => __( 'Đại lý', 'elu-shop' ),
+			'status'   => __( 'Trạng thái', 'elu-shop' ),
+			'customer' => __( 'Khách hàng', 'elu-shop' ),
+			'products' => __( 'Sản phẩm', 'elu-shop' ),
+			'amount'   => __( 'Tổng tiền', 'elu-shop' ),
+			'date'     => __( 'Ngày', 'elu-shop' ),
+			// 'daily'    => __( 'Đại lý', 'elu-shop' ),
 		];
 
 		return $columns;
@@ -187,7 +187,7 @@ class Table extends \WP_List_Table {
 
 	public function column_id( $item ) {
 		$title = sprintf(
-			'<a href="%s"><strong>' . __( 'Order', 'elu-shop' ) . ': #%d</strong></a>',
+			'<a href="%s"><strong>' . __( 'Đơn hàng', 'elu-shop' ) . ': #%d</strong></a>',
 			add_query_arg(
 				[
 					'action' => 'view',
@@ -206,9 +206,9 @@ class Table extends \WP_List_Table {
 
 	public function column_status( $item ) {
 		$statuses = [
-			'pending' => [ 'badge', __( 'Pending', 'elu-shop' ) ],
-			'completed'  => [ 'badge badge--success', __( 'Completed', 'elu-shop' ) ],
-			'trash'   => [ 'badge badge--danger', __( 'Deleted', 'elu-shop' ) ],
+			'pending' => [ 'badge', __( 'Đang xử lý', 'elu-shop' ) ],
+			'completed'  => [ 'badge badge--success', __( 'Đã hoàn thành', 'elu-shop' ) ],
+			'trash'   => [ 'badge badge--danger', __( 'Đã xoá', 'elu-shop' ) ],
 		];
 		$status   = $statuses[ $item['status'] ];
 		$user     = get_userdata( $item['user'] );
@@ -218,7 +218,7 @@ class Table extends \WP_List_Table {
 		printf( '<span class="%s">%s</span>', $status[0], $status[1] );
 		if ( 'pending' === $item['status'] ) {
 			printf(
-				'<a href="%s" class="button">' . __( 'Completed', 'elu-shop' ) . ' </a>',
+				'<a href="%s" class="button">' . __( 'Đã hoàn thành', 'elu-shop' ) . ' </a>',
 				add_query_arg(
 					[
 						'action'   => 'close',
@@ -234,7 +234,7 @@ class Table extends \WP_List_Table {
 		}
 		if ( 'completed' === $item['status'] ) {
 			printf(
-				'<a href="%s" class="button">' . __( 'Pending', 'elu-shop' ) . ' </a>',
+				'<a href="%s" class="button">' . __( 'Đang xử lý', 'elu-shop' ) . ' </a>',
 				add_query_arg(
 					[
 						'action'   => 'open',
@@ -265,16 +265,6 @@ class Table extends \WP_List_Table {
 		echo esc_html( $info->name );
 	}
 
-	public function column_daily( $item ) {
-		$daily_id = json_decode( $item['user'] );
-		if ( $daily_id ) {
-			$daily = get_userdata( $daily_id );
-			if ( 'dai_ly' === $daily->roles[0] ) {
-				echo esc_html( $daily->display_name );
-			}
-		}
-	}
-
 	public function column_amount( $item ) {
 		echo number_format_i18n( $item['amount'], 0 ) . ' ' . ps_setting( 'currency' );
 	}
@@ -288,7 +278,7 @@ class Table extends \WP_List_Table {
 	protected function get_row_actions( $item ) {
 		$actions = [
 			'view' => sprintf(
-				'<a href="%s">' . esc_html__( 'Detail', 'elu-shop' ) . '</a>',
+				'<a href="%s">' . esc_html__( 'Chi tiết', 'elu-shop' ) . '</a>',
 				add_query_arg(
 					[
 						'action' => 'view',
@@ -300,7 +290,7 @@ class Table extends \WP_List_Table {
 		];
 		if ( 'trash' === $item['status'] ) {
 			$actions['untrash'] = sprintf(
-				'<a href="%s">' . esc_html__( 'Restore', 'elu-shop' ) . '</a>',
+				'<a href="%s">' . esc_html__( 'Phục hồi', 'elu-shop' ) . '</a>',
 				add_query_arg(
 					[
 						'action'   => 'untrash',
@@ -312,7 +302,7 @@ class Table extends \WP_List_Table {
 			);
 		} else {
 			$actions['trash'] = sprintf(
-				'<a href="%s">' . esc_html__( 'Move to Trash', 'elu-shop' ) . '</a>',
+				'<a href="%s">' . esc_html__( 'Xoá', 'elu-shop' ) . '</a>',
 				add_query_arg(
 					[
 						'action'   => 'trash',
@@ -324,7 +314,7 @@ class Table extends \WP_List_Table {
 			);
 		}
 		$actions['delete'] = sprintf(
-			'<a href="%s">' . esc_html__( 'Delete Permanently', 'elu-shop' ) . '</a>',
+			'<a href="%s">' . esc_html__( 'Xoá vĩnh viễn', 'elu-shop' ) . '</a>',
 			add_query_arg(
 				[
 					'action'   => 'delete',
@@ -339,12 +329,12 @@ class Table extends \WP_List_Table {
 
 	public function get_bulk_actions() {
 		$actions = [
-			'bulk-trash'  => __( 'Delete', 'elu-shop' ),
-			'bulk-delete' => __( 'Empty trash', 'elu-shop' ),
+			'bulk-trash'  => __( 'Xoá', 'elu-shop' ),
+			'bulk-delete' => __( 'Xoá sạch thùng rác', 'elu-shop' ),
 		];
 
 		if ( isset( $_GET['status'] ) && 'trash' === $_GET['status'] && $this->get_total_items( 'trash' ) ) {
-			$actions['bulk-untrash'] = __( 'Restore', 'elu-shop' );
+			$actions['bulk-untrash'] = __( 'Phục hồi', 'elu-shop' );
 		}
 
 		return $actions;

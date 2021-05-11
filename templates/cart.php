@@ -19,7 +19,7 @@
 			      <th scope="col">#</th>
 			      <th scope="col">Tên sản phẩm</th>
 			      <th scope="col">Số lượng</th>
-			      <th scope="col">Giá (nghìn đồng)</th>
+			      <th scope="col">Giá</th>
 			      <th scope="col">Tổng tiền</th>
 			      <th scope="col">Thao tác</th>
 			    </tr>
@@ -73,7 +73,7 @@
 			</div>
 		</div>
 		<div class="submit-cart-shop text-right">
-			<button class="place-order btn btn-success"><?= __( 'Checkout', 'gtt-shop' );?></button>
+			<button class="place-order btn btn-success"><?= __( 'Tiến hành thanh toán', 'gtt-shop' );?></button>
 		</div>
 		<#
 	}

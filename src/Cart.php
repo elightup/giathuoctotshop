@@ -154,8 +154,8 @@ class Cart {
 		return [
 			'id'    => $id,
 			'title' => get_the_title( $id ),
-			'price' => $price,
-			'url'   => 'http://demo1.elightup.com/images/' . $id . '.jpg',
+			'price' => $price * 1000,
+			'url'   => 'https://i.giathuoctot.vn/' . $id . '.jpg',
 			'link'  => get_permalink( $id ),
 		];
 	}
