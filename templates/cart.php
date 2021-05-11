@@ -9,19 +9,19 @@
 	let cart_subtotal = 0;
 	if ( data.products.length == 0 ) {
 		#>
-		<div class="alert"><?= __( 'There are no products in your cart.', 'gtt-shop' );?> <a href="<?= home_url( '/' ); ?>"><?php esc_html_e( 'Go to home', 'gtt-shop' );?></a></div>
+		<div class="alert">Không có sản phẩm trong giỏ hàng <a href="<?= home_url( '/' ); ?>">Trở về trang chủ</a></div>
 		<#
 	} else {
 		#>
 		<table class="cart cart-checkout table table-bordered">
 			<thead class="thead-dark">
 			    <tr>
-			      <th scope="col"><?= __( '#', 'gtt-shop' );?></th>
-			      <th scope="col"><?= __( 'Product', 'gtt-shop' );?></th>
-			      <th scope="col"><?= __( 'Quantity', 'gtt-shop' );?></th>
-			      <th scope="col"><?= __( 'Price', 'gtt-shop' );?></th>
-			      <th scope="col"><?= __( 'Total', 'gtt-shop' );?></th>
-			      <th scope="col"><?= __( 'Delete', 'gtt-shop' );?></th>
+			      <th scope="col">#</th>
+			      <th scope="col">Tên sản phẩm</th>
+			      <th scope="col">Số lượng</th>
+			      <th scope="col">Giá (nghìn đồng)</th>
+			      <th scope="col">Tổng tiền</th>
+			      <th scope="col">Thao tác</th>
 			    </tr>
 		  	</thead>
 		  	<tbody>
