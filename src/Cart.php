@@ -128,8 +128,8 @@ class Cart {
 		$price_vip4 = get_post_meta( $id, 'price_vip4', true );
 		$price_vip5 = get_post_meta( $id, 'price_vip5', true );
 		$price_vip6 = get_post_meta( $id, 'price_vip6', true );
-		$role = wp_get_current_user()->roles;
-		switch ( $role[0] ) {
+		$role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
+		switch ( $role ) {
 			case 'vip2':
 				$price_original = $price_vip2 ? $price_vip2 : $price_original;
 				break;
