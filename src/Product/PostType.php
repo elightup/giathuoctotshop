@@ -43,35 +43,6 @@ class PostType {
 	}
 
 	public function register_taxonomies() {
-		$category_labels = [
-			'name'                       => __( 'Categories', 'gtt-shop' ),
-			'singular_name'              => __( 'Category', 'gtt-shop' ),
-			'all_items'                  => __( 'All Categories', 'gtt-shop' ),
-			'edit_item'                  => __( 'Edit Category', 'gtt-shop' ),
-			'view_item'                  => __( 'View Category', 'gtt-shop' ),
-			'update_item'                => __( 'Update Category', 'gtt-shop' ),
-			'add_new_item'               => __( 'Add New Category', 'gtt-shop' ),
-			'new_item_name'              => __( 'New Category Name', 'gtt-shop' ),
-			'parent_item'                => __( 'Parent Category', 'gtt-shop' ),
-			'parent_item_colon'          => __( 'Parent Category:', 'gtt-shop' ),
-			'search_items'               => __( 'Search Categories', 'gtt-shop' ),
-			'popular_items'              => __( 'Popular Categories', 'gtt-shop' ),
-			'separate_items_with_commas' => __( 'Separate categories with commas', 'gtt-shop' ),
-			'add_or_remove_items'        => __( 'Add or remove categories', 'gtt-shop' ),
-			'choose_from_most_used'      => __( 'Choose from the most used categories', 'gtt-shop' ),
-			'not_found'                  => __( 'No categories found', 'gtt-shop' ),
-			'back_to_items'              => __( '&larr; Back to categories', 'gtt-shop' ),
-		];
-		$category_args   = [
-			'label'             => __( 'Categories', 'gtt-shop' ),
-			'labels'            => $category_labels,
-			'hierarchical'      => true,
-			'show_admin_column' => true,
-		];
-		$options       = get_option( 'gtt_shop' );
-		$category_slug = isset( $options[ 'product_category_slug' ] ) ? $options[ 'product_category_slug' ] : 'product-category';
-		register_taxonomy( $category_slug, 'product', $category_args );
-
 		$tag_labels = [
 			'name'                       => __( 'Tags', 'gtt-shop' ),
 			'singular_name'              => __( 'Tag', 'gtt-shop' ),

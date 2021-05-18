@@ -122,12 +122,14 @@ class Cart {
 	}
 
 	protected static function get_product_info( $id ) {
+		$price = 0;
 		$price_original = ! empty( get_post_meta( $id, 'price', true ) ) ? get_post_meta( $id, 'price', true ) : 0;
 		$price_vip2 = get_post_meta( $id, 'price_vip2', true );
 		$price_vip3 = get_post_meta( $id, 'price_vip3', true );
 		$price_vip4 = get_post_meta( $id, 'price_vip4', true );
 		$price_vip5 = get_post_meta( $id, 'price_vip5', true );
 		$price_vip6 = get_post_meta( $id, 'price_vip6', true );
+		$price_sale = get_post_meta( $id, 'flash_sale_price', true );
 		$role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
 		switch ( $role ) {
 			case 'vip2':
@@ -150,7 +152,11 @@ class Cart {
 				break;
 		}
 
-		$price = $price_original;
+		if ( $price_sale == NULL ) {
+			$price = $price_original;
+		} else {
+			$price = $price_sale;
+		}
 		return [
 			'id'    => $id,
 			'title' => get_the_title( $id ),
