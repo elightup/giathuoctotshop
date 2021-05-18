@@ -21,8 +21,17 @@ class Settings {
 				'payment'  => __( 'Thanh toán', 'gtt-shop' ),
 				'shipping' => __( 'Giao hàng', 'gtt-shop' ),
 				'support'  => __( 'Hỗ trợ', 'gtt-shop' ),
-				'vouchers'  => __( 'Vouchers', 'gtt-shop' ),
+				// 'vouchers'  => __( 'Vouchers', 'gtt-shop' ),
 			],
+		];
+		$settings_pages[] = [
+			'id'          => 'gtt-shop-voucher',
+			'option_name' => 'gtt_shop',
+			'menu_title'  => __( 'Vouchers', 'gtt-shop' ),
+			'capability'  => 'edit_pages',
+			'parent'      => 'edit.php?post_type=product',
+			'style'       => 'no-boxes',
+			'columns'     => true,
 		];
 		return $settings_pages;
 	}
@@ -147,8 +156,8 @@ class Settings {
 		$meta_boxes[] = [
 			'id'             => 'voucher',
 			'title'          => ' ',
-			'settings_pages' => 'gtt-shop',
-			'tab'            => 'vouchers',
+			'settings_pages' => 'gtt-shop-voucher',
+			// 'tab'            => 'vouchers',
 			'fields'         => [
 				[
 					'id'          => 'vouchers_group',
