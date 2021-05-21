@@ -53,12 +53,6 @@ class Settings {
 					'std'  => 'product',
 				],
 				[
-					'id'   => 'product_category_slug',
-					'name' => __( 'Product Category Slug', 'gtt-shop' ),
-					'type' => 'text',
-					'std'  => 'product-category',
-				],
-				[
 					'id'   => 'product_tag_slug',
 					'name' => __( 'Product Tag Slug', 'gtt-shop' ),
 					'type' => 'text',
