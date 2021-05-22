@@ -89,6 +89,9 @@
 		$.each( cart['data'], function( key, value ) {
 			$mini_cart_count += parseInt( value['quantity'] );
 			$price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
+			if ( value['quantity'] == 0 ) {
+				cart.removeProduct( value['id'] );
+			}
 		});
 		$( '.mini-cart-count span' ).html( $mini_cart_count );
 		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) ) {
