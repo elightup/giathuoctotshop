@@ -45,26 +45,23 @@
 		var add_cart_group  = $(this).parent();
 			cart_id         = [];
 			quantity        = $( '.quantity_products', add_cart_group ).val();
+			button_plus     = $(this).attr('class');
 		const productInfo = $( this ).data( 'info' );
 
-
-		if ( $(this).attr('class') == 'button-plus' ) {
-			$.each( cart['data'], function( key, value ) {
-				cart_id.push( value['id'] );
-				if ( value['id'] == productInfo['id'] ) {
-					$old_quantity = value['quantity'];
-					$new_quantity = parseInt( $old_quantity ) + 1;
-				}
-			});
-		} else {
-			$.each( cart['data'], function( key, value ) {
-				cart_id.push( value['id'] );
-				if ( value['id'] == productInfo['id'] ) {
-					$old_quantity = value['quantity'];
-					$new_quantity = parseInt( $old_quantity ) == 0 ? 0 : parseInt( $old_quantity ) - 1;
-				}
-			});
-		}
+		$.each( cart['data'], function( key, value ) {
+			cart_id.push( value['id'] );
+			if ( value['id'] != productInfo['id'] ) {
+				return;
+			}
+			
+			$old_quantity = value['quantity'];
+			if ( button_plus == 'button-plus' ) {
+				$new_quantity = parseInt( $old_quantity ) + 1;
+			} else {
+				$new_quantity = parseInt( $old_quantity ) == 0 ? 0 : parseInt( $old_quantity ) - 1;
+			}
+			
+		});
 
 		// add or update product cart.
 		if ( cart_id.includes( productInfo['id'] ) ) {
