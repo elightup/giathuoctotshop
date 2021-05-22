@@ -130,6 +130,24 @@
 		}
 	}
 
+	// addQuantityToInput
+	function addQuantityToInput() {
+		var button_plus = $('.quantity .button-plus');
+		$.each( button_plus, function( key, value ) {
+			var info = $(this).attr('data-info'),
+				product_id = JSON.parse( info )['id'],
+				fieldName = $( this ).data( 'field' ),
+				parent = $( this ).closest( 'div' ),
+				currentVal = parseInt( parent.find( 'input[name=' + fieldName + ']' ).val(), 10 );
+			$.each( cart['data'], function( key, value ) {
+				if ( value['id'] == product_id ) {
+					parent.find( 'input[name=' + fieldName + ']' ).val( value['quantity'] );
+				}
+			});
+		});
+	}
+
+	// Click button plus and minus
 	$( '.quantity' ).on( 'click', '.button-plus', function(e) {
 		incrementValue(e);
 	} );
@@ -139,6 +157,8 @@
 		decrementValue(e);
 	} );
 	$( document ).on( 'click', '.button-minus', clickHandle );
+
+	addQuantityToInput();
 
 	// Export cart object.
 	window.cart = cart;
