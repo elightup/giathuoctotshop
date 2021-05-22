@@ -16,10 +16,11 @@
 		},
 		addProduct: function ( productInfo, quantity ) {
 			cart.data[productInfo.id] = productInfo;
-			if ( quantity > 1 ) {
+			if ( quantity >= 1 ) {
 				cart.data[productInfo.id].quantity = quantity;
 			} else {
-				cart.data[productInfo.id].quantity = 1;
+				// cart.data[productInfo.id].quantity = 1;
+				cart.removeProduct( productInfo.id );
 			}
 			cart.update();
 		},
@@ -43,20 +44,27 @@
 
 		var add_cart_group  = $(this).parent();
 			cart_id         = [];
-			mini_cart_count = 0;
-			price_total     = 0;
 			quantity        = $( '.quantity_products', add_cart_group ).val();
 		const productInfo = $( this ).data( 'info' );
 
-		$.each( cart['data'], function( key, value ) {
-			mini_cart_count += parseInt( value['quantity'] );
-			price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
-			cart_id.push( value['id'] );
-			if ( value['id'] == productInfo['id'] ) {
-				$old_quantity = value['quantity'];
-				$new_quantity = parseInt( $old_quantity ) + parseInt( quantity );
-			}
-		});
+
+		if ( $(this).attr('class') == 'button-plus' ) {
+			$.each( cart['data'], function( key, value ) {
+				cart_id.push( value['id'] );
+				if ( value['id'] == productInfo['id'] ) {
+					$old_quantity = value['quantity'];
+					$new_quantity = parseInt( $old_quantity ) + 1;
+				}
+			});
+		} else {
+			$.each( cart['data'], function( key, value ) {
+				cart_id.push( value['id'] );
+				if ( value['id'] == productInfo['id'] ) {
+					$old_quantity = value['quantity'];
+					$new_quantity = parseInt( $old_quantity ) == 0 ? 0 : parseInt( $old_quantity ) - 1;
+				}
+			});
+		}
 
 		// add or update product cart.
 		if ( cart_id.includes( productInfo['id'] ) ) {
@@ -66,43 +74,28 @@
 		}
 
 		// add count to minicart when click add to cart button.
-		mini_cart_count += parseInt( quantity );
-		price_total += parseInt( quantity ) * productInfo['price'];
-		$( '.mini-cart-count span' ).html( mini_cart_count );
-		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) ) {
-			$( '.product-cart__detail .color-secondary' ).html( mini_cart_count );
-			$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( price_total )) );
-		}
-
-		// Notify when click add to cart button
-		var add_success = $( this ).data('type');
-        setTimeout(function(){
-			$( '.load-icon', '.add-to-cart' ).remove();
-			new $.notification('<i class="fa fa-shopping-cart"></i> ' + add_success , {"class" : 'alert-notification', timeout : 2000, click : null, close : false});
-		}, 1000);
+		miniCart();
 	}
 
 	cart.load();
 
-	// add mini cart count.
-	$mini_cart_count = 0;
-	$price_total = 0;
-	$.each( cart['data'], function( key, value ) {
-		$mini_cart_count += parseInt( value['quantity'] );
-		$price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
-	});
-	$( '.mini-cart-count span' ).html( $mini_cart_count );
-	if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) ) {
-		$( '.product-cart__detail .color-secondary' ).html( $mini_cart_count );
-		$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( $price_total )) );
+	// mini cart count when load.
+	miniCart();
+
+
+	function miniCart() {
+		$mini_cart_count = 0;
+		$price_total = 0;
+		$.each( cart['data'], function( key, value ) {
+			$mini_cart_count += parseInt( value['quantity'] );
+			$price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
+		});
+		$( '.mini-cart-count span' ).html( $mini_cart_count );
+		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) ) {
+			$( '.product-cart__detail .color-secondary' ).html( $mini_cart_count );
+			$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( $price_total )) );
+		}
 	}
-
-	// $( function() {
-	// 	// $( '.cart-button .view-cart' ).css( 'display', 'none' );
-	// 	// $( document ).on( 'click', '.add-to-cart.buy-now', clickviewcart );
-	// 	$( document ).on( 'click', '.add-to-cart', clickHandle );
-	// } );
-
 
 	function incrementValue( e ) {
 		e.preventDefault();
