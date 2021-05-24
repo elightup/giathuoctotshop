@@ -1,42 +1,43 @@
 #cart {
     overflow-x: auto;
 }
-#cart .cart.table {
-	margin-bottom: 25px;
-}
-.cart thead th {
-	text-align: center;
-}
-.cart.table tbody td {
-	text-align: center;
-    vertical-align: middle;
-}
-.cart tbody td.cart__title {
-	text-align: left;
-}
-.cart tbody td.cart__title a {
-	text-decoration: initial;
-}
-.cart tbody td.cart__title img {
-    width: 70px;
-    height: auto;
-    float: left;
-    margin-right: 20px;
-}
-
-.cart tbody td.cart__remove-product .cart__remove {
+#cart .cart__remove-product .cart__remove {
     background: none;
     color: #ff0101;
     font-size: 2em;
     text-decoration: initial;
 }
+#cart .product-cart__detail .col-md-5 {
+    border-right: 1px solid rgba(195,204,220,0.4);
+}
+#cart .product-cart__wrapper {
+    top: unset !important;
+}
+#cart .product-cart__button .place-order {
+    width: 100%;
+}
+#cart .remove-voucher {
+    color: red;
+}
+
 .total-pay-product {
     margin-bottom: 15px;
-    font-size: 24px;
-    color: red;
+    font-size: 18px;
 }
 .total-pay-product p {
     margin-bottom: 0;
+}
+.total-pay-product .total__number {
+    color: #00b46e;
+}
+
+.product-back {
+    border-radius: 10px;
+    box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
+    padding: 15px;
+}
+.product-back p {
+    margin: 0;
 }
 /* order list */
 .info-order.text-center {
