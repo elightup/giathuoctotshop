@@ -25,6 +25,7 @@ class Cart {
 			[
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
+				'user_id' => is_user_logged_in() ? get_current_user_id() : '',
 			]
 		);
 	}

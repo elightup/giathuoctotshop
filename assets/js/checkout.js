@@ -75,7 +75,7 @@
 
 			$.post( CheckoutParams.ajaxUrl, {
 				action: 'place_checkout',
-				cart: localStorage.getItem( 'cart' ),
+				cart: cart.data,
 				voucher: voucher,
 				note: $( '#order-note' ).val(),
 				info: info,

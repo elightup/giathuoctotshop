@@ -1,15 +1,21 @@
 ( function ( $, window, document, localStorage, CartParams ) {
 	let cart = {
 		data: {},
+		key: 'cart',
+		setKey: function () {
+			const userId = CartParams.user_id;
+			cart.key = userId ? `cart-${ userId }` : 'cart';
+		},
 		load: function () {
-			const data = localStorage.getItem( 'cart' );
+			const data = localStorage.getItem( cart.key );
 			if ( data ) {
 				cart.data = JSON.parse( data );
 			}
 		},
 		update: function () {
-			localStorage.setItem( 'cart', JSON.stringify( cart.data ) );
+			localStorage.setItem( cart.key, JSON.stringify( cart.data ) );
 		},
+
 		clear: function() {
 			cart.data = {};
 			cart.update();
@@ -37,10 +43,7 @@
 	function clickHandle( e ) {
 		e.preventDefault();
 		$('.add-to-cart', '.cart-button' ).append('<div class="load-icon"></div>');
-		const data = localStorage.getItem( 'cart' );
-		if ( data ) {
-			cart.data = JSON.parse( data );
-		}
+		const data = cart.data;
 
 		var add_cart_group  = $(this).parent();
 			cart_id         = [];
@@ -53,14 +56,14 @@
 			if ( value['id'] != productInfo['id'] ) {
 				return;
 			}
-			
+
 			$old_quantity = value['quantity'];
 			if ( button_plus == 'button-plus' ) {
 				$new_quantity = parseInt( $old_quantity ) + 1;
 			} else {
 				$new_quantity = parseInt( $old_quantity ) == 0 ? 0 : parseInt( $old_quantity ) - 1;
 			}
-			
+
 		});
 
 		// add or update product cart.
@@ -74,6 +77,7 @@
 		miniCart();
 	}
 
+	cart.setKey();
 	cart.load();
 
 	// mini cart count when load.
