@@ -75,22 +75,35 @@ $info = json_decode( $item->info, true );
 			<thead>
 			<tr>
 				<td><?php esc_html_e( 'Họ tên', 'gtt-shop' ) ?></td>
-				<!-- <td><?php esc_html_e( 'Email', 'gtt-shop' ) ?></td> -->
 				<td><?php esc_html_e( 'Số điện thoại', 'gtt-shop' ) ?></td>
 				<td><?php esc_html_e( 'Địa chỉ', 'gtt-shop' ) ?></td>
-				<!-- <td><?php esc_html_e( 'Payment Method', 'gtt-shop' ) ?></td>
-				<td><?php esc_html_e( 'Shipping Method', 'gtt-shop' ) ?></td> -->
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td><?= esc_html( $info['name'] ); ?></td>
+				<td><?= esc_html( $info['phone'] ); ?></td>
+				<td><?= esc_html( $info['address'] ); ?></td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="info-shipping">
+		<h3><?php esc_html_e( 'Thông tin nhận hàng', 'gtt-shop' ) ?></h3>
+		<table class="widefat">
+			<thead>
+			<tr>
+				<td><?php esc_html_e( 'Họ tên người nhận', 'gtt-shop' ) ?></td>
+				<td><?php esc_html_e( 'Số điện thoại người nhận', 'gtt-shop' ) ?></td>
+				<td><?php esc_html_e( 'Địa chỉ nhận hàng', 'gtt-shop' ) ?></td>
 				<td><?php esc_html_e( 'Ghi chú', 'gtt-shop' ) ?></td>
 			</tr>
 			</thead>
 			<tbody>
 			<tr>
 				<td><?= esc_html( $info['name'] ); ?></td>
-				<!-- <td><?= esc_html( $info['email'] ); ?></td> -->
 				<td><?= esc_html( $info['phone'] ); ?></td>
 				<td><?= esc_html( $info['address'] ); ?></td>
-				<!-- <td><?= esc_html( $info['payment_method'] ); ?></td>
-				<td><?= esc_html( $info['shipping_method'] ); ?></td> -->
 				<td><?= esc_html( $item->note ); ?></td>
 			</tr>
 			</tbody>

@@ -61,6 +61,7 @@ class Checkout {
 	public function place_checkout() {
 		$data = isset( $_POST['cart'] ) ? $_POST['cart'] : [];
 		$info = isset( $_POST['info'] ) ? $_POST['info'] : '';
+		$info_shipping = isset( $_POST['info_shipping'] ) ? $_POST['info_shipping'] : '';
 		$voucher = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
 		$voucher = json_decode( wp_unslash( $voucher ), true );
 		$giam_gia = 0;
@@ -88,13 +89,14 @@ class Checkout {
 		$wpdb->insert(
 			$wpdb->orders,
 			[
-				'date'   => current_time( 'mysql' ),
-				'status' => 'pending',
-				'user'   => get_current_user_id(),
-				'amount' => $amount,
-				'note'   => $note,
-				'info'   => json_encode( $info ),
-				'data'   => json_encode( $data, JSON_UNESCAPED_UNICODE ),
+				'date'          => current_time( 'mysql' ),
+				'status'        => 'pending',
+				'user'          => get_current_user_id(),
+				'amount'        => $amount,
+				'note'          => $note,
+				'info'          => json_encode( $info ),
+				'info_shipping' => json_encode( $info_shipping ),
+				'data'          => json_encode( $data, JSON_UNESCAPED_UNICODE ),
 			]
 		);
 		$url = add_query_arg(

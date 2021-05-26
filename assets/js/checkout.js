@@ -58,18 +58,24 @@
 		$( '.place-checkout' ).on( 'click', function( e ) {
 			e.preventDefault();
 			var name            = $ ('.info-details .form-info__name').val(),
-				email 	        = $ ('.info-details .form-info__email').val(),
 				phone 	        = $ ('.info-details .form-info__phone').val(),
 				address         = $ ('.info-details .form-info__address').val(),
 				payment_method  = $( '.form-info__input input:checked', '.form-info--pay').val(),
-				shipping_method = $( '.form-info__input input:checked', '.form-info--ship').val(),
+
+				name_shipping    = $ ('.form-info__other_name').val(),
+				phone_shipping   = $ ('.form-info__other_phone').val(),
+				address_shipping = $ ('.form-info__other_address').val(),
+
 				info            = {
 					name,
-					email,
 					phone,
 					address,
 					payment_method,
-					shipping_method
+				},
+				info_shipping   = {
+					name_shipping,
+					phone_shipping,
+					address_shipping,
 				},
 				voucher = localStorage.getItem( 'voucher' );
 
@@ -79,6 +85,7 @@
 				voucher: voucher,
 				note: $( '#order-note' ).val(),
 				info: info,
+				info_shipping: info_shipping,
 			}, function ( response ) {
 				if ( ! response.success ) {
 					return;
