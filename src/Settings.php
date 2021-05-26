@@ -19,7 +19,6 @@ class Settings {
 			'tabs'        => [
 				'general'  => __( 'Chung', 'gtt-shop' ),
 				'payment'  => __( 'Thanh toán', 'gtt-shop' ),
-				'shipping' => __( 'Giao hàng', 'gtt-shop' ),
 				'support'  => __( 'Hỗ trợ', 'gtt-shop' ),
 				// 'vouchers'  => __( 'Vouchers', 'gtt-shop' ),
 			],
@@ -110,20 +109,6 @@ class Settings {
 							],
 						],
 					],
-				],
-			],
-		];
-		$meta_boxes[] = [
-			'id'             => 'shipping',
-			'title'          => ' ',
-			'settings_pages' => 'gtt-shop',
-			'tab'            => 'shipping',
-			'fields'         => [
-				[
-					'id'    => 'shipping_methods',
-					'name'  => __( 'Phương thức giao hàng', 'gtt-shop' ),
-					'type'  => 'text',
-					'clone' => true,
 				],
 			],
 		];

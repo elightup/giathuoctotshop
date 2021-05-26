@@ -35,7 +35,33 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-6 template-checkout__cart float-left">
+
+				<div class="col-lg-6 template-checkout__payments float-left">
+					<div class="checkout-title-cart">Địa chỉ giao hàng</div>
+					<div class="ship check-deliverytype form-info--ship">
+						<div class="form-info__fields form-info__fields__name">
+							<p>Họ tên người nhận hàng</p>
+							<input class="form-info__other_name" type="text" name="checkout_info[other_name]" value="" required>
+						</div>
+						<div class="form-info__fields form-info__fields__phone">
+							<p>Số điện thoại người nhận hàng</p>
+							<input class="form-info__other_phone" type="text" name="checkout_info[other_phone]" value="" required>
+						</div>
+						<div class="form-info__fields">
+							<p>Địa chỉ nhận hàng</p>
+							<textarea class="form-info__other-address" type="text" name="checkout_info[other_address]"></textarea>
+						</div>
+					</div>
+					<div class="order-note">
+						<div class="form-info__fields">
+							<p>Ghi chú đơn hàng</p>
+							<textarea id="order-note"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-12 template-checkout__cart float-left">
+					<div class="checkout-title-cart">Thông tin đơn hàng</div>
 					<table class="cart table">
 						<thead class="thead-dark">
 						    <tr>
@@ -84,14 +110,9 @@
 					cart_subtotal = total - giam_gia;
 					#>
 					<div class="total"><?= __( 'Tổng:', 'gtt-shop' );?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( cart_subtotal )) }}</span> <?= $symbol; ?></div>
-
 				</div>
-				<div class="col-lg-6 template-checkout__payments float-left">
-					<p class="order-note">
-						<label for="order-note">Ghi chú đơn hàng</label>
-						<textarea id="order-note"></textarea>
-					</p>
 
+				<div class="col-lg-12 template-checkout__payments float-left">
 					<?php $payment_methods = ps_setting( 'payment_methods' ); ?>
 					<?php if ( $payment_methods ): ?>
 						<div class="col-lg-12 custom">
