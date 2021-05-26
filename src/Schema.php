@@ -22,6 +22,7 @@ class schema {
 				`amount` int unsigned NOT NULL,
 				`note` text,
 				`info` text,
+				`info_shipping` text,
 				`data` text,
 				PRIMARY KEY  (`id`),
 				KEY `date` (`date`),

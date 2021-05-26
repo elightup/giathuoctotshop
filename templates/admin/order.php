@@ -5,8 +5,9 @@ if ( ! $id ) {
 }
 
 global $wpdb;
-$item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $id ) );
-$info = json_decode( $item->info, true );
+$item          = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $id ) );
+$info          = json_decode( $item->info, true );
+$info_shipping = json_decode( $item->info_shipping, true );
 ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'Chi tiết đơn hàng', 'gtt-shop' ) . ' #' . esc_html( $id ); ?></h1>
@@ -101,9 +102,9 @@ $info = json_decode( $item->info, true );
 			</thead>
 			<tbody>
 			<tr>
-				<td><?= esc_html( $info['name'] ); ?></td>
-				<td><?= esc_html( $info['phone'] ); ?></td>
-				<td><?= esc_html( $info['address'] ); ?></td>
+				<td><?= esc_html( $info_shipping['name_shipping'] ); ?></td>
+				<td><?= esc_html( $info_shipping['phone_shipping'] ); ?></td>
+				<td><?= esc_html( $info_shipping['address_shipping'] ); ?></td>
 				<td><?= esc_html( $item->note ); ?></td>
 			</tr>
 			</tbody>

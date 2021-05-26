@@ -3,6 +3,7 @@ global $wpdb;
 $id   = intval( $_GET['id'] );
 $item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $id ) );
 $info = json_decode( $item->info, true );
+$info_shipping = json_decode( $item->info_shipping, true );
 ?>
 
 <?php if ( isset( $_GET['type'] ) && 'checkout' === $_GET['type'] ) : ?>
@@ -12,7 +13,7 @@ $info = json_decode( $item->info, true );
 	<?php esc_html_e( 'Chi tiết đơn hàng', 'gtt-shop' ); ?>
 </div>
 <div class="detail-order">
-	<div class="line-items float-left col-lg-6">
+	<div class="line-items col-lg-6">
 		<h4><?php esc_html_e( 'Đơn hàng số', 'gtt-shop' ); ?> #<?= $id; ?></h4>
 		<table class="order table">
 			<tr>
@@ -61,6 +62,23 @@ $info = json_decode( $item->info, true );
 			<tr>
 				<th>Địa chỉ:</th>
 				<td><?= $info['address']; ?></td>
+			</tr>
+		</table>
+	</div>
+	<div class="customer-details float-left col-lg-6 ">
+		<h4>Thông tin nhận hàng</h4>
+		<table class="customer table">
+			<tr>
+				<th>Họ tên người nhận</th>
+				<td><?= $info_shipping['name_shipping']; ?></td>
+			</tr>
+			<tr>
+				<th>Số điện thoại người nhận:</th>
+				<td><?= $info_shipping['phone_shipping']; ?></td>
+			</tr>
+			<tr>
+				<th>Địa chỉ người nhận:</th>
+				<td><?= $info_shipping['address_shipping']; ?></td>
 			</tr>
 		</table>
 	</div>

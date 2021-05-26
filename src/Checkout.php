@@ -66,8 +66,6 @@ class Checkout {
 		$voucher = json_decode( wp_unslash( $voucher ), true );
 		$giam_gia = 0;
 		$note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
-		$data = wp_unslash( $data );
-		$data = json_decode( $data, true );
 
 		if ( empty( $data ) ) {
 			wp_send_json_error();

@@ -49,7 +49,7 @@
 						</div>
 						<div class="form-info__fields">
 							<p>Địa chỉ nhận hàng</p>
-							<textarea class="form-info__other-address" type="text" name="checkout_info[other_address]"></textarea>
+							<textarea class="form-info__other_address" type="text" name="checkout_info[other_address]"></textarea>
 						</div>
 					</div>
 					<div class="order-note">
