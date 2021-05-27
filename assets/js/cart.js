@@ -1,4 +1,6 @@
 ( function ( $, window, document, localStorage, CartParams ) {
+	const $d = $( document );
+
 	let cart = {
 		data: {},
 		key: 'cart',
@@ -19,6 +21,12 @@
 		clear: function() {
 			cart.data = {};
 			cart.update();
+		},
+		hasProduct: function( id ) {
+			return cart.data.hasOwnProperty( id );
+		},
+		getProduct: function( id ) {
+			return cart.hasProduct( id ) ? cart.data[ id ] : null;
 		},
 		addProduct: function ( productInfo, quantity ) {
 			cart.data[productInfo.id] = productInfo;
@@ -43,32 +51,22 @@
 	function clickHandle( e ) {
 		e.preventDefault();
 		$('.add-to-cart', '.cart-button' ).append('<div class="load-icon"></div>');
-		const data = cart.data;
 
-		var add_cart_group  = $(this).parent();
-			cart_id         = [];
-			quantity        = $( '.quantity_products', add_cart_group ).val();
-			button_plus     = $(this).attr('class');
+		const $this        = $( this ),
+			$quantityInput = $this.parent().find( '.quantity_products' ),
+			amount         = $this.hasClass( 'button-minus' ) ? -1 : 1;
+
+		let quantity = parseInt( $quantityInput.val(), 10 );
+		quantity = quantity + amount;
+		if ( quantity < 0 ) {
+			quantity = 0;
+		}
+
+		$quantityInput.val( quantity );
+
 		const productInfo = $( this ).data( 'info' );
-
-		$.each( cart['data'], function( key, value ) {
-			cart_id.push( value['id'] );
-			if ( value['id'] != productInfo['id'] ) {
-				return;
-			}
-
-			$old_quantity = value['quantity'];
-			if ( button_plus == 'button-plus' ) {
-				$new_quantity = parseInt( $old_quantity ) + 1;
-			} else {
-				$new_quantity = parseInt( $old_quantity ) == 0 ? 0 : parseInt( $old_quantity ) - 1;
-			}
-
-		});
-
-		// add or update product cart.
-		if ( cart_id.includes( productInfo['id'] ) ) {
-			cart.updateProduct( productInfo['id'], $new_quantity );
+		if ( cart.hasProduct( productInfo.id ) ) {
+			cart.updateProduct( productInfo.id, quantity );
 		} else {
 			cart.addProduct( productInfo, quantity );
 		}
@@ -76,13 +74,6 @@
 		// add count to minicart when click add to cart button.
 		miniCart();
 	}
-
-	cart.setKey();
-	cart.load();
-
-	// mini cart count when load.
-	miniCart();
-
 
 	function miniCart() {
 		$mini_cart_count = 0;
@@ -95,65 +86,36 @@
 			}
 		});
 		$( '.mini-cart-count span' ).html( $mini_cart_count );
-		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) ) {
+			console.log( $price_total);
+		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) || $( 'body' ).hasClass( 'page-id-12' ) ) {
 			$( '.product-cart__detail .color-secondary' ).html( $mini_cart_count );
 			$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( $price_total )) );
 		}
 	}
 
-	function incrementValue( e ) {
-		e.preventDefault();
-		var fieldName = $( e.target ).data( 'field' );
-		var parent = $( e.target ).closest( 'div' );
-		var currentVal = parseInt( parent.find( 'input[name=' + fieldName + ']' ).val(), 10 );
-
-		if ( ! isNaN( currentVal ) ) {
-			parent.find( 'input[name=' + fieldName + ']' ).val( currentVal + 1 );
-		} else {
-			parent.find( 'input[name=' + fieldName + ']' ).val( 0 );
-		}
-	}
-
-	function decrementValue( e ) {
-		e.preventDefault();
-		var fieldName = $( e.target ).data( 'field' );
-		var parent = $( e.target ).closest( 'div' );
-		var currentVal = parseInt( parent.find( 'input[name=' + fieldName + ']' ).val(), 10 );
-
-		if ( ! isNaN( currentVal ) && currentVal > 0 ) {
-			parent.find( 'input[name=' + fieldName + ']' ).val( currentVal - 1 );
-		} else {
-			parent.find( 'input[name=' + fieldName + ']' ).val( 0 );
-		}
-	}
-
 	// addQuantityToInput
 	function addQuantityToInput() {
-		var button_plus = $('.quantity .button-plus');
-		$.each( button_plus, function( key, value ) {
-			var info = $(this).attr('data-info'),
-				product_id = JSON.parse( info )['id'],
-				fieldName = $( this ).data( 'field' ),
-				parent = $( this ).closest( 'div' ),
-				currentVal = parseInt( parent.find( 'input[name=' + fieldName + ']' ).val(), 10 );
-			$.each( cart['data'], function( key, value ) {
-				if ( value['id'] == product_id ) {
-					parent.find( 'input[name=' + fieldName + ']' ).val( value['quantity'] );
-				}
-			});
-		});
+		$('.button-plus').each( function() {
+			const $this = $( this ),
+				info = $this.data('info'),
+				id = info.id;
+
+			if ( cart.hasProduct( id ) ) {
+				product = cart.getProduct( id );
+				$this.prev().val( product.quantity );
+			}
+		} );
 	}
 
-	// Click button plus and minus
-	$( '.quantity' ).on( 'click', '.button-plus', function(e) {
-		incrementValue(e);
-	} );
-	$( document ).on( 'click', '.button-plus', clickHandle );
+	cart.setKey();
+	cart.load();
 
-	$( '.quantity' ).on('click', '.button-minus', function(e) {
-		decrementValue(e);
-	} );
-	$( document ).on( 'click', '.button-minus', clickHandle );
+	// mini cart count when load.
+	miniCart();
+
+	// Click button plus and minus
+	$d.on( 'click', '.button-plus', clickHandle );
+	$d.on( 'click', '.button-minus', clickHandle );
 
 	addQuantityToInput();
 

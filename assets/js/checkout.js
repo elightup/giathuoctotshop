@@ -22,28 +22,6 @@
 			updateCartHtml();
 		} );
 
-		// Update quantity.
-		$cart.on( 'change', '.cart__quantity input', function() {
-			const productId = $( this ).data( 'product_id' ),
-				quantity = this.value;
-			cart.updateProduct( productId, quantity );
-			updateCartHtml();
-		} );
-		$( '.radio-info', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).removeClass('hidden');
-		$( 'input[type=radio]', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).attr('checked', true);
-		$( 'input[type=radio]', '.check-deliverytype .form-info__fields:nth-child(1)' ).attr('checked', true);
-
-		$( 'input[type=radio]', '.form-info.form-info--pay' ).on( 'click', function( e ) {
-			var radio_class = $( this ).parent().parent(),
-				radio_info = $('.radio-info', radio_class );
-				$( '.radio-info', '.form-info.form-info--pay' ).addClass('hidden');
-
-				if ( $(this).attr('checked', true)) {
-					radio_info.removeClass('hidden');
-				}
-
-		} ).change();
-
 		// redict page checkout
 		$( '.page' ).on( 'click', '.place-order',  function( e ) {
 			e.preventDefault();

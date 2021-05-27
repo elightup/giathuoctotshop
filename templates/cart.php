@@ -36,8 +36,14 @@
 							<div class="product-price">
 								<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( product.price )) }} <?= $symbol; ?></p>
 							</div>
-							<!-- <?php ELUSHOP\Cart::add_cart(); ?> -->
-							<div class="cart__quantity"><input type="number" value="{{ product.quantity }}" min="1" data-product_id="{{ product.id }}" style="width: 70px;float: initial;margin: auto;text-align: center;"></div>
+							<div class="cart-button">
+								<div class="quantity cart__quantity">
+									<input type="button" value="-" class="button-minus" data-info="{{ JSON.stringify( product ) }}">
+									<input type="number" class="quantity_products" min="1" name="quantity" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
+									<input type="button" value="+" class="button-plus" data-info="{{ JSON.stringify( product ) }}">
+								</div>
+							</div>
+
 							<div class="cart__remove-product"> <button class="cart__remove btn btn-link" data-product_id="{{ product.id }}" title="Xóa sản phẩm này">&times;</button> </div>
 						</div>
 					</article>
@@ -72,7 +78,7 @@
 								}
 								cart_subtotal = total - giam_gia;
 								#>
-								<p><?php esc_html_e( 'Tổng:', 'gtt-shop' ) ?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( cart_subtotal )) }} <?= $symbol; ?></span></p>
+								<p class="color-primary"><?php esc_html_e( 'Tổng:', 'gtt-shop' ) ?> <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( cart_subtotal )) }} <?= $symbol; ?></span></p>
 							</div>
 						</div>
 					</div>
