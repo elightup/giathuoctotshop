@@ -15,6 +15,8 @@ class Checkout {
 		add_action( 'wp_ajax_nopriv_check_voucher', [ $this, 'check_voucher' ] );
 		add_action( 'wp_ajax_check_remove_voucher', [ $this, 'check_remove_voucher' ] );
 		add_action( 'wp_ajax_nopriv_check_remove_voucher', [ $this, 'check_remove_voucher' ] );
+
+		add_filter( 'body_class', [ $this, 'add_class_body' ] );
 	}
 
 	public function enqueue() {
@@ -46,6 +48,16 @@ class Checkout {
 			TemplateLoader::instance()->get_template_part( 'checkout' );
 		}
 		return ob_get_clean();
+	}
+
+	public function add_class_body( $classes ) {
+		if ( is_cart_page() ) {
+			$classes[] = 'cart-page';
+		}
+		if ( is_checkout_page() ) {
+			$classes[] = 'checkout-page';
+		}
+		return $classes;
 	}
 
 	public function place_order() {
