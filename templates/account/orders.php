@@ -1,4 +1,3 @@
-<h3><?php esc_html_e( 'Order List', 'gtt-shop' )?></h3>
 <?php
 global $wpdb;
 $items = $wpdb->get_results( $wpdb->prepare(
