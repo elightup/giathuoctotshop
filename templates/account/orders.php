@@ -10,8 +10,8 @@ $items = $wpdb->get_results( $wpdb->prepare(
 
 if ( empty( $items ) ) :
 	?>
-	<div class="alert alert--warning">Bạn không có đơn hàng nào
-		<a href="<?= get_post_type_archive_link( 'product' ); ?>"><?php esc_html_e( 'Click vào đây', 'gtt-shop' )?></a><?php esc_html_e( 'để bắt đầu mua sản phẩm', 'gtt-shop' )?>
+	<div class="alert alert--warning">Bạn không có đơn hàng nào.
+		<a href="<?= get_post_type_archive_link( 'product' ); ?>"><?php esc_html_e( 'Click vào đây ', 'gtt-shop' )?></a><?php esc_html_e( 'để bắt đầu mua sản phẩm', 'gtt-shop' )?>
 	</div>
 	<?php
 	return;
