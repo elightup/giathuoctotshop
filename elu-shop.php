@@ -35,6 +35,7 @@ register_activation_hook( __FILE__, function () use ( $schema ) {
 ( new Checkout() )->init();
 ( new Order\Notification() )->init();
 ( new User\invoice() )->init();
+( new Account() )->init();
 
 ( new Settings() )->init();
 if ( is_admin() ) {

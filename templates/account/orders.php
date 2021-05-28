@@ -42,8 +42,8 @@ endif;
 				printf( '<span class="%s">%s</span>', $status[0], $status[1] );
 				?>
 			</td>
-			<td><?= $item->amount; ?> <?= ps_setting( 'currency' ); ?></td>
-			<td><a href="?view=order&id=<?= $item->id; ?>"><?php esc_html_e( 'Xem chi tiết', 'gtt-shop' )?></a></td>
+			<td><?= number_format( $item->amount, 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?></td>
+			<td><a href="<?= get_permalink( ps_setting( 'confirmation_page' ) ) ?>?view=order&id=<?= $item->id; ?>"><?php esc_html_e( 'Xem chi tiết', 'gtt-shop' )?></a></td>
 		</tr>
 	<?php endforeach; ?>
 </table>

@@ -75,6 +75,12 @@ class Settings {
 					'type'      => 'post',
 					'post_type' => 'page',
 				],
+				[
+					'id'        => 'account_page',
+					'name'      => __( 'Trang tài khoản', 'gtt-shop' ),
+					'type'      => 'post',
+					'post_type' => 'page',
+				],
 			],
 		];
 		$meta_boxes[] = [

@@ -14,6 +14,22 @@
 
 		updateCartHtml();
 
+		// Phương thức thanh toán radio
+		$( '.radio-info', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).removeClass('hidden');
+		$( 'input[type=radio]', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).attr('checked', true);
+		$( 'input[type=radio]', '.check-deliverytype .form-info__fields:nth-child(1)' ).attr('checked', true);
+
+		$( 'input[type=radio]', '.form-info.form-info--pay' ).on( 'click', function( e ) {
+			var radio_class = $( this ).parent().parent(),
+				radio_info = $('.radio-info', radio_class );
+				$( '.radio-info', '.form-info.form-info--pay' ).addClass('hidden');
+
+				if ( $(this).attr('checked', true)) {
+					radio_info.removeClass('hidden');
+				}
+
+		} ).change();
+
 		// Remove an item from cart.
 		$cart.on( 'click', '.cart__remove', function( e ) {
 			e.preventDefault();
