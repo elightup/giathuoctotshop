@@ -86,7 +86,7 @@
 			}
 		});
 		$( '.mini-cart-count span' ).html( $mini_cart_count );
-		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) || $( 'body' ).hasClass( 'page-id-70' ) ) {
+		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) || $( 'body' ).hasClass( 'cart-page' ) ) {
 			$( '.product-cart__detail .color-secondary' ).html( $mini_cart_count );
 			$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( $price_total )) );
 		}
