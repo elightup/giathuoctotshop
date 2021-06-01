@@ -239,6 +239,11 @@ class PostType {
 					'std'     => get_post_meta( $product_id , 'price_vip6_old', true ) ? get_post_meta( $product_id , 'price_vip6_old', true ) . ' (nghìn đồng)' : 'Chưa có',
 					'columns' => 6,
 				],
+				[
+					'id'      => 'image_url',
+					'name'    => 'Link ảnh thumbnail',
+					'columns' => 6,
+				],
 			],
 		];
 		return $meta_boxes;
