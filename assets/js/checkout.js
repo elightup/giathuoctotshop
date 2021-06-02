@@ -93,12 +93,19 @@
 		} );
 
 		// Check vouchers.
+
 		$( document ).on( 'click', '.voucher_button', function( e ) {
 			e.preventDefault();
 			var voucher = $( '.voucher_input' ).val();
+			let total = 0;
+			$.each( cart.data, function( key, value ) {
+				const subtotal = value.price * value.quantity;
+				total += subtotal;
+			} );
 			$.post( CheckoutParams.ajaxUrl, {
 				action: 'check_voucher',
 				voucher: voucher,
+				total_price: total,
 			}, function ( response ) {
 				if ( response.success ) {
 					localStorage.setItem( 'voucher', JSON.stringify( response.data ) );
@@ -125,5 +132,19 @@
 				}
 			}, 'json' );
 		} );
+
+
+		const $voucher = JSON.parse( localStorage.getItem( 'voucher' ) );
+
+		let total = 0;
+		$.each( cart.data, function( key, value ) {
+			const subtotal = value.price * value.quantity;
+			total += subtotal;
+		} );
+
+		if ( $voucher && $voucher.voucher_dieukien > total ) {
+			localStorage.removeItem( 'voucher' );
+			updateCartHtml();
+		}
 	} );
 } )( jQuery, cart, wp, CheckoutParams );

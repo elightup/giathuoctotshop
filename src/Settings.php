@@ -180,6 +180,11 @@ class Settings {
 							'id'   => 'voucher_soluong',
 							'type' => 'number',
 						],
+						[
+							'name' => __( 'Điều kiện (Giá nhỏ nhất để áp dụng)', 'gtt-shop' ),
+							'id'   => 'voucher_dieukien',
+							'type' => 'number',
+						],
 					],
 				],
 			],
