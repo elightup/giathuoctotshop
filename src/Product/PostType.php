@@ -244,6 +244,21 @@ class PostType {
 					'name'    => 'Link ảnh thumbnail',
 					'columns' => 6,
 				],
+				[
+					'id'      => 'ma_sp',
+					'name'    => 'Mã sản phẩm',
+					'columns' => 6,
+				],
+				[
+					'id'      => 'product_status',
+					'name'    => 'Trạng thái',
+					'columns' => 6,
+				],
+				[
+					'id'      => 'product_quy_cach',
+					'name'    => 'Quy cách',
+					'columns' => 6,
+				],
 			],
 		];
 		return $meta_boxes;
