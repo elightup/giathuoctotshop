@@ -132,6 +132,7 @@ class Cart {
 		$price_vip6 = get_post_meta( $id, 'price_vip6', true );
 		$price_sale = get_post_meta( $id, 'flash_sale_price', true );
 		$ma_sp      = get_post_meta( $id, 'ma_sp', true );
+		$image_url  = get_post_meta( $id, 'image_url', true );
 		$role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
 		switch ( $role ) {
 			case 'vip2':
@@ -163,7 +164,7 @@ class Cart {
 			'id'    => $id,
 			'title' => get_the_title( $id ),
 			'price' => $price * 1000,
-			'url'   => 'https://i.giathuoctot.vn/' . $id . '.jpg',
+			'url'   => $image_url,
 			'link'  => get_permalink( $id ),
 			'ma_sp' => $ma_sp,
 		];
