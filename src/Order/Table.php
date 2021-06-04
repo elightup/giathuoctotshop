@@ -163,7 +163,7 @@ class Table extends \WP_List_Table {
 			'products' => __( 'Sản phẩm', 'elu-shop' ),
 			'amount'   => __( 'Tổng tiền', 'elu-shop' ),
 			'date'     => __( 'Ngày', 'elu-shop' ),
-			// 'daily'    => __( 'Đại lý', 'elu-shop' ),
+			'action'   => __( 'Thao tác', 'elu-shop' ),
 		];
 
 		return $columns;
@@ -275,6 +275,43 @@ class Table extends \WP_List_Table {
 		echo $payments[0]['pay'];
 	}
 
+	public function column_action( $item ) {
+
+
+		// printf(
+		// 	'<a href="%s" class="button tips">' . __( 'ERP', 'elu-shop' ) . ' </a>',
+		// 	add_query_arg(
+		// 		[
+		// 			'action'   => 'push_to_erp',
+		// 			'id'       => $item['id'],
+		// 			'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
+		// 		],
+		// 		$this->base_url
+		// 	)
+		// );
+
+		$statuses = [
+			'pending' => [ 'badge', __( 'Đang xử lý', 'elu-shop' ) ],
+			'completed'  => [ 'badge badge--success', __( 'Đã đẩy lên ERP', 'elu-shop' ) ],
+		];
+		$status   = $statuses[ $item['push_erp'] ];
+		printf( '<span class="%s">%s</span>', $status[0], $status[1] );
+		if ( 'pending' === $item['push_erp'] ) {
+			printf(
+				'<a href="%s" class="button tips">' . __( 'Đẩy lên ERP', 'elu-shop' ) . ' </a>',
+				add_query_arg(
+					[
+						'action'   => 'push_to_erp',
+						'id'       => $item['id'],
+						'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
+					],
+					$this->base_url
+				)
+			);
+		}
+
+	}
+
 	protected function get_row_actions( $item ) {
 		$actions = [
 			'view' => sprintf(
@@ -320,6 +357,17 @@ class Table extends \WP_List_Table {
 					'action'   => 'delete',
 					'id'       => $item['id'],
 					'_wpnonce' => wp_create_nonce( 'ps_delete_order' ),
+				],
+				$this->base_url
+			)
+		);
+		$actions['push_to_erp'] = sprintf(
+			'<a href="%s">' . esc_html__( 'Đẩy lên ERP', 'elu-shop' ) . '</a>',
+			add_query_arg(
+				[
+					'action'   => 'push_to_erp',
+					'id'       => $item['id'],
+					'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
 				],
 				$this->base_url
 			)
@@ -372,6 +420,13 @@ class Table extends \WP_List_Table {
 			check_admin_referer( 'ps_close_order' );
 
 			$this->update_item_status( $_GET['id'], 'completed' );
+			return;
+		}
+		if ( 'push_to_erp' === $this->current_action() ) {
+			check_admin_referer( 'gtt_push_order_to_erp' );
+
+			$this->push_to_erp( $_GET['id'] );
+			$this->update_push_erp_status( $_GET['id'], 'completed' );
 			return;
 		}
 		if ( 'delete' === $this->current_action() ) {
@@ -430,5 +485,61 @@ class Table extends \WP_List_Table {
 			[ 'id' => $id ],
 			[ '%d' ]
 		);
+	}
+
+	protected function update_push_erp_status( $id, $status ) {
+		global $wpdb;
+
+		$wpdb->update(
+			$wpdb->orders,
+			[ 'push_erp' => $status ],
+			[ 'id' => $id ],
+			[ '%s' ]
+		);
+	}
+
+	protected function push_to_erp( $id ) {
+		$products = $this->get_product_from_order_id( $id );
+		$products = reset( $products );
+
+		$data_product = $products['data'];
+		$data_product = json_decode( $data_product, true );
+
+		$data_customer = $products['info'];
+		$data_customer = json_decode( $data_customer, true );
+
+		$products_api = [];
+		foreach ( $data_product as $product ) {
+			$products_api[] = [
+				'product_code' => $product['ma_sp'],
+				'qty'          => (int)$product['quantity'],
+			];
+		}
+
+		$data_string = json_encode( array(
+			'note'         => $products['note'],
+			'payment_term' => $data_customer['payment_method'],
+			'products'     => $products_api,
+		), JSON_UNESCAPED_UNICODE );
+
+		wp_remote_get( 'http://clone.hapu.vn/api/v1/private/pre_order/create', array(
+			'headers' => [
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Bearer ' . 'eyJ1aWQiOiAxN3.71DEA7B6B64961DE322A7A418E1B2B6C940B70F3',
+			],
+			'method'  => 'POST',
+			'body'    => $data_string,
+			'timeout' => 15,
+		) );
+
+	}
+
+	public function get_product_from_order_id( $id ) {
+		global $wpdb;
+
+		$where = $wpdb->prepare( '`id`=%s', $id );
+		$sql    = "SELECT * FROM $wpdb->orders WHERE $where";
+
+		return $wpdb->get_results( $sql, 'ARRAY_A' );
 	}
 }

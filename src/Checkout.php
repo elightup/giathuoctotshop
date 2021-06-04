@@ -78,6 +78,7 @@ class Checkout {
 		$voucher = json_decode( wp_unslash( $voucher ), true );
 		$giam_gia = 0;
 		$note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
+		// $note = isset( $_POST['note'] ) ? $_POST['note'] : '';
 
 		if ( empty( $data ) ) {
 			wp_send_json_error();
@@ -101,12 +102,13 @@ class Checkout {
 			[
 				'date'          => current_time( 'mysql' ),
 				'status'        => 'pending',
+				'push_erp'      => 'pending',
 				'user'          => get_current_user_id(),
 				'amount'        => $amount,
 				'note'          => $note,
 				'info'          => json_encode( $info ),
 				'info_shipping' => json_encode( $info_shipping ),
-				'data'          => json_encode( $data, JSON_UNESCAPED_UNICODE ),
+				'data'          => json_encode( $data ),
 			]
 		);
 		$url = add_query_arg(

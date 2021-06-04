@@ -80,6 +80,10 @@ $info_shipping = json_decode( $item->info_shipping, true );
 				<th>Địa chỉ người nhận:</th>
 				<td><?= $info_shipping['address_shipping']; ?></td>
 			</tr>
+			<tr>
+				<th>Ghi chú:</th>
+				<td><?= $item->note; ?></td>
+			</tr>
 		</table>
 	</div>
 </div>

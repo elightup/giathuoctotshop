@@ -18,6 +18,7 @@ class schema {
 				`id` mediumint unsigned NOT NULL auto_increment,
 				`date` datetime NOT NULL,
 				`status` varchar(12) NOT NULL,
+				`push_erp` varchar(12) NOT NULL,
 				`user` mediumint unsigned NOT NULL,
 				`amount` int unsigned NOT NULL,
 				`note` text,

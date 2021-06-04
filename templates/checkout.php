@@ -119,9 +119,12 @@
 							<div class="checkout-title-cart">Phương thức thanh toán</div>
 							<div class="form-info check-deliverytype form-info--pay">
 								<?php foreach ( $payment_methods as $payment_method ) : ?>
+								<?php
+								$payment_id = $payment_method['payment_method_title'] == 'TRẢ TIỀN MẶT KHI NHẬN HÀNG' ? 'cash' : 'bank' ;
+								?>
 									<div class="form-info__fields">
 										<label class="form-info__input">
-											<input type="radio" name="pay_form_info" value="<?php echo $payment_method['payment_method_title']; ?>">
+											<input type="radio" name="pay_form_info" value="<?php echo $payment_id; ?>">
 											<?= wp_kses_post( $payment_method['payment_method_title'] ); ?>
 										</label>
 										<?php if ( ! empty( $payment_method['payment_method_description'] ) ): ?>
@@ -129,23 +132,6 @@
 												<?= wp_kses_post( $payment_method['payment_method_description'] ); ?>
 											</div>
 										<?php endif ?>
-									</div>
-								<?php endforeach; ?>
-							</div>
-						</div>
-					<?php endif ?>
-
-					<?php $shipping_methods = ps_setting( 'shipping_methods' ); ?>
-					<?php if ( $shipping_methods ): ?>
-						<div class="col-lg-12 ship">
-							<div class="checkout-title-cart">Phương thức giao hàng</div>
-							<div class="form-info check-deliverytype form-info--ship">
-								<?php foreach ( $shipping_methods as $shipping_method ) : ?>
-									<div class="form-info__fields">
-										<label class="form-info__input">
-											<input type="radio" name="checkout_info" data-check="ship-agree" value="<?= wp_kses_post( $shipping_method ); ?>">
-											<?= wp_kses_post( $shipping_method ); ?>
-										</label>
 									</div>
 								<?php endforeach; ?>
 							</div>
