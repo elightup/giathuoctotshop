@@ -522,16 +522,16 @@ class Table extends \WP_List_Table {
 			'products'     => $products_api,
 		), JSON_UNESCAPED_UNICODE );
 
+		$token = json_decode( $this->get_token_api() );
 		wp_remote_get( 'http://clone.hapu.vn/api/v1/private/pre_order/create', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
-				'Authorization' => 'Bearer ' . 'eyJ1aWQiOiAxN3.71DEA7B6B64961DE322A7A418E1B2B6C940B70F3',
+				'Authorization' => 'Bearer ' . $token->data->access_token,
 			],
 			'method'  => 'POST',
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
-
 	}
 
 	public function get_product_from_order_id( $id ) {
@@ -541,5 +541,23 @@ class Table extends \WP_List_Table {
 		$sql    = "SELECT * FROM $wpdb->orders WHERE $where";
 
 		return $wpdb->get_results( $sql, 'ARRAY_A' );
+	}
+
+	public function get_token_api() {
+		$data_string = json_encode( array(
+			'login'    => 'xuannt@nodo.vn',
+			'password' => '111555',
+		), JSON_UNESCAPED_UNICODE );
+
+		$request = wp_remote_get( 'http://clone.hapu.vn/api/v1/public/Authentication/login', array(
+			'headers' => [
+				'Content-Type'  => 'application/json',
+			],
+			'method'  => 'POST',
+			'body'    => $data_string,
+			'timeout' => 15,
+		) );
+
+		return wp_remote_retrieve_body( $request );
 	}
 }
