@@ -78,7 +78,7 @@ class user {
 		} elseif ( $response == 1 ) {
 			$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: #28a745; padding: 5px; border-radius: 3px;">Đã đẩy lên ERP</span>';
 		} else {
-			$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: red; padding: 5px; border-radius: 3px;">Có lỗi khi đẩy lên ERP</span>';
+			$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: red; padding: 5px; margin-right: 5px; border-radius: 3px;">Có lỗi khi đẩy lên ERP</span>';
 			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
 			$output .= '<a href="' . $url . '" class="button" title="ERP">Thử lại</a>';
 		}
