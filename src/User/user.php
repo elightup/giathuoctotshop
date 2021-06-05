@@ -71,11 +71,16 @@ class user {
 	 */
 	public function show_users_columns( $output, $column, $user_id ) {
 		$response = get_user_meta( $user_id, 'erp_response', true );
-		if ( $response ) {
+
+		if ( ! $response ) {
+			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
+			$output .= '<a href="' . $url . '" class="button" title="ERP">Đẩy user lên ERP</a>';
+		} elseif ( $response == 1 ) {
 			$output .= '<span class="badge badge--success" style="color: #fff; background: #28a745; padding: 5px; border-radius: 3px;">Đã đẩy lên ERP</span>';
 		} else {
+			$output .= '<span class="badge badge--success" style="color: #fff; background: red; padding: 5px; border-radius: 3px;">Có lỗi khi đẩy lên ERP</span>';
 			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
-			$output .= '<a href="' . $url . '" class="button" title="ERP">Đẩy user ERP</a>';
+			$output .= '<a href="' . $url . '" class="button" title="ERP">Thử lại</a>';
 		}
 
 		return $output;
@@ -112,7 +117,8 @@ class user {
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
-		update_user_meta( $user_id, 'erp_response', 'complete' );
+		$response = json_decode( $data['body'], true );
+		update_user_meta( $user_id, 'erp_response', $response['code'] );
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
 	}
