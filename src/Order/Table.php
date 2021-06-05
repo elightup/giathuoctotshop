@@ -266,7 +266,19 @@ class Table extends \WP_List_Table {
 	}
 
 	public function column_amount( $item ) {
-		echo number_format_i18n( $item['amount'], 0 ) . ' ' . ps_setting( 'currency' );
+		$voucher = json_decode( $item['voucher'], true );
+		if ( ! $voucher ) {
+			echo number_format_i18n( $item['amount'], 0 ) . ' ' . ps_setting( 'currency' );
+			return;
+		}
+		$giam_gia = 0;
+		if ( $voucher['voucher_type'] == 'by_price' ) {
+			$giam_gia = $voucher['voucher_price'];
+		} else {
+			$giam_gia = $voucher['voucher_price'] * $item['amount'] / 100;
+		}
+		$amount = $item['amount'] - $giam_gia;
+		echo number_format( $amount, 0, '', '.' ); ?> <?= ps_setting( 'currency' );
 	}
 
 	public function column_payments( $item ) {

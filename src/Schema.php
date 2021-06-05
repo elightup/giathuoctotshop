@@ -21,6 +21,7 @@ class schema {
 				`push_erp` varchar(12) NOT NULL,
 				`user` mediumint unsigned NOT NULL,
 				`amount` int unsigned NOT NULL,
+				`voucher` text,
 				`note` text,
 				`info` text,
 				`info_shipping` text,

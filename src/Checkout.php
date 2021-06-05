@@ -71,13 +71,13 @@ class Checkout {
 	}
 
 	public function place_checkout() {
-		$data = isset( $_POST['cart'] ) ? $_POST['cart'] : [];
-		$info = isset( $_POST['info'] ) ? $_POST['info'] : '';
+		$data          = isset( $_POST['cart'] ) ? $_POST['cart'] : [];
+		$info          = isset( $_POST['info'] ) ? $_POST['info'] : '';
 		$info_shipping = isset( $_POST['info_shipping'] ) ? $_POST['info_shipping'] : '';
-		$voucher = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
-		$voucher = json_decode( wp_unslash( $voucher ), true );
-		$giam_gia = 0;
-		$note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
+		$voucher       = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
+		$voucher       = wp_unslash( $voucher );
+		// $giam_gia      = 0;
+		$note          = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 		// $note = isset( $_POST['note'] ) ? $_POST['note'] : '';
 
 		if ( empty( $data ) ) {
@@ -88,14 +88,14 @@ class Checkout {
 			$amount += $product['price'] * $product['quantity'];
 		}
 
-		if ( ! empty( $voucher ) ) {
-			if( $voucher['voucher_type'] == 'by_price' ) {
-				$giam_gia = $voucher['voucher_price'];
-			} else {
-				$giam_gia = $voucher['voucher_price'] * $amount / 100;
-			}
-			$amount = $amount - $giam_gia;
-		}
+		// if ( ! empty( $voucher ) ) {
+		// 	if( $voucher['voucher_type'] == 'by_price' ) {
+		// 		$giam_gia = $voucher['voucher_price'];
+		// 	} else {
+		// 		$giam_gia = $voucher['voucher_price'] * $amount / 100;
+		// 	}
+		// 	$amount = $amount - $giam_gia;
+		// }
 		global $wpdb;
 		$wpdb->insert(
 			$wpdb->orders,
@@ -109,6 +109,7 @@ class Checkout {
 				'info'          => json_encode( $info ),
 				'info_shipping' => json_encode( $info_shipping ),
 				'data'          => json_encode( $data ),
+				'voucher'       => $voucher,
 			]
 		);
 		$url = add_query_arg(

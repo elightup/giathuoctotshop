@@ -8,6 +8,7 @@ global $wpdb;
 $item          = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $id ) );
 $info          = json_decode( $item->info, true );
 $info_shipping = json_decode( $item->info_shipping, true );
+$voucher       = json_decode( $item->voucher, true );
 ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'Chi tiết đơn hàng', 'gtt-shop' ) . ' #' . esc_html( $id ); ?></h1>
@@ -59,15 +60,24 @@ $info_shipping = json_decode( $item->info_shipping, true );
 				<td><?php esc_html_e( 'Tổng tiền', 'gtt-shop' ) ?></td>
 				<td><?= number_format_i18n( $item->amount, 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
 			</tr>
-			<!-- <tr>
-				<td><?php esc_html_e( 'Customer', 'gtt-shop' ) ?></td>
-				<td>
-					<?php
-					$user = get_userdata( $item->user );
-					echo esc_html( $user->display_name );
-					?>
-				</td>
-			</tr> -->
+			<?php if ( $voucher ) :
+				$giam_gia = 0;
+				if( $voucher['voucher_type'] == 'by_price' ) {
+					$giam_gia = $voucher['voucher_price'];
+				} else {
+					$giam_gia = $voucher['voucher_price'] * $item->amount / 100;
+				}
+				$amount = $item->amount - $giam_gia;
+			?>
+				<tr>
+					<th>Voucher:</th>
+					<td><?= number_format( $giam_gia, 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?> ( Mã: <?= $voucher['voucher_id']; ?> )</td>
+				</tr>
+				<tr>
+					<th>Thành tiền:</th>
+					<td><?= number_format( $amount, 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?></td>
+				</tr>
+			<?php endif; ?>
 		</table>
 	</div>
 	<div class="info-user">
