@@ -76,7 +76,6 @@ class Checkout {
 		$info_shipping = isset( $_POST['info_shipping'] ) ? $_POST['info_shipping'] : '';
 		$voucher       = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
 		$voucher       = wp_unslash( $voucher );
-		// $giam_gia      = 0;
 		$note          = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 		// $note = isset( $_POST['note'] ) ? $_POST['note'] : '';
 
@@ -88,14 +87,6 @@ class Checkout {
 			$amount += $product['price'] * $product['quantity'];
 		}
 
-		// if ( ! empty( $voucher ) ) {
-		// 	if( $voucher['voucher_type'] == 'by_price' ) {
-		// 		$giam_gia = $voucher['voucher_price'];
-		// 	} else {
-		// 		$giam_gia = $voucher['voucher_price'] * $amount / 100;
-		// 	}
-		// 	$amount = $amount - $giam_gia;
-		// }
 		global $wpdb;
 		$wpdb->insert(
 			$wpdb->orders,
