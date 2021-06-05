@@ -101,7 +101,7 @@ class user {
 			'password'         => "111111",
 			'confirm_password' => "111111",
 			'name'             => $user_meta['user_name'][0],
-			'drugstore_name'   => $user_meta['user_name'][0],
+			'drugstore_name'   => $user_meta['user_ten_csdk'][0],
 			'phone'            => $user_data->user_login,
 			'mail'             => $user_data->user_email,
 			'state_id'         => 679,
