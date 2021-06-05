@@ -40,6 +40,7 @@ class user {
 	 */
 	public function users_columns( $columns ) {
 		$columns['header_name'] = 'Tác vụ';
+		unset( $columns['posts'] );
 		return $columns;
 	}
 
