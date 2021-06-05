@@ -276,20 +276,6 @@ class Table extends \WP_List_Table {
 	}
 
 	public function column_action( $item ) {
-
-
-		// printf(
-		// 	'<a href="%s" class="button tips">' . __( 'ERP', 'elu-shop' ) . ' </a>',
-		// 	add_query_arg(
-		// 		[
-		// 			'action'   => 'push_to_erp',
-		// 			'id'       => $item['id'],
-		// 			'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
-		// 		],
-		// 		$this->base_url
-		// 	)
-		// );
-
 		$statuses = [
 			'pending' => [ 'badge', __( 'Đang xử lý', 'elu-shop' ) ],
 			'completed'  => [ 'badge badge--success', __( 'Đã đẩy lên ERP', 'elu-shop' ) ],
@@ -309,7 +295,6 @@ class Table extends \WP_List_Table {
 				)
 			);
 		}
-
 	}
 
 	protected function get_row_actions( $item ) {
