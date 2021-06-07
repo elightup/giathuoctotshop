@@ -111,8 +111,85 @@ class Checkout {
 			],
 			get_permalink( ps_setting( 'confirmation_page' ) )
 		);
+		$this->push_to_erp( $wpdb->insert_id );
+		$this->update_push_erp_status( $wpdb->insert_id, 'completed' );
 		wp_send_json_success( $url );
 	}
+
+	public function push_to_erp( $id ) {
+		$products = $this->get_product_from_order_id( $id );
+		$products = reset( $products );
+
+		$data_product = $products['data'];
+		$data_product = json_decode( $data_product, true );
+
+		$data_customer = $products['info'];
+		$data_customer = json_decode( $data_customer, true );
+
+		$products_api = [];
+		foreach ( $data_product as $product ) {
+			$products_api[] = [
+				'product_code' => $product['ma_sp'],
+				'qty'          => (int)$product['quantity'],
+			];
+		}
+
+		$data_string = json_encode( array(
+			'note'         => $products['note'],
+			'payment_term' => $data_customer['payment_method'],
+			'products'     => $products_api,
+		), JSON_UNESCAPED_UNICODE );
+
+		$token = json_decode( $this->get_token_api() );
+		wp_remote_get( 'http://clone.hapu.vn/api/v1/private/pre_order/create', array(
+			'headers' => [
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Bearer ' . $token->data->access_token,
+			],
+			'method'  => 'POST',
+			'body'    => $data_string,
+			'timeout' => 15,
+		) );
+	}
+
+	public function get_product_from_order_id( $id ) {
+		global $wpdb;
+
+		$where = $wpdb->prepare( '`id`=%s', $id );
+		$sql    = "SELECT * FROM $wpdb->orders WHERE $where";
+
+		return $wpdb->get_results( $sql, 'ARRAY_A' );
+	}
+
+	public function get_token_api() {
+		$data_string = json_encode( array(
+			'login'    => 'xuannt@nodo.vn',
+			'password' => '111555',
+		), JSON_UNESCAPED_UNICODE );
+
+		$request = wp_remote_get( 'http://clone.hapu.vn/api/v1/public/Authentication/login', array(
+			'headers' => [
+				'Content-Type'  => 'application/json',
+			],
+			'method'  => 'POST',
+			'body'    => $data_string,
+			'timeout' => 15,
+		) );
+
+		return wp_remote_retrieve_body( $request );
+	}
+
+	public function update_push_erp_status( $id, $status ) {
+		global $wpdb;
+
+		$wpdb->update(
+			$wpdb->orders,
+			[ 'push_erp' => $status ],
+			[ 'id' => $id ],
+			[ '%s' ]
+		);
+	}
+
 	public function check_voucher() {
 		$voucher_choice = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
 		$total_price    = isset( $_POST['total_price'] ) ? $_POST['total_price'] : '';
