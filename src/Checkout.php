@@ -120,6 +120,18 @@ class Checkout {
 		$products = $this->get_product_from_order_id( $id );
 		$products = reset( $products );
 
+		$amount  = $products['amount'];
+		$voucher = $products['voucher'];
+		$voucher = json_decode( $voucher, true );
+		if ( ! $voucher ) {
+			$giam_gia = 0;
+		}
+		if ( $voucher['voucher_type'] == 'by_price' ) {
+			$giam_gia = $voucher['voucher_price'] / 1000;
+		} else {
+			$giam_gia = ( $voucher['voucher_price'] * $amount / 100 ) / 1000;
+		}
+
 		$data_product = $products['data'];
 		$data_product = json_decode( $data_product, true );
 
@@ -138,6 +150,7 @@ class Checkout {
 			'note'         => $products['note'],
 			'payment_term' => $data_customer['payment_method'],
 			'products'     => $products_api,
+			'discount'     => $giam_gia,
 		), JSON_UNESCAPED_UNICODE );
 
 		$token = json_decode( $this->get_token_api() );

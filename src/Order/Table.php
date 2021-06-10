@@ -422,8 +422,8 @@ class Table extends \WP_List_Table {
 		if ( 'push_to_erp' === $this->current_action() ) {
 			check_admin_referer( 'gtt_push_order_to_erp' );
 
-			$this->push_to_erp( $_GET['id'] );
-			$this->update_push_erp_status( $_GET['id'], 'completed' );
+			// $this->push_to_erp( $_GET['id'] );
+			// $this->update_push_erp_status( $_GET['id'], 'completed' );
 			return;
 		}
 		if ( 'delete' === $this->current_action() ) {
@@ -499,6 +499,18 @@ class Table extends \WP_List_Table {
 		$products = $this->get_product_from_order_id( $id );
 		$products = reset( $products );
 
+		$amount  = $products['amount'];
+		$voucher = $products['voucher'];
+		$voucher = json_decode( $voucher, true );
+		if ( ! $voucher ) {
+			$giam_gia = 0;
+		}
+		if ( $voucher['voucher_type'] == 'by_price' ) {
+			$giam_gia = $voucher['voucher_price'] / 1000;
+		} else {
+			$giam_gia = ( $voucher['voucher_price'] * $amount / 100 ) / 1000;
+		}
+
 		$data_product = $products['data'];
 		$data_product = json_decode( $data_product, true );
 
@@ -517,6 +529,7 @@ class Table extends \WP_List_Table {
 			'note'         => $products['note'],
 			'payment_term' => $data_customer['payment_method'],
 			'products'     => $products_api,
+			'discount'     => $giam_gia,
 		), JSON_UNESCAPED_UNICODE );
 
 		$token = json_decode( $this->get_token_api() );
