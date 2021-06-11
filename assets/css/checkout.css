@@ -5,7 +5,7 @@
     text-transform: uppercase;
 }
 .checkout-title-cart {
-    background: #333;
+    background: #F29F05;
     color: #fff;
     text-align: center;
     text-transform: uppercase;
@@ -55,7 +55,7 @@
 .template-checkout__cart .total {
     font-size: 1.5em;
     font-weight: 600;
-    color: red;
+    color: #03A62C;
     text-transform: uppercase;
     text-align: right;
 }
