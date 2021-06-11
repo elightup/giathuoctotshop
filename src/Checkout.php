@@ -175,9 +175,13 @@ class Checkout {
 	}
 
 	public function get_token_api() {
+		$user_id    = get_current_user_id();
+		$user_data  = get_userdata( $user_id );
+		$user_login = $user_data->user_login;
+
 		$data_string = json_encode( array(
-			'login'    => 'xuannt@nodo.vn',
-			'password' => '111555',
+			'login'    => $user_login,
+			'password' => '111111',
 		), JSON_UNESCAPED_UNICODE );
 
 		$request = wp_remote_get( 'http://clone.hapu.vn/api/v1/public/Authentication/login', array(
