@@ -133,6 +133,11 @@ class Cart {
 		$price_sale = get_post_meta( $id, 'flash_sale_price', true );
 		$ma_sp      = get_post_meta( $id, 'ma_sp', true );
 		$image_url  = get_post_meta( $id, 'image_url', true );
+
+		$time_start = (int)rwmb_meta( 'flash_sale_time_start', get_queried_object_id() );
+		$time_end   = (int)rwmb_meta( 'flash_sale_time_end', get_queried_object_id() );
+		$time_now   = strtotime( current_time( 'mysql' ) );
+
 		$role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
 		switch ( $role ) {
 			case 'vip2':
@@ -155,7 +160,7 @@ class Cart {
 				break;
 		}
 
-		if ( $price_sale == NULL ) {
+		if ( $price_sale == NULL || $time_start > $time_now || $time_now > $time_end ) {
 			$price = $price_original;
 		} else {
 			$price = $price_sale;
