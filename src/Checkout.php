@@ -143,7 +143,7 @@ class Checkout {
 			$products_api[] = [
 				'product_code' => $product['ma_sp'],
 				'qty'          => (int)$product['quantity'],
-				'unit_price'   => (int)$product['price'],
+				'unit_price'   => (int)$product['price'] / 1000,
 			];
 		}
 
