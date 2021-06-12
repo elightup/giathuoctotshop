@@ -104,7 +104,7 @@ class user {
 			'drugstore_name'   => $user_meta['user_ten_csdk'][0],
 			'phone'            => $user_data->user_login,
 			'mail'             => $user_data->user_email,
-			'state_id'         => 679,
+			'state_id'         => (int)$user_meta['user_province'][0],
 		), JSON_UNESCAPED_UNICODE );
 
 		$token = json_decode( $this->get_token_api() );
