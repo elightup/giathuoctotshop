@@ -104,6 +104,7 @@ class user {
 			'drugstore_name'   => $user_meta['user_ten_csdk'][0],
 			'phone'            => $user_data->user_login,
 			'mail'             => $user_data->user_email,
+			'street'           => $user_meta['user_address'][0],
 			'state_id'         => (int)$user_meta['user_province'][0],
 		), JSON_UNESCAPED_UNICODE );
 
