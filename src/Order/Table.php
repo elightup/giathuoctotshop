@@ -522,6 +522,7 @@ class Table extends \WP_List_Table {
 			$products_api[] = [
 				'product_code' => $product['ma_sp'],
 				'qty'          => (int)$product['quantity'],
+				'unit_price'   => (int)$product['price'],
 			];
 		}
 
@@ -530,6 +531,7 @@ class Table extends \WP_List_Table {
 			'payment_term' => $data_customer['payment_method'],
 			'products'     => $products_api,
 			'discount'     => $giam_gia,
+			'giathuoctot'  => 'True',
 		), JSON_UNESCAPED_UNICODE );
 
 		$token = json_decode( $this->get_token_api() );
