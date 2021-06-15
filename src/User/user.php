@@ -102,7 +102,7 @@ class user {
 			'confirm_password' => "111111",
 			'name'             => $user_meta['user_name'][0],
 			'drugstore_name'   => $user_meta['user_ten_csdk'][0],
-			'phone'            => $user_data->user_login,
+			'phone'            => $user_meta['user_sdt'][0],
 			'mail'             => $user_data->user_email,
 			'street'           => $user_meta['user_address'][0],
 			'state_id'         => (int)$user_meta['user_province'][0],
