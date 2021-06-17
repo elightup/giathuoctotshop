@@ -97,7 +97,7 @@ class user {
 		$user_data = get_userdata( $user_id );
 
 		$data_string = json_encode( array(
-			'login'            => $user_data->user_login,
+			'login'            => $user_meta['user_sdt'][0],
 			'password'         => "111111",
 			'confirm_password' => "111111",
 			'name'             => $user_meta['user_name'][0],
