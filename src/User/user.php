@@ -92,12 +92,13 @@ class user {
 	 * @return void
 	 */
 	public function push_user_to_erp() {
-		$user_id   = $_GET['user_id'];
-		$user_meta = get_user_meta( $user_id );
-		$user_data = get_userdata( $user_id );
+		$user_id     = $_GET['user_id'];
+		$user_meta   = get_user_meta( $user_id );
+		$user_data   = get_userdata( $user_id );
+		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
 
 		$data_string = json_encode( array(
-			'login'            => $user_meta['user_sdt'][0],
+			'login'            => $prefix_user . $user_meta['user_sdt'][0],
 			'password'         => "111111",
 			'confirm_password' => "111111",
 			'name'             => $user_meta['user_name'][0],
