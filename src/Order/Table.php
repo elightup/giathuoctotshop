@@ -294,19 +294,6 @@ class Table extends \WP_List_Table {
 		];
 		$status   = $statuses[ $item['push_erp'] ];
 		printf( '<span class="%s">%s</span>', $status[0], $status[1] );
-		if ( 'pending' === $item['push_erp'] ) {
-			printf(
-				'<a href="%s" class="button tips">' . __( 'Đẩy lên ERP', 'elu-shop' ) . ' </a>',
-				add_query_arg(
-					[
-						'action'   => 'push_to_erp',
-						'id'       => $item['id'],
-						'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
-					],
-					$this->base_url
-				)
-			);
-		}
 	}
 
 	protected function get_row_actions( $item ) {

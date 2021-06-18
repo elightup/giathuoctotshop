@@ -112,7 +112,7 @@ class Checkout {
 			get_permalink( ps_setting( 'confirmation_page' ) )
 		);
 		$this->push_to_erp( $wpdb->insert_id );
-		$this->update_push_erp_status( $wpdb->insert_id, 'completed' );
+		// $this->update_push_erp_status( $wpdb->insert_id, 'completed' );
 		wp_send_json_success( $url );
 	}
 
@@ -156,7 +156,7 @@ class Checkout {
 		), JSON_UNESCAPED_UNICODE );
 
 		$token = json_decode( $this->get_token_api() );
-		wp_remote_get( 'http://clone.hapu.vn/api/v1/private/pre_order/create', array(
+		$data = wp_remote_get( 'http://clone.hapu.vn/api/v1/private/pre_order/create', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
 				'Authorization' => 'Bearer ' . $token->data->access_token,
@@ -165,6 +165,10 @@ class Checkout {
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
+		$response   = json_decode( $data['body'], true );
+		$erp_status = $response['code'] == 1 ? 'completed' : 'pending';
+		global $wpdb;
+		$this->update_push_erp_status( $wpdb->insert_id, $erp_status );
 	}
 
 	public function get_product_from_order_id( $id ) {
