@@ -289,7 +289,7 @@ class Table extends \WP_List_Table {
 
 	public function column_action( $item ) {
 		$statuses = [
-			'pending' => [ 'badge', __( 'Đang xử lý', 'elu-shop' ) ],
+			'pending' => [ 'badge', __( 'Có lỗi khi đẩy lên ERP', 'elu-shop' ) ],
 			'completed'  => [ 'badge badge--success', __( 'Đã đẩy lên ERP', 'elu-shop' ) ],
 		];
 		$status   = $statuses[ $item['push_erp'] ];
