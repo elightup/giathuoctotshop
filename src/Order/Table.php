@@ -556,8 +556,9 @@ class Table extends \WP_List_Table {
 	}
 
 	public function get_token_api() {
-		$user_id   = get_current_user_id();
-		$user_meta = get_user_meta( $user_id );
+		$user_id     = get_current_user_id();
+		$user_meta   = get_user_meta( $user_id );
+		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
 
 		$data_string = json_encode( array(
 			'login'    => $prefix_user . $user_meta['user_sdt'][0],
