@@ -75,6 +75,24 @@
 		miniCart();
 	}
 
+	function onChangeQuantity( e ) {
+		e.preventDefault();
+
+		const $this = $( this );
+		const quantity = $this.val();
+		const productInfo = $this.next().data( 'info' );
+
+		console.log( quantity, productInfo );
+
+		if ( cart.hasProduct( productInfo.id ) ) {
+			cart.updateProduct( productInfo.id, quantity );
+		} else {
+			cart.addProduct( productInfo, quantity );
+		}
+
+		miniCart();
+	}
+
 	function miniCart() {
 		$mini_cart_count = 0;
 		$price_total = 0;
@@ -115,6 +133,9 @@
 	// Click button plus and minus
 	$d.on( 'click', '.button-plus', clickHandle );
 	$d.on( 'click', '.button-minus', clickHandle );
+
+	// Update quantity when input change.
+	$d.on( 'change', '.quantity_products', onChangeQuantity );
 
 	addQuantityToInput();
 

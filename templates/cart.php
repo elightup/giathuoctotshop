@@ -39,7 +39,7 @@
 							<div class="cart-button">
 								<div class="quantity cart__quantity">
 									<input type="button" value="-" class="button-minus" data-info="{{ JSON.stringify( product ) }}">
-									<input type="number" class="quantity_products" min="1" name="quantity" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
+									<input type="number" class="quantity_products" min="0" name="quantity" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
 									<input type="button" value="+" class="button-plus" data-info="{{ JSON.stringify( product ) }}">
 								</div>
 							</div>
