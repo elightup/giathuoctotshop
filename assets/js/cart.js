@@ -4,33 +4,38 @@
 	let cart = {
 		data: {},
 		key: 'cart',
-		setKey: function () {
+		init() {
+			cart.setKey();
+			cart.load();
+			cart.updateMiniCart();
+		},
+		setKey() {
 			const userId = CartParams.user_id;
 			cart.key = userId ? `cart-${ userId }` : 'cart';
 		},
-		load: function () {
+		load() {
 			const data = localStorage.getItem( cart.key );
 			if ( data ) {
 				cart.data = JSON.parse( data );
 			}
 		},
-		update: function () {
+		update() {
 			localStorage.setItem( cart.key, JSON.stringify( cart.data ) );
 
 			cart.updateMiniCart();
 		},
 
-		clear: function() {
+		clear() {
 			cart.data = {};
 			cart.update();
 		},
-		hasProduct: function( id ) {
+		hasProduct( id ) {
 			return cart.data.hasOwnProperty( id );
 		},
-		getProduct: function( id ) {
+		getProduct( id ) {
 			return cart.hasProduct( id ) ? cart.data[ id ] : null;
 		},
-		addProduct: function ( productInfo, quantity ) {
+		addProduct( productInfo, quantity ) {
 			cart.data[productInfo.id] = productInfo;
 			if ( quantity >= 1 ) {
 				cart.data[productInfo.id].quantity = quantity;
@@ -40,15 +45,15 @@
 			}
 			cart.update();
 		},
-		updateProduct: function( productId, quantity ) {
+		updateProduct( productId, quantity ) {
 			cart.data[productId].quantity = quantity;
 			cart.update();
 		},
-		removeProduct: function ( productId ) {
+		removeProduct( productId ) {
 			delete cart.data[productId];
 			cart.update();
 		},
-		updateMiniCart: function() {
+		updateMiniCart() {
 			$mini_cart_count = 0;
 			$price_total = 0;
 			$.each( cart['data'], function( key, value ) {
@@ -120,9 +125,7 @@
 		} );
 	}
 
-	cart.setKey();
-	cart.load();
-	cart.updateMiniCart();
+	cart.init();
 
 	// Click button plus and minus
 	$d.on( 'click', '.button-plus', clickHandle );

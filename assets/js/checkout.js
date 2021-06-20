@@ -1,4 +1,44 @@
 ( function ( $, cart, wp, CheckoutParams ) {
+	const $d = $( document );
+
+	let checkout = {
+		data: {},
+		key: 'checkout',
+		init: function() {
+			checkout.setKey();
+			checkout.load();
+			checkout.addEventListeners();
+		},
+		setKey: function () {
+			const userId = CartParams.user_id;
+			checkout.key = userId ? `checkout-${ userId }` : 'checkout';
+		},
+		load: function () {
+			const data = localStorage.getItem( checkout.key );
+			if ( data ) {
+				checkout.data = JSON.parse( data );
+			}
+		},
+		addEventListeners: function() {
+			$d.on( 'change', '#order-note', function() {
+				checkout.saveNote( $( this ).val() );
+			} );
+			setTimeout( function() {
+				$( '#order-note' ).val( checkout.data.note );
+			}, 100 );
+		},
+
+		update: function () {
+			localStorage.setItem( checkout.key, JSON.stringify( checkout.data ) );
+		},
+		saveNote: function ( note ) {
+			checkout.data.note = note;
+			checkout.update();
+		}
+	};
+
+	checkout.init();
+
 	$( function () {
 		const $cart = $( '#cart' ),
 			// Underscore template for cart.
