@@ -261,8 +261,18 @@ class Table extends \WP_List_Table {
 	}
 
 	public function column_customer( $item ) {
-		$info = json_decode( $item['info'] );
-		echo esc_html( $info->name );
+		$info        = json_decode( $item['info'] );
+		$user_id     = $item['user'];
+		$user_data   = get_userdata( $user_id );
+		$status_user = get_user_meta( $user_id, 'erp_response', true );
+		$status_user = ! isset( $status_user ) || $status_user != 1 ? 'Chưa kích hoạt' : 'Đã kích hoạt';
+
+		echo esc_html( $info->name ) . '<br>';
+		if ( $user_data ) {
+			echo 'Login: ' . $user_data->user_login . '(' . $status_user . ')';
+		} else {
+			echo 'KH chưa đăng nhập';
+		}
 	}
 
 	public function column_amount( $item ) {
@@ -294,6 +304,21 @@ class Table extends \WP_List_Table {
 		];
 		$status   = $statuses[ $item['push_erp'] ];
 		printf( '<span class="%s">%s</span>', $status[0], $status[1] );
+
+		if ( 'pending' === $item['push_erp'] ) {
+			printf(
+				'<a href="%s" class="button tips">' . __( 'Thử lại', 'elu-shop' ) . ' </a>',
+				add_query_arg(
+					[
+						'action'   => 'push_to_erp',
+						'id'       => $item['id'],
+						'user_id'  => $item['user'],
+						'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
+					],
+					$this->base_url
+				)
+			);
+		}
 	}
 
 	protected function get_row_actions( $item ) {
@@ -345,17 +370,17 @@ class Table extends \WP_List_Table {
 				$this->base_url
 			)
 		);
-		$actions['push_to_erp'] = sprintf(
-			'<a href="%s">' . esc_html__( 'Đẩy lên ERP', 'elu-shop' ) . '</a>',
-			add_query_arg(
-				[
-					'action'   => 'push_to_erp',
-					'id'       => $item['id'],
-					'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
-				],
-				$this->base_url
-			)
-		);
+		// $actions['push_to_erp'] = sprintf(
+		// 	'<a href="%s">' . esc_html__( 'Đẩy lên ERP', 'elu-shop' ) . '</a>',
+		// 	add_query_arg(
+		// 		[
+		// 			'action'   => 'push_to_erp',
+		// 			'id'       => $item['id'],
+		// 			'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
+		// 		],
+		// 		$this->base_url
+		// 	)
+		// );
 		return $actions;
 	}
 
@@ -409,7 +434,7 @@ class Table extends \WP_List_Table {
 		if ( 'push_to_erp' === $this->current_action() ) {
 			check_admin_referer( 'gtt_push_order_to_erp' );
 
-			// $this->push_to_erp( $_GET['id'] );
+			$this->push_to_erp( $_GET['id'], $_GET['user_id'] );
 			// $this->update_push_erp_status( $_GET['id'], 'completed' );
 			return;
 		}
@@ -482,7 +507,7 @@ class Table extends \WP_List_Table {
 		);
 	}
 
-	protected function push_to_erp( $id ) {
+	protected function push_to_erp( $id, $user_id ) {
 		$products = $this->get_product_from_order_id( $id );
 		$products = reset( $products );
 
@@ -521,16 +546,21 @@ class Table extends \WP_List_Table {
 			'giathuoctot'  => 'True',
 		), JSON_UNESCAPED_UNICODE );
 
-		$token = json_decode( $this->get_token_api() );
-		wp_remote_get( 'http://clone.hapu.vn/api/v1/private/pre_order/create', array(
+		$token      = json_decode( $this->get_token_api( $user_id  ) );
+		$token_data = $token->error ? '' : $token->data->access_token;
+		$data = wp_remote_get( 'http://clone.hapu.vn/api/v1/private/pre_order/create', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
-				'Authorization' => 'Bearer ' . $token->data->access_token,
+				'Authorization' => 'Bearer ' . $token_data,
 			],
 			'method'  => 'POST',
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
+		$response   = json_decode( $data['body'], true );
+		$erp_status = $response['code'] == 1 ? 'completed' : 'pending';
+		global $wpdb;
+		$this->update_push_erp_status( $_GET['id'], $erp_status );
 	}
 
 	public function get_product_from_order_id( $id ) {
@@ -542,8 +572,7 @@ class Table extends \WP_List_Table {
 		return $wpdb->get_results( $sql, 'ARRAY_A' );
 	}
 
-	public function get_token_api() {
-		$user_id     = get_current_user_id();
+	public function get_token_api( $user_id  ) {
 		$user_meta   = get_user_meta( $user_id );
 		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
 
