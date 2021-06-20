@@ -27,7 +27,7 @@
 					<article>
 						<div class="product-item">
 							<a class="post-thumbnail" href="{{ product.link }}" aria-hidden="true" tabindex="-1">
-								<img src="{{product.url}}">
+								<img src="{{product.url}}" loading="lazy">
 							</a>
 
 							<div class="product-title">
