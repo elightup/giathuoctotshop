@@ -1,11 +1,15 @@
 #cart {
     overflow-x: auto;
 }
-#cart .cart__remove-product .cart__remove {
-    background: none;
+.cart__remove {
     color: #ff0101;
-    font-size: 2em;
-    text-decoration: initial;
+    font-size: 16px;
+    margin-left: 8px;
+    cursor: pointer;
+    height: 24px;
+    width: 24px;
+    display: inline-block;
+    text-align: center;
 }
 #cart .product-cart__detail .col-md-5 {
     border-right: 1px solid rgba(195,204,220,0.4);

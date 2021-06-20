@@ -44,7 +44,9 @@
 								</div>
 							</div>
 
-							<div class="cart__remove-product"> <button class="cart__remove btn btn-link" data-product_id="{{ product.id }}" title="Xóa sản phẩm này">&times;</button> </div>
+							<div class="cart__remove-product">
+								<span class="cart__remove" data-product_id="{{ product.id }}" title="Xóa sản phẩm này">&times;</span>
+							</div>
 						</div>
 					</article>
 					<#
