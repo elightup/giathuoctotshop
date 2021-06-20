@@ -78,7 +78,7 @@ class Cart {
 			]
 		);
 		$quantity         = '<div class="quantity">
-		<input type="number" class="quantity_products" step="1" min="0" name="quantity" value="1" size="4" pattern="[0-9]*" inputmode="numeric">
+		<input type="text" class="quantity_products" step="1" min="0" name="quantity" value="1" size="4" pattern="[0-9]*" inputmode="numeric">
 		</div>';
 		$button_view_cart = sprintf(
 			'<a class="add-to-cart buy-now btn btn-primary" data-info="%s" data-type="%s">%s</a>',
@@ -102,9 +102,9 @@ class Cart {
 			]
 		);
 		$quantity = '<div class="quantity">
-		<input type="button" value="-" class="button-minus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">
-		<input type="number" class="quantity_products" step="1" min="0" name="quantity" value="0" size="4" pattern="[0-9]*" inputmode="numeric">
-		<input type="button" value="+" class="button-plus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">
+		<span class="button-minus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">-</span>
+		<input type="text" class="quantity_products" step="1" min="0" name="quantity" value="0" size="4" pattern="[0-9]*" inputmode="numeric">
+		<span class="button-plus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">+</span>
 		</div>';
 
 		$button_add_cart = sprintf(

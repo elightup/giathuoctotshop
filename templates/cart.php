@@ -38,9 +38,9 @@
 							</div>
 							<div class="cart-button">
 								<div class="quantity cart__quantity">
-									<input type="button" value="-" class="button-minus" data-info="{{ JSON.stringify( product ) }}">
-									<input type="number" class="quantity_products" min="0" name="quantity" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
-									<input type="button" value="+" class="button-plus" data-info="{{ JSON.stringify( product ) }}">
+									<span class="button-minus" data-info="{{ JSON.stringify( product ) }}">-</span>
+									<input type="text" class="quantity_products" min="0" name="quantity" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
+									<span class="button-plus" data-info="{{ JSON.stringify( product ) }}">+</span>
 								</div>
 							</div>
 
