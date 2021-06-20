@@ -16,6 +16,8 @@
 		},
 		update: function () {
 			localStorage.setItem( cart.key, JSON.stringify( cart.data ) );
+
+			cart.updateMiniCart();
 		},
 
 		clear: function() {
@@ -45,6 +47,22 @@
 		removeProduct: function ( productId ) {
 			delete cart.data[productId];
 			cart.update();
+		},
+		updateMiniCart: function() {
+			$mini_cart_count = 0;
+			$price_total = 0;
+			$.each( cart['data'], function( key, value ) {
+				$mini_cart_count += parseInt( value['quantity'] );
+				$price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
+				if ( value['quantity'] == 0 ) {
+					cart.removeProduct( value['id'] );
+				}
+			});
+			$( '.mini-cart-count span' ).html( $mini_cart_count );
+			if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) || $( 'body' ).hasClass( 'cart-page' ) ) {
+				$( '.product-cart__detail .color-secondary' ).html( $mini_cart_count );
+				$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( $price_total )) );
+			}
 		}
 	};
 
@@ -70,9 +88,6 @@
 		} else {
 			cart.addProduct( productInfo, quantity );
 		}
-
-		// add count to minicart when click add to cart button.
-		miniCart();
 	}
 
 	function onChangeQuantity( e ) {
@@ -88,25 +103,6 @@
 			cart.updateProduct( productInfo.id, quantity );
 		} else {
 			cart.addProduct( productInfo, quantity );
-		}
-
-		miniCart();
-	}
-
-	function miniCart() {
-		$mini_cart_count = 0;
-		$price_total = 0;
-		$.each( cart['data'], function( key, value ) {
-			$mini_cart_count += parseInt( value['quantity'] );
-			$price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
-			if ( value['quantity'] == 0 ) {
-				cart.removeProduct( value['id'] );
-			}
-		});
-		$( '.mini-cart-count span' ).html( $mini_cart_count );
-		if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) || $( 'body' ).hasClass( 'cart-page' ) ) {
-			$( '.product-cart__detail .color-secondary' ).html( $mini_cart_count );
-			$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( $price_total )) );
 		}
 	}
 
@@ -126,9 +122,7 @@
 
 	cart.setKey();
 	cart.load();
-
-	// mini cart count when load.
-	miniCart();
+	cart.updateMiniCart();
 
 	// Click button plus and minus
 	$d.on( 'click', '.button-plus', clickHandle );
