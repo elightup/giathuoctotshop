@@ -130,7 +130,7 @@ class user {
 		), JSON_UNESCAPED_UNICODE );
 
 		$token = json_decode( $this->get_token_api() );
-		$data = wp_remote_get( 'http://clone.hapu.vn/api/v1/public/Authentication/register', array(
+		$data = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/register', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
 				'Authorization' => 'Bearer ' . $token->data->access_token,
@@ -150,7 +150,7 @@ class user {
 			'password' => '111555',
 		), JSON_UNESCAPED_UNICODE );
 
-		$request = wp_remote_get( 'http://clone.hapu.vn/api/v1/public/Authentication/login', array(
+		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/login', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
 			],

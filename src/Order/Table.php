@@ -544,7 +544,7 @@ class Table extends \WP_List_Table {
 
 		$token      = json_decode( $this->get_token_api( $user_id  ) );
 		$token_data = $token->error ? '' : $token->data->access_token;
-		$data = wp_remote_get( 'http://clone.hapu.vn/api/v1/private/pre_order/create', array(
+		$data = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/pre_order/create', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
 				'Authorization' => 'Bearer ' . $token_data,
@@ -577,7 +577,7 @@ class Table extends \WP_List_Table {
 			'password' => '111111',
 		), JSON_UNESCAPED_UNICODE );
 
-		$request = wp_remote_get( 'http://clone.hapu.vn/api/v1/public/Authentication/login', array(
+		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/login', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
 			],
