@@ -8,7 +8,7 @@ $voucher       = json_decode( $item->voucher, true );
 ?>
 
 <?php if ( isset( $_GET['type'] ) && 'checkout' === $_GET['type'] ) : ?>
-	<div class="alert alert-info">Cảm ơn bạn đã đặt hàng của bạn. Đơn đặt hàng của bạn hiện đang được xử lý. Dưới đây là thông tin đặt hàng. Chúng tôi sẽ liên hệ với bạn ngay khi có thể!</div>
+	<div class="alert alert-info">Đơn hàng của bạn đã được đặt thành công. Chúng tôi sẽ liên hệ lại để xác nhận đơn hàng của bạn. Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của Giá Thuốc Hapu.</div>
 <?php endif; ?>
 <div class="info-order text-center">
 	<?php esc_html_e( 'Chi tiết đơn hàng', 'gtt-shop' ); ?>
