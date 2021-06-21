@@ -28,8 +28,17 @@ class user {
 		add_filter( 'manage_users_columns', [ $this, 'users_columns' ] );
 		add_filter( 'manage_users_sortable_columns', [ $this, 'users_sortable_columns' ] );
 		add_filter( 'manage_users_custom_column', [ $this, 'show_users_columns' ], 10, 3 );
+		add_action( 'pre_user_query', [ $this, 'order_users' ] );
 	}
 
+	public function order_users( $query ) {
+		global $pagenow;
+
+		if ( ! is_admin() || 'users.php' !== $pagenow || isset( $_GET['orderby'] ) ) {
+			return;
+		}
+		$query->query_orderby = 'ORDER BY user_registered DESC';
+	}
 
 	/**
 	 * Change columns for users
@@ -39,7 +48,8 @@ class user {
 	 * @return array
 	 */
 	public function users_columns( $columns ) {
-		$columns['header_name'] = 'Tác vụ';
+		$columns['registered'] = 'Thời gian tạo';
+		$columns['action'] = 'Tác vụ';
 		unset( $columns['posts'] );
 		return $columns;
 	}
@@ -55,8 +65,6 @@ class user {
 		return [
 			'username'   => 'login',
 			'registered' => 'registered',
-			'last_order' => 'last_order',
-			'star'       => 'star',
 		];
 	}
 
@@ -70,17 +78,29 @@ class user {
 	 * @return string
 	 */
 	public function show_users_columns( $output, $column, $user_id ) {
-		$response = get_user_meta( $user_id, 'erp_response', true );
+		$user = get_userdata( $user_id );
+		switch ( $column ) {
+			case 'action':
+				$response = get_user_meta( $user_id, 'erp_response', true );
 
-		if ( ! $response ) {
-			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
-			$output .= '<a href="' . $url . '" class="button" title="ERP">Đẩy user lên ERP</a>';
-		} elseif ( $response == 1 ) {
-			$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: #28a745; padding: 5px; border-radius: 3px;">Đã đẩy lên ERP</span>';
-		} else {
-			$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: red; padding: 5px; margin-right: 5px; border-radius: 3px;">Có lỗi khi đẩy lên ERP</span>';
-			$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
-			$output .= '<a href="' . $url . '" class="button" title="ERP">Thử lại</a>';
+				if ( ! $response ) {
+					$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
+					$output .= '<a href="' . $url . '" class="button" title="ERP">Đẩy user lên ERP</a>';
+				} elseif ( $response == 1 ) {
+					$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: #28a745; padding: 5px; border-radius: 3px;">Đã đẩy lên ERP</span>';
+				} else {
+					$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: red; padding: 5px; margin-right: 5px; border-radius: 3px;">Có lỗi khi đẩy lên ERP</span>';
+					$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
+					$output .= '<a href="' . $url . '" class="button" title="ERP">Thử lại</a>';
+				}
+				break;
+			case 'registered':
+				if ( $user->user_registered ) {
+					$registered = strtotime( $user->user_registered ) + 7 * 3600; // sửa lại ngày đăng kí theo múi giờ Việt Nam
+					$output = date( 'd.m.Y', $registered ) . '<br>';
+					$output .= date ( 'H:i', $registered );
+				}
+				break;
 		}
 
 		return $output;
