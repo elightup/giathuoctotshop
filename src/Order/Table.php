@@ -146,11 +146,8 @@ class Table extends \WP_List_Table {
 	}
 
 	protected function get_sql_order_clause() {
-		if ( empty( $_REQUEST['orderby'] ) ) {
-			return '';
-		}
-		$order  = 'ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-		$order .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
+		$order  = 'ORDER BY date';
+		$order .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' DESC';
 		return $order;
 	}
 
@@ -172,7 +169,6 @@ class Table extends \WP_List_Table {
 	public function get_sortable_columns() {
 		$sortable_columns = [
 			'date'   => [ 'date', true ],
-			'status' => [ 'status', false ],
 		];
 
 		return $sortable_columns;
