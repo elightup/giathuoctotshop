@@ -314,6 +314,19 @@ class Table extends \WP_List_Table {
 					$this->base_url
 				)
 			);
+		} else {
+			printf(
+				'<a href="%s" class="button tips">' . __( 'Đẩy lên lần nữa', 'elu-shop' ) . ' </a>',
+				add_query_arg(
+					[
+						'action'   => 'push_to_erp',
+						'id'       => $item['id'],
+						'user_id'  => $item['user'],
+						'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
+					],
+					$this->base_url
+				)
+			);
 		}
 	}
 
