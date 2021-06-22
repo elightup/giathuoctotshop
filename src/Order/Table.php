@@ -261,7 +261,7 @@ class Table extends \WP_List_Table {
 		$user_id     = $item['user'];
 		$user_data   = get_userdata( $user_id );
 		$status_user = get_user_meta( $user_id, 'erp_response', true );
-		$status_user = ! isset( $status_user ) || $status_user != 1 ? 'Chưa kích hoạt' : 'Đã kích hoạt';
+		$status_user = ! isset( $status_user ) || $status_user != 1 ? 'Chưa đẩy lên ERP' : 'Đã đẩy lên ERP';
 
 		echo esc_html( $info->name ) . '<br>';
 		if ( $user_data ) {
