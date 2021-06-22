@@ -161,6 +161,7 @@ class Table extends \WP_List_Table {
 			'amount'   => __( 'Tổng tiền', 'elu-shop' ),
 			'date'     => __( 'Ngày', 'elu-shop' ),
 			'action'   => __( 'Thao tác', 'elu-shop' ),
+			'message'  => __( 'Chi tiết lỗi', 'elu-shop' ),
 		];
 
 		return $columns;
@@ -328,6 +329,10 @@ class Table extends \WP_List_Table {
 				)
 			);
 		}
+	}
+
+	public function column_message( $item ) {
+		echo $item['push_message'];
 	}
 
 	protected function get_row_actions( $item ) {
@@ -505,12 +510,15 @@ class Table extends \WP_List_Table {
 		);
 	}
 
-	protected function update_push_erp_status( $id, $status ) {
+	protected function update_push_erp_status( $id, $status, $message ) {
 		global $wpdb;
 
 		$wpdb->update(
 			$wpdb->orders,
-			[ 'push_erp' => $status ],
+			[
+				'push_erp'     => $status,
+				'push_message' => $message
+			],
 			[ 'id' => $id ],
 			[ '%s' ]
 		);
@@ -566,10 +574,13 @@ class Table extends \WP_List_Table {
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
-		$response   = json_decode( $data['body'], true );
-		$erp_status = $response['code'] == 1 ? 'completed' : 'pending';
+		$response    = json_decode( $data['body'], true );
+		$erp_message = $response['message'] ? $response['message'] : $response['name'];
+		$erp_message = $response['code'] == 1 ? '' : $erp_message;
+		$erp_status  = $response['code'] == 1 ? 'completed' : 'pending';
+
 		global $wpdb;
-		$this->update_push_erp_status( $_GET['id'], $erp_status );
+		$this->update_push_erp_status( $_GET['id'], $erp_status, $erp_message );
 	}
 
 	public function get_product_from_order_id( $id ) {

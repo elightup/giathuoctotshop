@@ -94,6 +94,7 @@ class Checkout {
 				'date'          => current_time( 'mysql' ),
 				'status'        => 'pending',
 				'push_erp'      => 'pending',
+				'push_message'  => '',
 				'user'          => get_current_user_id(),
 				'amount'        => $amount,
 				'note'          => $note,
@@ -165,10 +166,12 @@ class Checkout {
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
-		$response   = json_decode( $data['body'], true );
-		$erp_status = $response['code'] == 1 ? 'completed' : 'pending';
+		$response    = json_decode( $data['body'], true );
+		$erp_message = $response['message'] ? $response['message'] : $response['name'];
+		$erp_message = $response['code'] == 1 ? '' : $erp_message;
+		$erp_status  = $response['code'] == 1 ? 'completed' : 'pending';
 		global $wpdb;
-		$this->update_push_erp_status( $wpdb->insert_id, $erp_status );
+		$this->update_push_erp_status( $wpdb->insert_id, $erp_status, $erp_message );
 	}
 
 	public function get_product_from_order_id( $id ) {
@@ -202,12 +205,15 @@ class Checkout {
 		return wp_remote_retrieve_body( $request );
 	}
 
-	public function update_push_erp_status( $id, $status ) {
+	public function update_push_erp_status( $id, $status, $message ) {
 		global $wpdb;
 
 		$wpdb->update(
 			$wpdb->orders,
-			[ 'push_erp' => $status ],
+			[
+				'push_erp'   => $status,
+				'push_message' => $message
+			],
 			[ 'id' => $id ],
 			[ '%s' ]
 		);

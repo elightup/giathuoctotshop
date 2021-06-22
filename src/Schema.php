@@ -19,6 +19,7 @@ class schema {
 				`date` datetime NOT NULL,
 				`status` varchar(12) NOT NULL,
 				`push_erp` varchar(12) NOT NULL,
+				`push_message` varchar(100) NOT NULL,
 				`user` mediumint unsigned NOT NULL,
 				`amount` int unsigned NOT NULL,
 				`voucher` text,
