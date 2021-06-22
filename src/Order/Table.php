@@ -24,6 +24,17 @@ class Table extends \WP_List_Table {
 		$class        = $status ? '' : ' class="current"';
 		$links['all'] = "<a href='{$this->base_url}'$class>" . sprintf( 'Tất cả <span class="count">(%s)</span>', $this->get_total_items() ) . '</a>';
 
+		$push_erp = isset( $_REQUEST['push_erp'] ) ? $_REQUEST['push_erp'] : '';
+		$statuses_erp = [
+			'completed'  => __( 'Đã đẩy lên ERP', 'elu-shop' ),
+			'pending' => __( 'Lỗi khi đẩy lên ERP', 'elu-shop' ),
+		];
+		foreach ( $statuses_erp as $key => $label ) {
+			$class         = $key === $push_erp ? ' class="current"' : '';
+			$url           = add_query_arg( 'push_erp', $key, $this->base_url );
+			$links[ 'erp' . $key ] .= "<a href='$url'$class>" . sprintf( "$label <span class='count'>(%s)</span>", $this->get_total_items_by_erp( $key ) ) . '</a>';
+		}
+
 		$statuses = [
 			'completed'  => __( 'Đã hoàn thành', 'elu-shop' ),
 			'pending' => __( 'Đang xử lý', 'elu-shop' ),
@@ -32,7 +43,7 @@ class Table extends \WP_List_Table {
 		foreach ( $statuses as $key => $label ) {
 			$class         = $key === $status ? ' class="current"' : '';
 			$url           = add_query_arg( 'status', $key, $this->base_url );
-			$links[ $key ] = "<a href='$url'$class>" . sprintf( "$label <span class='count'>(%s)</span>", $this->get_total_items( $key ) ) . '</a>';
+			$links[ $key ] .= "<a href='$url'$class>" . sprintf( "$label <span class='count'>(%s)</span>", $this->get_total_items( $key ) ) . '</a>';
 		}
 		return $links;
 	}
@@ -134,12 +145,26 @@ class Table extends \WP_List_Table {
 		return $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->orders $where" );
 	}
 
+	protected function get_total_items_by_erp( $status = '' ) {
+		global $wpdb;
+
+		$where = '';
+		if ( $status ) {
+			$where = $wpdb->prepare( 'WHERE `push_erp`=%s', $status );
+		}
+		return $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->orders $where" );
+	}
+
 	protected function get_sql_where_clause() {
 		global $wpdb;
 
 		$where = [];
 		if ( isset( $_REQUEST['status'] ) ) {
 			$where[] = $wpdb->prepare( '`status`=%s', $_REQUEST['status'] );
+		}
+
+		if ( isset( $_REQUEST['push_erp'] ) ) {
+			$where[] = $wpdb->prepare( '`push_erp`=%s', $_REQUEST['push_erp'] );
 		}
 
 		return $where ? 'WHERE ' . implode( ' ', $where ) : '';
