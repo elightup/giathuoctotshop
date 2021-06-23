@@ -94,7 +94,10 @@
 
 		// Place checkout.
 		$( '.place-checkout' ).on( 'click', function( e ) {
+			$( this ).prop( 'disabled', true ).text( 'Đang đặt hàng...' );
+
 			e.preventDefault();
+
 			var name            = $ ('.info-details .form-info__name').val(),
 				phone 	        = $ ('.info-details .form-info__phone').val(),
 				address         = $ ('.info-details .form-info__address').val(),
