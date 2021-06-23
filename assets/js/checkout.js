@@ -60,8 +60,6 @@
 
 		// Phương thức thanh toán radio
 		$( '.radio-info', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).removeClass('hidden');
-		$( 'input[type=radio]', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).attr('checked', true);
-		$( 'input[type=radio]', '.check-deliverytype .form-info__fields:nth-child(1)' ).attr('checked', true);
 
 		$( 'input[type=radio]', '.form-info.form-info--pay' ).on( 'click', function( e ) {
 			var radio_class = $( this ).parent().parent(),
@@ -94,6 +92,12 @@
 
 		// Place checkout.
 		$( '.place-checkout' ).on( 'click', function( e ) {
+			let payment = $( 'input[name="pay_form_info"]:checked' ).val();
+			if ( ! payment ) {
+				alert( 'Bạn hãy chọn phương thức thanh toán' );
+				return false;
+			}
+
 			$( this ).prop( 'disabled', true ).text( 'Đang đặt hàng...' );
 
 			e.preventDefault();
