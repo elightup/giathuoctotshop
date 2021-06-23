@@ -31,6 +31,10 @@
 		update: function () {
 			localStorage.setItem( checkout.key, JSON.stringify( checkout.data ) );
 		},
+		clear: function () {
+			checkout.data = {};
+			checkout.update();
+		},
 		saveNote: function ( note ) {
 			checkout.data.note = note;
 			checkout.update();
@@ -126,6 +130,7 @@
 				}
 				localStorage.removeItem( 'voucher' );
 				cart.clear();
+				checkout.clear();
 
 				// Redirect user to confirmation page.
 				location.href = response.data;
