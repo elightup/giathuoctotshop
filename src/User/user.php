@@ -17,6 +17,7 @@ class user {
 	public function init() {
 		add_action( 'load-users.php', [ $this, 'users_page' ] );
 		add_action( 'wp_ajax_push_user_to_erp', [ $this, 'push_user_to_erp' ] );
+		add_action( 'wp_ajax_active_user', [ $this, 'active_user' ] );
 	}
 
 	/**
@@ -94,6 +95,15 @@ class user {
 					$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
 					$output .= '<a href="' . $url . '" class="button" title="ERP">Thử lại</a>';
 				}
+
+				$user_active = get_user_meta( $user_id, 'active_user', true );
+				if ( ! $user_active ) {
+					$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=active_user&user_id=' . $user_id ), 'account' );
+					$output .= '<br><a style="margin-top: 5px;" href="' . $url . '" class="button" title="ERP">Kích hoạt TK</a>';
+				} else {
+					$output .= '<br><span class="badge badge--success" style="display: inline-block; color: #fff; background: #28a745; padding: 5px; border-radius: 3px; margin-top: 5px;">Đã kích hoạt TK</span>';
+				}
+
 				break;
 			case 'registered':
 				if ( $user->user_registered ) {
@@ -108,6 +118,13 @@ class user {
 		}
 
 		return $output;
+	}
+
+	public function active_user() {
+		$user_id = $_GET['user_id'];
+		update_user_meta( $user_id, 'active_user', 1 );
+		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
+		die;
 	}
 
 	/**
