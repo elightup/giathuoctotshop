@@ -50,6 +50,7 @@ class user {
 	public function users_columns( $columns ) {
 		$columns['registered'] = 'Thời gian tạo';
 		$columns['action'] = 'Tác vụ';
+		$columns['message'] = 'Chi tiết lỗi';
 		unset( $columns['posts'] );
 		return $columns;
 	}
@@ -101,6 +102,9 @@ class user {
 					$output .= date ( 'H:i', $registered );
 				}
 				break;
+			case 'message':
+				$output .= get_user_meta( $user_id, 'erp_message', true );
+				break;
 		}
 
 		return $output;
@@ -140,7 +144,9 @@ class user {
 			'timeout' => 15,
 		) );
 		$response = json_decode( $data['body'], true );
+		$erp_message = $response['code'] == 1 ? '' : $response['message'];
 		update_user_meta( $user_id, 'erp_response', $response['code'] );
+		update_user_meta( $user_id, 'erp_message', $erp_message );
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
 	}

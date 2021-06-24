@@ -113,9 +113,9 @@
 
 	// addQuantityToInput
 	function addQuantityToInput() {
-		$('.button-plus').each( function() {
+		$( '.button-plus' ).each( function() {
 			const $this = $( this ),
-				info = $this.data('info'),
+				info = $this.data( 'info' ),
 				id = info.id;
 
 			if ( cart.hasProduct( id ) ) {
