@@ -73,7 +73,6 @@
 
 	function clickHandle( e ) {
 		e.preventDefault();
-		$('.add-to-cart', '.cart-button' ).append('<div class="load-icon"></div>');
 
 		const $this        = $( this ),
 			$quantityInput = $this.parent().find( '.quantity_products' ),
