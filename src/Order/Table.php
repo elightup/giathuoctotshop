@@ -32,7 +32,7 @@ class Table extends \WP_List_Table {
 		foreach ( $statuses_erp as $key => $label ) {
 			$class         = $key === $push_erp ? ' class="current"' : '';
 			$url           = add_query_arg( 'push_erp', $key, $this->base_url );
-			$links[ 'erp' . $key ] .= "<a href='$url'$class>" . sprintf( "$label <span class='count'>(%s)</span>", $this->get_total_items_by_erp( $key ) ) . '</a>';
+			$links[ 'erp_' . $key ] .= "<a href='$url'$class>" . sprintf( "$label <span class='count'>(%s)</span>", $this->get_total_items_by_erp( $key ) ) . '</a>';
 		}
 
 		$statuses = [
