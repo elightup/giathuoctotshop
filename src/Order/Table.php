@@ -585,6 +585,7 @@ class Table extends \WP_List_Table {
 			'payment_term' => $data_customer['payment_method'],
 			'products'     => $products_api,
 			'discount'     => $giam_gia,
+			'giathuoc_id'  => (int)$id,
 			'giathuoctot'  => 'True',
 		), JSON_UNESCAPED_UNICODE );
 
