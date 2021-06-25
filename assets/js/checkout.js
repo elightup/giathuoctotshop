@@ -102,14 +102,14 @@
 
 			e.preventDefault();
 
-			var name            = $ ('.info-details .form-info__name').val(),
-				phone 	        = $ ('.info-details .form-info__phone').val(),
-				address         = $ ('.info-details .form-info__address').val(),
-				payment_method  = $( '.form-info__input input:checked', '.form-info--pay').val(),
+			var name            = $ ( '.info-details .form-info__name' ).val(),
+				phone 	        = $ ( '.info-details .form-info__phone' ).val(),
+				address         = $ ( '.info-details .form-info__address' ).val(),
+				payment_method  = $( '.form-info__input input:checked', '.form-info--pay' ).val(),
 
-				name_shipping    = $ ('.form-info__other_name').val(),
-				phone_shipping   = $ ('.form-info__other_phone').val(),
-				address_shipping = $ ('.form-info__other_address').val(),
+				name_shipping    = $ ( '.form-info__other_name' ).val(),
+				phone_shipping   = $ ( '.form-info__other_phone' ).val(),
+				address_shipping = $ ( '.form-info__other_address' ).val(),
 
 				info            = {
 					name,
