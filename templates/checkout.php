@@ -41,15 +41,15 @@
 					<div class="ship check-deliverytype form-info--ship">
 						<div class="form-info__fields form-info__fields__name">
 							<p>Họ tên người nhận hàng</p>
-							<input class="form-info__other_name" type="text" name="checkout_info[other_name]" value="" required>
+							<input disabled class="form-info__other_name" type="text" name="checkout_info[other_name]" value="" required>
 						</div>
 						<div class="form-info__fields form-info__fields__phone">
 							<p>Số điện thoại người nhận hàng</p>
-							<input class="form-info__other_phone" type="text" name="checkout_info[other_phone]" value="" required>
+							<input disabled class="form-info__other_phone" type="text" name="checkout_info[other_phone]" value="" required>
 						</div>
 						<div class="form-info__fields">
 							<p>Địa chỉ nhận hàng</p>
-							<textarea class="form-info__other_address" type="text" name="checkout_info[other_address]"></textarea>
+							<textarea disabled class="form-info__other_address" type="text" name="checkout_info[other_address]"></textarea>
 						</div>
 					</div>
 					<div class="order-note">
