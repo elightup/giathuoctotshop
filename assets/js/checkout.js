@@ -74,14 +74,14 @@
 
 			e.preventDefault();
 
-			var name            = $ ( '.info-details .form-info__name' ).val(),
-				phone 	        = $ ( '.info-details .form-info__phone' ).val(),
-				address         = $ ( '.info-details .form-info__address' ).val(),
+			var name            = $ ( '#name' ).val(),
+				phone 	        = $ ( '#phone' ).val(),
+				address         = $ ( '#address' ).val(),
 				payment_method  = $( 'input[name="payment_method"]:checked' ).val(),
 
-				name_shipping    = $ ( '.form-info__other_name' ).val(),
-				phone_shipping   = $ ( '.form-info__other_phone' ).val(),
-				address_shipping = $ ( '.form-info__other_address' ).val(),
+				name_shipping    = $ ( '#ship-name' ).val(),
+				phone_shipping   = $ ( '#ship-phone' ).val(),
+				address_shipping = $ ( '#ship-address' ).val(),
 
 				info            = {
 					name,

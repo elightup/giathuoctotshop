@@ -1,6 +1,7 @@
 <div id="cart" class="cart--checkout"><?= __( 'Updating the cart', 'gtt-shop' );?></div>
 
 <?php $symbol = ps_setting( 'currency' ); ?>
+<?php $user = wp_get_current_user() ?>
 <script type="text/html" id="tmpl-cart">
 	<#
 	let total = 0;
@@ -14,45 +15,39 @@
 		#>
 		<div class="template-checkout">
 			<div class="row">
-				<div class="col-lg-6 float-left checkout-info">
+				<div class="col-lg-6">
 					<h2 class="checkout-title">Thông tin thanh toán</h2>
-					<div class="form-info info-details">
-						<div class="form-info__fields form-info__fields__name">
-							<p>Họ tên</p>
-							<input class="form-info__name" type="text" name="checkout_info[name]" value="" required>
-						</div>
-						<div class="form-info__fields form-info__fields__phone">
-							<p>Số điện thoại</p>
-							<input class="form-info__phone" type="text" name="checkout_info[phone]" value="" required>
-						</div>
-						<div class="form-info__fields">
-							<p>Địa chỉ</p>
-							<textarea class="form-info__address" type="text" name="checkout_info[address]"></textarea>
-						</div>
+					<div class="field">
+						<label for="name">Họ tên</label>
+						<input id="name" type="text" name="checkout_info[name]" value="<?= esc_attr( $user->display_name ) ?>" required>
+					</div>
+					<div class="field">
+						<label for="phone">Số điện thoại</label>
+						<input id="phone" type="text" name="checkout_info[phone]" value="<?= esc_attr( get_user_meta( $user->ID, 'phone', true ) ) ?>" required>
+					</div>
+					<div class="field">
+						<label for="address">Địa chỉ</label>
+						<textarea id="address" type="text" name="checkout_info[address]"><?= esc_textarea( get_user_meta( $user->ID, 'address', true ) ) ?></textarea>
 					</div>
 				</div>
 
-				<div class="col-lg-6 template-checkout__payments">
+				<div class="col-lg-6">
 					<h2 class="checkout-title">Địa chỉ giao hàng</h2>
-					<div class="ship check-deliverytype form-info--ship">
-						<div class="form-info__fields form-info__fields__name">
-							<p>Họ tên người nhận hàng</p>
-							<input disabled class="form-info__other_name" type="text" name="checkout_info[other_name]" value="" required>
-						</div>
-						<div class="form-info__fields form-info__fields__phone">
-							<p>Số điện thoại người nhận hàng</p>
-							<input disabled class="form-info__other_phone" type="text" name="checkout_info[other_phone]" value="" required>
-						</div>
-						<div class="form-info__fields">
-							<p>Địa chỉ nhận hàng</p>
-							<textarea disabled class="form-info__other_address" type="text" name="checkout_info[other_address]"></textarea>
-						</div>
+					<div class="field">
+						<label for="ship-name">Họ tên người nhận hàng</label>
+						<input disabled id="ship-name" type="text" name="checkout_info[other_name]" value="" required>
 					</div>
-					<div class="order-note">
-						<div class="form-info__fields">
-							<p>Ghi chú đơn hàng</p>
-							<textarea id="order-note"></textarea>
-						</div>
+					<div class="field">
+						<label for="ship-phone">Số điện thoại người nhận hàng</label>
+						<input disabled id="ship-phone" type="text" name="checkout_info[other_phone]" value="" required>
+					</div>
+					<div class="field">
+						<label for="ship-address">Địa chỉ nhận hàng</label>
+						<textarea disabled id="ship-address" type="text" name="checkout_info[other_address]"></textarea>
+					</div>
+					<div class="field">
+						<label for="order-note">Ghi chú đơn hàng</label>
+						<textarea id="order-note"></textarea>
 					</div>
 				</div>
 			</div>
