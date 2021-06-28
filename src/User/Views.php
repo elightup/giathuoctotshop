@@ -2,6 +2,8 @@
 namespace ELUSHOP\User;
 
 class Views {
+	private $custom_query = false;
+
 	public function __construct() {
 		add_filter( 'views_users', [ $this, 'add_views' ] );
 
@@ -9,16 +11,20 @@ class Views {
 	}
 
 	public function add_views( $views ) {
+		$this->custom_query = true;
+
 		$type = filter_input( INPUT_GET, 'gtt-type' );
 
-		$views['today-inactive'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-inactive' ? 'current' : '' ) . '">KH mới</a>';
-		$views['today-active'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-active', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-active' ? 'current' : '' ) . '">KH mới kích hoạt</a>';
+		$views['today-inactive'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-inactive' ? 'current' : '' ) . '">KH mới chưa kích hoạt <span class="count">(' . $this->get_today_inactive_count() . ')</span></a>';
+		$views['today-active'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-active', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-active' ? 'current' : '' ) . '">KH mới đã kích hoạt <span class="count">(' . $this->get_today_active_count() . ')</span></a>';
+
+		$this->custom_query = false;
 
 		return $views;
 	}
 
 	public function filter_users( \WP_User_Query $query ) {
-		if ( ! is_admin() ) {
+		if ( ! is_admin() || $this->custom_query ) {
 			return;
 		}
 		$screen = get_current_screen();
@@ -50,5 +56,40 @@ class Views {
 				],
 			] );
 		}
+	}
+
+	private function get_today_inactive_count() {
+		$users = get_users( [
+			'date_query' => [
+				'year'  => date( 'Y' ),
+				'month' => date( 'n' ),
+				'day'   => date( 'j' ),
+			],
+			'meta_query' => [
+				[
+					'key'     => 'active_user',
+					'value'   => 1,
+					'compare' => 'NOT EXISTS',
+				],
+			],
+			'fields' => 'ID',
+		] );
+
+		return count( $users );
+	}
+
+	private function get_today_active_count() {
+		$users = get_users( [
+			'date_query' => [
+				'year'  => date( 'Y' ),
+				'month' => date( 'n' ),
+				'day'   => date( 'j' ),
+			],
+			'meta_key'   => 'active_user',
+			'meta_value' => 1,
+			'fields'     => 'ID',
+		] );
+
+		return count( $users );
 	}
 }
