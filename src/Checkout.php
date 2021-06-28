@@ -60,7 +60,7 @@ class Checkout {
 
 	public function place_checkout() {
 		$data          = isset( $_POST['cart'] ) ? $_POST['cart'] : [];
-		$info          = isset( $_POST['info'] ) ? $_POST['info'] : '';
+		$info          = isset( $_POST['info'] ) ? $_POST['info'] : [];
 		$info_shipping = isset( $_POST['info_shipping'] ) ? $_POST['info_shipping'] : '';
 		$voucher       = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
 		$voucher       = wp_unslash( $voucher );

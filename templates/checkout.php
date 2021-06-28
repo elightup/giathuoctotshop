@@ -19,15 +19,15 @@
 					<h2 class="checkout-title">Thông tin thanh toán</h2>
 					<div class="field">
 						<label for="name">Họ tên</label>
-						<input id="name" type="text" name="checkout_info[name]" value="<?= esc_attr( $user->display_name ) ?>" required>
+						<input id="name" type="text" name="checkout_info[name]" value="<?= esc_attr( get_user_meta( $user->ID, 'user_name', true ) ) ?>" required>
 					</div>
 					<div class="field">
 						<label for="phone">Số điện thoại</label>
-						<input id="phone" type="text" name="checkout_info[phone]" value="<?= esc_attr( get_user_meta( $user->ID, 'phone', true ) ) ?>" required>
+						<input id="phone" type="text" name="checkout_info[phone]" value="<?= esc_attr( get_user_meta( $user->ID, 'user_sdt', true ) ) ?>" required>
 					</div>
 					<div class="field">
 						<label for="address">Địa chỉ</label>
-						<textarea id="address" type="text" name="checkout_info[address]"><?= esc_textarea( get_user_meta( $user->ID, 'address', true ) ) ?></textarea>
+						<textarea id="address" type="text" name="checkout_info[address]"><?= esc_textarea( get_user_meta( $user->ID, 'user_address', true ) ) ?></textarea>
 					</div>
 				</div>
 
