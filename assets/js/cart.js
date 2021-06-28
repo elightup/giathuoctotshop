@@ -3,15 +3,10 @@
 
 	let cart = {
 		data: {},
-		key: 'cart',
+		key: `cart-${ CartParams.userId }`,
 		init() {
-			cart.setKey();
 			cart.load();
 			cart.updateMiniCart();
-		},
-		setKey() {
-			const userId = CartParams.user_id;
-			cart.key = userId ? `cart-${ userId }` : 'cart';
 		},
 		load() {
 			const data = localStorage.getItem( cart.key );

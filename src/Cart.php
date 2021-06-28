@@ -19,15 +19,11 @@ class Cart {
 		wp_register_script( 'notification', ELU_SHOP_URL . 'assets/js/notification.min.js', [ 'jquery' ], '', true );
 		wp_register_script( 'alertify', ELU_SHOP_URL . 'assets/js/alertify.min.js', [ 'jquery' ], '1.11.1', true );
 		wp_register_script( 'cart', ELU_SHOP_URL . 'assets/js/cart.js', [ 'jquery', 'notification', 'alertify' ], ELU_SHOP_VER, true );
-		wp_localize_script(
-			'cart',
-			'CartParams',
-			[
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-				'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
-				'user_id' => is_user_logged_in() ? get_current_user_id() : '',
-			]
-		);
+		wp_localize_script( 'cart', 'CartParams', [
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
+			'userId'  => get_current_user_id(),
+		] );
 	}
 
 	public function enqueue() {

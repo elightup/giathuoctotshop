@@ -3,15 +3,10 @@
 
 	let checkout = {
 		data: {},
-		key: 'checkout',
+		key: `checkout-${ CartParams.userId }`,
 		init: function() {
-			checkout.setKey();
 			checkout.load();
 			checkout.addEventListeners();
-		},
-		setKey: function () {
-			const userId = CartParams.user_id;
-			checkout.key = userId ? `checkout-${ userId }` : 'checkout';
 		},
 		load: function () {
 			const data = localStorage.getItem( checkout.key );
