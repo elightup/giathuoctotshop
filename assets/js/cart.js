@@ -24,6 +24,8 @@
 				if ( response.success ) {
 					cart.data = Array.isArray( response.data ) ? {} : response.data;
 					cart.updateMiniCart();
+
+					$d.trigger( 'cart-loaded' );
 				}
 			} );
 		},

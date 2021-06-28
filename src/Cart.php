@@ -199,10 +199,7 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		if ( ! isset( $_POST['data'] ) ) {
-			wp_send_json_error();
-		}
-		$data = $_POST['data'];
+		$data = $_POST['data'] ?? [];
 		if ( empty( $data ) ) {
 			$data = [];
 		}

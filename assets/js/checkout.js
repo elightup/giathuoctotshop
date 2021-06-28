@@ -52,6 +52,7 @@
 		}
 
 		updateCartHtml();
+		$d.on( 'cart-loaded', updateCartHtml );
 
 		// Phương thức thanh toán radio
 		$( '.radio-info', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).removeClass('hidden');
