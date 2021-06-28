@@ -6,6 +6,7 @@ class Views {
 
 	public function __construct() {
 		add_filter( 'views_users', [ $this, 'add_views' ] );
+		add_action( 'admin_bar_menu', [ $this, 'admin_bar_notification' ], 99 );
 
 		add_action( 'pre_get_users', [ $this, 'filter_users' ] );
 	}
@@ -21,6 +22,14 @@ class Views {
 		$this->custom_query = false;
 
 		return $views;
+	}
+
+	public function admin_bar_notification( \WP_Admin_Bar $wp_admin_bar ) {
+		$wp_admin_bar->add_node( [
+			'id'    => 'today-inactive',
+			'title' => '<span class="bubble">' . $this->get_today_inactive_count() . '</span> KH mới',
+			'href'  => esc_url( add_query_arg( 'gtt-type', 'today-inactive', admin_url( 'users.php' ) ) ),
+		] );
 	}
 
 	public function filter_users( \WP_User_Query $query ) {
