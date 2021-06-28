@@ -41,8 +41,8 @@ register_activation_hook( __FILE__, function () use ( $schema ) {
 if ( is_admin() ) {
     ( new Order\AdminList() )->init();
 	( new User\user() )->init();
-} else {
-	( new Assets() )->init();
+	new User\Views;
+	new Assets;
 }
 
 function is_cart_page() {
