@@ -41,6 +41,7 @@ register_activation_hook( __FILE__, function () use ( $schema ) {
 if ( is_admin() ) {
     ( new Order\AdminList() )->init();
 	( new User\user() )->init();
+	new User\Views;
 } else {
 	( new Assets() )->init();
 }
