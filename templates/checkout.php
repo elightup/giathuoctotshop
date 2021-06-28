@@ -53,13 +53,13 @@
 			</div>
 
 			<h2 class="checkout-title">Thông tin đơn hàng</h2>
-			<table class="cart table">
-				<thead class="thead-dark">
+			<table class="table">
+				<thead>
 					<tr>
-						<th scope="col"><?= __( '#', 'gtt-shop' );?></th>
-						<th scope="col">Tên sản phẩm</th>
-						<th scope="col">Số lượng</th>
-						<th scope="col">Giá</th>
+						<th>#</th>
+						<th>Tên sản phẩm</th>
+						<th>Số lượng</th>
+						<th>Giá</th>
 					</tr>
 				</thead>
 				<#
@@ -69,15 +69,10 @@
 					id += 1;
 					#>
 					<tr>
-						<td class="cart__stt">{{ id }}</td>
-
-						<td class="cart__title">
-							<div class="pull-left">
-								<a href="{{ product.link }}">{{ product.title }}</a>
-							</div>
-						</td>
-						<td class="cart__quantity"><input type="number" value="{{ product.quantity }}" min="1" data-product_id="{{ product.id }}" style="width: 70px;text-align: center;"></td>
-						<td class="cart__subtotal"><span class="cart__subtotal__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( subtotal )) }}</span> <?= $symbol; ?></td>
+						<td>{{ id }}</td>
+						<td><a href="{{ product.link }}">{{ product.title }}</a></td>
+						<td align="center"><input class="quantity" type="text" value="{{ product.quantity }}"></td>
+						<td>{{ eFormatNumber(0, 3, '.', ',', parseFloat( subtotal )) }} <?= $symbol; ?></td>
 					</tr>
 					<#
 				} );
