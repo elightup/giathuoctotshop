@@ -1,116 +1,127 @@
 #cart {
-    overflow-x: auto;
+	overflow-x: auto;
 }
 .cart__remove {
-    color: #ff0101;
-    font-size: 16px;
-    margin-left: 8px;
-    cursor: pointer;
-    height: 24px;
-    width: 24px;
-    display: inline-block;
-    text-align: center;
+	color: #ff0101;
+	font-size: 16px;
+	margin-left: 8px;
+	cursor: pointer;
+	height: 24px;
+	width: 24px;
+	display: inline-block;
+	text-align: center;
 }
 #cart .product-cart__detail .col-md-5 {
-    border-right: 1px solid rgba(195,204,220,0.4);
+	border-right: 1px solid rgba(195,204,220,0.4);
 }
 #cart .product-cart__wrapper {
-    top: unset !important;
+	top: unset !important;
 }
-#cart .product-cart__button .place-order {
-    width: 100%;
+.product-cart__button {
+	padding: 12px;
+}
+.product-cart__button a {
+	display: block;
+	width: 100%;
+	background: #f29f05;
+	color: #212529;
+	border-radius: 99px;
+	padding: 4px;
+}
+.product-cart__button a:hover {
+	text-decoration: none;
 }
 #cart .remove-voucher {
-    color: red;
+	color: red;
 }
 
 .total-pay-product {
-    margin-bottom: 15px;
-    font-size: 18px;
+	margin-bottom: 15px;
+	font-size: 18px;
 }
 .total-pay-product p {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 .total-pay-product .total__number {
-    color: #03A62C;
+	color: #03A62C;
 }
 
 .product-back {
-    border-radius: 10px;
-    box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
-    padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
+	padding: 15px;
 }
 .product-back p {
-    margin: 0;
+	margin: 0;
 }
 /* order list */
 .info-order.text-center {
-    font-size: 2em;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-transform: uppercase;
+	font-size: 2em;
+	font-weight: 600;
+	margin-bottom: 20px;
+	text-transform: uppercase;
 }
 .order-list h4,
 .detail-order h4{
-    background: #333;
-    color: #fff;
-    margin: 0;
-    padding: 10px 20px !important;
+	background: #333;
+	color: #fff;
+	margin: 0;
+	padding: 10px 20px !important;
 }
 .order.table .badge {
-    padding: .6em .6em .5em;
-    color: #212529;
-    background: #ffc107;
-    font-weight: bold;
-    font-size: 11px;
-    border-radius: .25em;
+	padding: .6em .6em .5em;
+	color: #212529;
+	background: #ffc107;
+	font-weight: bold;
+	font-size: 11px;
+	border-radius: .25em;
 }
 .clear {
-    clear: both;
+	clear: both;
 }
 .vouchers_repsonse {
-    padding: 1em 2em 1em 3.5em;
-    margin: 5px 0 0;
-    background-color: #f7f6f7;
-    border-top: 3px solid #00b46e;
+	padding: 1em 2em 1em 3.5em;
+	margin: 5px 0 0;
+	background-color: #f7f6f7;
+	border-top: 3px solid #00b46e;
 }
 
 #notification {
-    width: 235px;
-    position: fixed;
-    top: 90px;
-    right: 5px;
-    list-style-type: none;
-    z-index: 10000;
+	width: 235px;
+	position: fixed;
+	top: 90px;
+	right: 5px;
+	list-style-type: none;
+	z-index: 10000;
 }
 #notification p {
-    margin: 0;
+	margin: 0;
 }
 #notification li.in {
-    opacity: .8;
-    padding: 10px;
+	opacity: .8;
+	padding: 10px;
 }
 #notification li {
-    margin-bottom: 5px;
-    background: #e67817;
-    color: #fff;
+	margin-bottom: 5px;
+	background: #e67817;
+	color: #fff;
 }
 .load-icon {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 9;
-    width: 100%;
-    height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 9;
+	width: 100%;
+	height: 100%;
 }
 
 /* Voucher */
 .vouchers {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 .vouchers button {
-    border-radius: 0;
+	border-radius: 0;
 }
 .vouchers input {
-    padding: 4px 12px;
+	padding: 4px 12px;
 }

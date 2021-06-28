@@ -21,10 +21,6 @@
 							<p>Họ tên</p>
 							<input class="form-info__name" type="text" name="checkout_info[name]" value="" required>
 						</div>
-						<!-- <div class="form-info__fields">
-							<p><?php esc_html_e( 'Email', 'gtt-shop' );?></p>
-							<input class="form-info__email" type="email" name="checkout_info[email]" value="">
-						</div> -->
 						<div class="form-info__fields form-info__fields__phone">
 							<p>Số điện thoại</p>
 							<input class="form-info__phone" type="text" name="checkout_info[phone]" value="" required>
@@ -138,7 +134,7 @@
 						</div>
 					<?php endif ?>
 
-					<button class="place-checkout btn-success pay-coins">Đặt hàng</button>
+					<button class="place-checkout">Đặt hàng</button>
 				</div>
 			</div>
 		</div>

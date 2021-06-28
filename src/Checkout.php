@@ -6,8 +6,6 @@ class Checkout {
 	public function init() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_filter( 'the_content', [ $this, 'filter_content' ] );
-		add_action( 'wp_ajax_place_order', [ $this, 'place_order' ] );
-		add_action( 'wp_ajax_nopriv_place_order', [ $this, 'place_order' ] );
 		add_action( 'wp_ajax_place_checkout', [ $this, 'place_checkout' ] );
 		add_action( 'wp_ajax_nopriv_place_checkout', [ $this, 'place_checkout' ] );
 
@@ -58,16 +56,6 @@ class Checkout {
 			$classes[] = 'checkout-page';
 		}
 		return $classes;
-	}
-
-	public function place_order() {
-		$url = add_query_arg(
-			[
-				'userid' => get_current_user_id(),
-			],
-			get_permalink( ps_setting( 'checkout_page' ) )
-		);
-		wp_send_json_success( $url );
 	}
 
 	public function place_checkout() {

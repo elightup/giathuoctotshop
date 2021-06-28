@@ -85,9 +85,7 @@
 						<div class="vouchers_message"></div>
 					</div>
 					<div class="product-cart__button">
-						<button class="btn-secondary wp-block-button__link place-order">
-							Tiếp tục thanh toán
-						</button>
+						<a href="/thanh-toan/">Tiếp tục thanh toán</a>
 					</div>
 				</div>
 			</div>

@@ -76,16 +76,6 @@
 			updateCartHtml();
 		} );
 
-		// redict page checkout
-		$( '.page' ).on( 'click', '.place-order',  function( e ) {
-			e.preventDefault();
-			$.post( CheckoutParams.ajaxUrl, {
-				action: 'place_order',
-			}, function ( response ) {
-				location.href = response.data;
-			}, 'json' )
-		} );
-
 		// Place checkout.
 		$( '.place-checkout' ).on( 'click', function( e ) {
 			let payment = $( 'input[name="pay_form_info"]:checked' ).val();
