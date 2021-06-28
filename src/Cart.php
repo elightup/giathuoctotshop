@@ -9,6 +9,9 @@ class Cart {
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_struger_data' ] );
+
+		add_action( 'wp_ajax_get_cart', [ $this, 'ajax_get_cart' ] );
+		add_action( 'wp_ajax_set_cart', [ $this, 'ajax_set_cart' ] );
 	}
 
 	public function register_scripts() {
@@ -23,6 +26,7 @@ class Cart {
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
 			'userId'  => get_current_user_id(),
+			'nonce'   => wp_create_nonce( 'cart' ),
 		] );
 	}
 
@@ -169,5 +173,39 @@ class Cart {
 			'link'  => get_permalink( $id ),
 			'ma_sp' => $ma_sp,
 		];
+	}
+
+	public function ajax_get_cart() {
+		check_ajax_referer( 'cart' );
+
+		$id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$data = get_user_meta( $id, 'cart', true );
+		if ( empty( $data ) ) {
+			$data = [];
+		}
+
+		wp_send_json_success( $data );
+	}
+
+	public function ajax_set_cart() {
+		check_ajax_referer( 'cart' );
+
+		$id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$data = filter_input( INPUT_POST, 'data' );
+		if ( empty( $data ) ) {
+			$data = [];
+		}
+
+		update_user_meta( $id, 'cart', $data );
+
+		wp_send_json_success();
 	}
 }

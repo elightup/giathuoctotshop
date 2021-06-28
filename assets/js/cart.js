@@ -13,11 +13,30 @@
 			if ( data ) {
 				cart.data = JSON.parse( data );
 			}
+
+			if ( ! CartParams.userId ) {
+				return;
+			}
+			$.get( CartParams.ajaxUrl, {
+				action: 'get_cart',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId
+			}, response => response.success && cart.data = response.data );
 		},
 		update() {
 			localStorage.setItem( cart.key, JSON.stringify( cart.data ) );
 
 			cart.updateMiniCart();
+
+			if ( ! CartParams.userId ) {
+				return;
+			}
+			$.post( CartParams.ajaxUrl, {
+				action: 'set_cart',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				data: cart.data
+			} );
 		},
 
 		clear() {
