@@ -70,8 +70,6 @@
 				return false;
 			}
 
-			$( this ).prop( 'disabled', true ).text( 'Đang đặt hàng...' );
-
 			e.preventDefault();
 
 			var name            = $ ( '#name' ).val(),
@@ -95,6 +93,13 @@
 					address_shipping,
 				},
 				voucher = localStorage.getItem( 'voucher' );
+
+			if ( ! name || ! phone || ! address || ! payment_method ) {
+				alert( 'Vui lòng điền đầy đủ thông tin trước khi đặt đơn' );
+				return;
+			}
+
+			$( this ).prop( 'disabled', true ).text( 'Đang đặt hàng...' );
 
 			$.post( CheckoutParams.ajaxUrl, {
 				action: 'place_checkout',
