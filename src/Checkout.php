@@ -6,8 +6,6 @@ class Checkout {
 	public function init() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_filter( 'the_content', [ $this, 'filter_content' ] );
-		add_action( 'wp_ajax_place_order', [ $this, 'place_order' ] );
-		add_action( 'wp_ajax_nopriv_place_order', [ $this, 'place_order' ] );
 		add_action( 'wp_ajax_place_checkout', [ $this, 'place_checkout' ] );
 		add_action( 'wp_ajax_nopriv_place_checkout', [ $this, 'place_checkout' ] );
 
@@ -60,19 +58,9 @@ class Checkout {
 		return $classes;
 	}
 
-	public function place_order() {
-		$url = add_query_arg(
-			[
-				'userid' => get_current_user_id(),
-			],
-			get_permalink( ps_setting( 'checkout_page' ) )
-		);
-		wp_send_json_success( $url );
-	}
-
 	public function place_checkout() {
 		$data          = isset( $_POST['cart'] ) ? $_POST['cart'] : [];
-		$info          = isset( $_POST['info'] ) ? $_POST['info'] : '';
+		$info          = isset( $_POST['info'] ) ? $_POST['info'] : [];
 		$info_shipping = isset( $_POST['info_shipping'] ) ? $_POST['info_shipping'] : '';
 		$voucher       = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
 		$voucher       = wp_unslash( $voucher );
@@ -113,7 +101,10 @@ class Checkout {
 			get_permalink( ps_setting( 'confirmation_page' ) )
 		);
 		$this->push_to_erp( $wpdb->insert_id );
-		// $this->update_push_erp_status( $wpdb->insert_id, 'completed' );
+
+		// Clear cart.
+		delete_user_meta( get_current_user_id(), 'cart' );
+
 		wp_send_json_success( $url );
 	}
 
