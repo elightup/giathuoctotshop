@@ -54,20 +54,6 @@
 		updateCartHtml();
 		$d.on( 'cart-loaded', updateCartHtml );
 
-		// Phương thức thanh toán radio
-		$( '.radio-info', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).removeClass('hidden');
-
-		$( 'input[type=radio]', '.form-info.form-info--pay' ).on( 'click', function( e ) {
-			var radio_class = $( this ).parent().parent(),
-				radio_info = $('.radio-info', radio_class );
-				$( '.radio-info', '.form-info.form-info--pay' ).addClass('hidden');
-
-				if ( $(this).attr('checked', true)) {
-					radio_info.removeClass('hidden');
-				}
-
-		} ).change();
-
 		// Remove an item from cart.
 		$cart.on( 'click', '.cart__remove', function( e ) {
 			e.preventDefault();
@@ -77,9 +63,9 @@
 		} );
 
 		// Place checkout.
-		$( '.place-checkout' ).on( 'click', function( e ) {
-			let payment = $( 'input[name="pay_form_info"]:checked' ).val();
-			if ( ! payment ) {
+		$d.on( 'click', '.place-checkout', function( e ) {
+			let payment = $( 'input[name="payment_method"]:checked' );
+			if ( payment.length < 1 ) {
 				alert( 'Bạn hãy chọn phương thức thanh toán' );
 				return false;
 			}
@@ -91,7 +77,7 @@
 			var name            = $ ( '.info-details .form-info__name' ).val(),
 				phone 	        = $ ( '.info-details .form-info__phone' ).val(),
 				address         = $ ( '.info-details .form-info__address' ).val(),
-				payment_method  = $( '.form-info__input input:checked', '.form-info--pay' ).val(),
+				payment_method  = $( 'input[name="payment_method"]:checked' ).val(),
 
 				name_shipping    = $ ( '.form-info__other_name' ).val(),
 				phone_shipping   = $ ( '.form-info__other_phone' ).val(),
@@ -132,7 +118,7 @@
 
 		// Check vouchers.
 
-		$( document ).on( 'click', '.voucher_button', function( e ) {
+		$d.on( 'click', '.voucher_button', function( e ) {
 			e.preventDefault();
 			var voucher = $( '.voucher_input' ).val();
 			let total = 0;
@@ -155,7 +141,7 @@
 				$( '.vouchers_message' ).addClass( 'vouchers_repsonse' );
 			}, 'json' );
 		} );
-		$( document ).on( 'click', '.remove-voucher', function( e ) {
+		$d.on( 'click', '.remove-voucher', function( e ) {
 			e.preventDefault();
 			voucher = localStorage.getItem( 'voucher' );
 			$.post( CheckoutParams.ajaxUrl, {

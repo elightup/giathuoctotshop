@@ -101,7 +101,10 @@ class Checkout {
 			get_permalink( ps_setting( 'confirmation_page' ) )
 		);
 		$this->push_to_erp( $wpdb->insert_id );
-		// $this->update_push_erp_status( $wpdb->insert_id, 'completed' );
+
+		// Clear cart.
+		delete_user_meta( get_current_user_id(), 'cart' );
+
 		wp_send_json_success( $url );
 	}
 
