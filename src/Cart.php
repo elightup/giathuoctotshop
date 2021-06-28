@@ -178,7 +178,7 @@ class Cart {
 	public function ajax_get_cart() {
 		check_ajax_referer( 'cart' );
 
-		$id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$id = (int) filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 		if ( ! $id || $id !== get_current_user_id() ) {
 			wp_send_json_error();
 		}
@@ -194,7 +194,7 @@ class Cart {
 	public function ajax_set_cart() {
 		check_ajax_referer( 'cart' );
 
-		$id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 		if ( ! $id || $id !== get_current_user_id() ) {
 			wp_send_json_error();
 		}
