@@ -3,15 +3,10 @@
 
 	let checkout = {
 		data: {},
-		key: 'checkout',
+		key: `checkout-${ CartParams.userId }`,
 		init: function() {
-			checkout.setKey();
 			checkout.load();
 			checkout.addEventListeners();
-		},
-		setKey: function () {
-			const userId = CartParams.user_id;
-			checkout.key = userId ? `checkout-${ userId }` : 'checkout';
 		},
 		load: function () {
 			const data = localStorage.getItem( checkout.key );
@@ -57,6 +52,7 @@
 		}
 
 		updateCartHtml();
+		$d.on( 'cart-loaded', updateCartHtml );
 
 		// Phương thức thanh toán radio
 		$( '.radio-info', '.form-info.form-info--pay .form-info__fields:nth-child(1)' ).removeClass('hidden');

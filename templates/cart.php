@@ -14,7 +14,6 @@
 		<#
 	} else {
 		#>
-		
 		<div class="d-flex">
 			<div class="product-list col-md-7">
 				<#
@@ -24,37 +23,33 @@
 					total_quantity += parseFloat( product.quantity );
 					id += 1;
 					#>
-					<article>
-						<div class="product-item">
-							<a class="post-thumbnail" href="{{ product.link }}" aria-hidden="true" tabindex="-1">
-								<img src="{{product.url}}" loading="lazy">
-							</a>
+					<div class="product-item">
+						<a class="post-thumbnail" href="{{ product.link }}" aria-hidden="true" tabindex="-1">
+							<img src="{{product.url}}" loading="lazy">
+						</a>
 
-							<div class="product-title">
-								<h3 class="entry-title"><a href="{{ product.link }}">{{ product.title }}</a></h3>
-							</div>
-							<div class="product-price">
-								<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( product.price )) }} <?= $symbol; ?></p>
-							</div>
-							<div class="cart-button">
-								<div class="quantity cart__quantity">
-									<span class="button-minus" data-info="{{ JSON.stringify( product ) }}">-</span>
-									<input type="text" class="quantity_products" min="0" name="quantity" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
-									<span class="button-plus" data-info="{{ JSON.stringify( product ) }}">+</span>
-								</div>
-							</div>
-
-							<div class="cart__remove-product">
-								<span class="cart__remove" data-product_id="{{ product.id }}" title="Xóa sản phẩm này">&times;</span>
+						<div class="product-title">
+							<h3 class="entry-title"><a href="{{ product.link }}">{{ product.title }}</a></h3>
+						</div>
+						<div class="product-price">
+							<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( product.price )) }} <?= $symbol; ?></p>
+						</div>
+						<div class="cart-button">
+							<div class="quantity cart__quantity">
+								<span class="button-minus" data-info="{{ JSON.stringify( product ) }}">-</span>
+								<input type="text" class="quantity_products" min="0" name="quantity" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
+								<span class="button-plus" data-info="{{ JSON.stringify( product ) }}">+</span>
 							</div>
 						</div>
-					</article>
+
+						<div class="cart__remove-product">
+							<span class="cart__remove" data-product_id="{{ product.id }}" title="Xóa sản phẩm này">&times;</span>
+						</div>
+					</div>
 					<#
 				} );
 				#>
-				<div class="product-back">
-					<p>Để thêm sản phẩm vào giỏ hàng, vui lòng quay về trang<a href="<?php echo home_url(); ?>/dat-hang-nhanh"> Đặt hàng nhanh </a></p>
-				</div>
+				<div class="product-back">Để thêm sản phẩm vào giỏ hàng, vui lòng quay về trang <a href="/dat-hang-nhanh/">Đặt hàng nhanh</a>.</div>
 			</div>
 			<div class="product-cart col-md-5">
 				<div class="product-cart__wrapper">

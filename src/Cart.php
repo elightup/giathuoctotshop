@@ -9,6 +9,9 @@ class Cart {
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_struger_data' ] );
+
+		add_action( 'wp_ajax_get_cart', [ $this, 'ajax_get_cart' ] );
+		add_action( 'wp_ajax_set_cart', [ $this, 'ajax_set_cart' ] );
 	}
 
 	public function register_scripts() {
@@ -19,15 +22,12 @@ class Cart {
 		wp_register_script( 'notification', ELU_SHOP_URL . 'assets/js/notification.min.js', [ 'jquery' ], '', true );
 		wp_register_script( 'alertify', ELU_SHOP_URL . 'assets/js/alertify.min.js', [ 'jquery' ], '1.11.1', true );
 		wp_register_script( 'cart', ELU_SHOP_URL . 'assets/js/cart.js', [ 'jquery', 'notification', 'alertify' ], ELU_SHOP_VER, true );
-		wp_localize_script(
-			'cart',
-			'CartParams',
-			[
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-				'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
-				'user_id' => is_user_logged_in() ? get_current_user_id() : '',
-			]
-		);
+		wp_localize_script( 'cart', 'CartParams', [
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
+			'userId'  => get_current_user_id(),
+			'nonce'   => wp_create_nonce( 'cart' ),
+		] );
 	}
 
 	public function enqueue() {
@@ -173,5 +173,39 @@ class Cart {
 			'link'  => get_permalink( $id ),
 			'ma_sp' => $ma_sp,
 		];
+	}
+
+	public function ajax_get_cart() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$data = get_user_meta( $id, 'cart', true );
+		if ( empty( $data ) ) {
+			$data = [];
+		}
+
+		wp_send_json_success( $data );
+	}
+
+	public function ajax_set_cart() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$data = $_POST['data'] ?? [];
+		if ( empty( $data ) ) {
+			$data = [];
+		}
+
+		update_user_meta( $id, 'cart', $data );
+
+		wp_send_json_success();
 	}
 }

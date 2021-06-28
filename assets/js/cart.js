@@ -3,26 +3,47 @@
 
 	let cart = {
 		data: {},
-		key: 'cart',
+		key: `cart-${ CartParams.userId }`,
 		init() {
-			cart.setKey();
-			cart.load();
-			cart.updateMiniCart();
-		},
-		setKey() {
-			const userId = CartParams.user_id;
-			cart.key = userId ? `cart-${ userId }` : 'cart';
-		},
-		load() {
+			// Get from local storage first: for current user and guests.
 			const data = localStorage.getItem( cart.key );
 			if ( data ) {
 				cart.data = JSON.parse( data );
 			}
+			cart.updateMiniCart();
+
+			// For logged in users, get from server.
+			if ( ! CartParams.userId ) {
+				return;
+			}
+			$.get( CartParams.ajaxUrl, {
+				action: 'get_cart',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId
+			}, response => {
+				if ( response.success ) {
+					cart.data = Array.isArray( response.data ) ? {} : response.data;
+					cart.updateMiniCart();
+
+					$d.trigger( 'cart-loaded' );
+				}
+			} );
 		},
 		update() {
+			// Update to local storage first.
 			localStorage.setItem( cart.key, JSON.stringify( cart.data ) );
-
 			cart.updateMiniCart();
+
+			// Update to server.
+			if ( ! CartParams.userId ) {
+				return;
+			}
+			$.post( CartParams.ajaxUrl, {
+				action: 'set_cart',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				data: cart.data
+			} );
 		},
 
 		clear() {
@@ -40,7 +61,6 @@
 			if ( quantity >= 1 ) {
 				cart.data[productInfo.id].quantity = quantity;
 			} else {
-				// cart.data[productInfo.id].quantity = 1;
 				cart.removeProduct( productInfo.id );
 			}
 			cart.update();
@@ -54,19 +74,19 @@
 			cart.update();
 		},
 		updateMiniCart() {
-			$mini_cart_count = 0;
-			$price_total = 0;
-			$.each( cart['data'], function( key, value ) {
-				$mini_cart_count += parseInt( value['quantity'] );
-				$price_total += parseInt( value['price'] ) * parseInt( value['quantity'] );
-				if ( value['quantity'] == 0 ) {
-					cart.removeProduct( value['id'] );
+			let count = 0;
+			let total = 0;
+			Object.values( cart.data ).forEach( product => {
+				count += parseInt( product['quantity'] );
+				total += parseInt( product['price'] ) * parseInt( product['quantity'] );
+				if ( product['quantity'] == 0 ) {
+					cart.removeProduct( product['id'] );
 				}
-			});
-			$( '.mini-cart-count span' ).html( $mini_cart_count );
+			} );
+			$( '.mini-cart-count span' ).html( count );
 			if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) || $( 'body' ).hasClass( 'cart-page' ) ) {
-				$( '.product-cart__detail .color-secondary' ).html( $mini_cart_count );
-				$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( $price_total )) );
+				$( '.product-cart__detail .color-secondary' ).html( count );
+				$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( total ) ) );
 			}
 		}
 	};
