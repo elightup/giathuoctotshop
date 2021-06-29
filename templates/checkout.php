@@ -101,10 +101,13 @@
 			<?php if ( $payment_methods ): ?>
 				<h2 class="checkout-title">Phương thức thanh toán</h2>
 				<?php foreach ( $payment_methods as $payment_method ) : ?>
-					<?php $payment_id = $payment_method['payment_method_title'] === 'Thanh toán tiền mặt' ? 'cash' : 'bank' ; ?>
+					<?php
+					$payment_id = $payment_method['payment_method_title'] === 'Thanh toán tiền mặt' ? 'cash' : 'bank' ;
+					$checked    = $payment_method['payment_method_title'] === 'Chuyển khoản ngân hàng' ? 'checked="checked"' : '';
+					?>
 					<div class="payment-method">
 						<label>
-							<input type="radio" name="payment_method" value="<?= esc_attr( $payment_id ) ?>">
+							<input type="radio" name="payment_method" value="<?= esc_attr( $payment_id ) ?>" <?php echo $checked; ?>>
 							<?= wp_kses_post( $payment_method['payment_method_title'] ); ?>
 						</label>
 					</div>

@@ -64,12 +64,6 @@
 
 		// Place checkout.
 		$d.on( 'click', '.place-checkout', function( e ) {
-			let payment = $( 'input[name="payment_method"]:checked' );
-			if ( payment.length < 1 ) {
-				alert( 'Bạn hãy chọn phương thức thanh toán' );
-				return false;
-			}
-
 			e.preventDefault();
 
 			var name            = $ ( '#name' ).val(),

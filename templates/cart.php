@@ -85,7 +85,7 @@
 						<div class="vouchers_message"></div>
 					</div>
 					<div class="product-cart__button">
-						<a href="/thanh-toan/">Tiếp tục thanh toán</a>
+						<a href="<?php echo home_url(); ?>/thanh-toan/">Tiếp tục thanh toán</a>
 					</div>
 				</div>
 			</div>
