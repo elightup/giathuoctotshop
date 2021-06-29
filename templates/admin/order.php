@@ -92,9 +92,9 @@ $voucher       = json_decode( $item->voucher, true );
 			</thead>
 			<tbody>
 			<tr>
-				<td><?= esc_html( $info['name'] ); ?></td>
-				<td><?= esc_html( $info['phone'] ); ?></td>
-				<td><?= esc_html( $info['address'] ); ?></td>
+				<td class="info_name"><?= esc_html( $info['name'] ); ?></td>
+				<td class="info_phone"><?= esc_html( $info['phone'] ); ?></td>
+				<td class="info_address"><?= esc_html( $info['address'] ); ?></td>
 			</tr>
 			</tbody>
 		</table>
@@ -146,4 +146,5 @@ $voucher       = json_decode( $item->voucher, true );
 			</tbody>
 		</table>
 	</div>
+	<button class="order-update">Cập nhật</button>
 </div>
