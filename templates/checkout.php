@@ -103,7 +103,7 @@
 				<?php foreach ( $payment_methods as $payment_method ) : ?>
 					<?php
 					$payment_id = $payment_method['payment_method_title'] === 'Thanh toán tiền mặt' ? 'cash' : 'bank' ;
-					$checked    = $payment_method['payment_method_title'] === 'Chuyển khoản ngân hàng' ? 'checked="checked"' : '';
+					$checked    = $payment_method['payment_method_title'] === 'Thanh toán tiền mặt' ? 'checked="checked"' : '';
 					?>
 					<div class="payment-method">
 						<label>
