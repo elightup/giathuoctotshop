@@ -9,10 +9,29 @@
 			checkout.addEventListeners();
 		},
 		load: function () {
+			// Get from local storage first: for current user and guests.
 			const data = localStorage.getItem( checkout.key );
 			if ( data ) {
 				checkout.data = JSON.parse( data );
 			}
+
+			// For logged in users, get from server.
+			if ( ! CartParams.userId ) {
+				return;
+			}
+			$.get( CartParams.ajaxUrl, {
+				action: 'get_checkout',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId
+			}, response => {
+				if ( response.success ) {
+					checkout.data = Array.isArray( response.data ) ? {} : response.data;
+
+					setTimeout( function() {
+						$( '#order-note' ).val( checkout.data.note );
+					}, 100 );
+				}
+			} );
 		},
 		addEventListeners: function() {
 			$d.on( 'change', '#order-note', function() {
@@ -24,7 +43,19 @@
 		},
 
 		update: function () {
+			// Update to local storage first.
 			localStorage.setItem( checkout.key, JSON.stringify( checkout.data ) );
+
+			// Update to server.
+			if ( ! CartParams.userId ) {
+				return;
+			}
+			$.post( CartParams.ajaxUrl, {
+				action: 'set_checkout',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				data: checkout.data
+			} );
 		},
 		clear: function () {
 			checkout.data = {};

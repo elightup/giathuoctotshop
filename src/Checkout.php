@@ -11,6 +11,9 @@ class Checkout {
 		add_action( 'wp_ajax_check_remove_voucher', [ $this, 'check_remove_voucher' ] );
 
 		add_filter( 'body_class', [ $this, 'add_class_body' ] );
+
+		add_action( 'wp_ajax_get_checkout', [ $this, 'ajax_get_checkout' ] );
+		add_action( 'wp_ajax_set_checkout', [ $this, 'ajax_set_checkout' ] );
 	}
 
 	public function enqueue() {
@@ -225,5 +228,39 @@ class Checkout {
 		$result = 'Đã xoá thành công';
 
 		wp_send_json_success( $result );
+	}
+
+	public function ajax_get_checkout() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$data = get_user_meta( $id, 'checkout', true );
+		if ( empty( $data ) ) {
+			$data = [];
+		}
+
+		wp_send_json_success( $data );
+	}
+
+	public function ajax_set_checkout() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$data = $_POST['data'] ?? [];
+		if ( empty( $data ) ) {
+			$data = [];
+		}
+
+		update_user_meta( $id, 'checkout', $data );
+
+		wp_send_json_success();
 	}
 }
