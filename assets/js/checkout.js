@@ -1,4 +1,4 @@
-( function ( $, cart, wp, CheckoutParams ) {
+( function ( $, cart, wp, CartParams ) {
 	const $d = $( document );
 
 	let checkout = {
@@ -46,8 +46,7 @@
 		function updateCartHtml() {
 			$cart.html( cartTemplate( {
 				products: Object.values( cart.data ),
-				voucher: JSON.parse( localStorage.getItem( 'voucher' ) ),
-				budget: parseInt( CheckoutParams.budget )
+				voucher: JSON.parse( localStorage.getItem( 'voucher' ) )
 			} ) );
 		}
 
@@ -55,7 +54,7 @@
 		$d.on( 'cart-loaded', updateCartHtml );
 
 		// Remove an item from cart.
-		$cart.on( 'click', '.cart__remove', function( e ) {
+		$d.on( 'click', '.cart__remove', function( e ) {
 			e.preventDefault();
 			const productId = $( this ).data( 'product_id' );
 			cart.removeProduct( productId );
@@ -64,52 +63,27 @@
 
 		// Place checkout.
 		$d.on( 'click', '.place-checkout', function( e ) {
-			let payment = $( 'input[name="payment_method"]:checked' );
-			if ( payment.length < 1 ) {
+			e.preventDefault();
+
+			let $payment = $( 'input[name="payment_method"]:checked' );
+			if ( $payment.length < 1 ) {
 				alert( 'Bạn hãy chọn phương thức thanh toán' );
 				return false;
 			}
 
-			e.preventDefault();
-
-			var name            = $ ( '#name' ).val(),
-				phone 	        = $ ( '#phone' ).val(),
-				address         = $ ( '#address' ).val(),
-				payment_method  = $( 'input[name="payment_method"]:checked' ).val(),
-
-				name_shipping    = $ ( '#ship-name' ).val(),
-				phone_shipping   = $ ( '#ship-phone' ).val(),
-				address_shipping = $ ( '#ship-address' ).val(),
-
-				info            = {
-					name,
-					phone,
-					address,
-					payment_method,
-				},
-				info_shipping   = {
-					name_shipping,
-					phone_shipping,
-					address_shipping,
-				},
+			let payment_method = $payment.val(),
 				voucher = localStorage.getItem( 'voucher' );
-
-			if ( ! name || ! phone || ! address || ! payment_method ) {
-				alert( 'Vui lòng điền đầy đủ thông tin trước khi đặt đơn' );
-				return;
-			}
 
 			$( this ).prop( 'disabled', true ).text( 'Đang đặt hàng...' );
 
-			$.post( CheckoutParams.ajaxUrl, {
+			$.post( CartParams.ajaxUrl, {
 				action: 'place_checkout',
-				cart: cart.data,
-				voucher: voucher,
-				note: $( '#order-note' ).val(),
-				info: info,
-				info_shipping: info_shipping,
+				voucher,
+				payment_method,
+				note: checkout.data.note
 			}, function ( response ) {
 				if ( ! response.success ) {
+					alert( response.data );
 					return;
 				}
 				localStorage.removeItem( 'voucher' );
@@ -130,7 +104,7 @@
 				const subtotal = value.price * value.quantity;
 				total += subtotal;
 			} );
-			$.post( CheckoutParams.ajaxUrl, {
+			$.post( CartParams.ajaxUrl, {
 				action: 'check_voucher',
 				voucher: voucher,
 				total_price: total,
@@ -147,7 +121,7 @@
 		$d.on( 'click', '.remove-voucher', function( e ) {
 			e.preventDefault();
 			voucher = localStorage.getItem( 'voucher' );
-			$.post( CheckoutParams.ajaxUrl, {
+			$.post( CartParams.ajaxUrl, {
 				action: 'check_remove_voucher',
 				voucher: voucher,
 			}, function ( response ) {
@@ -158,7 +132,6 @@
 				}
 			}, 'json' );
 		} );
-
 
 		const $voucher = JSON.parse( localStorage.getItem( 'voucher' ) );
 
@@ -173,4 +146,4 @@
 			updateCartHtml();
 		}
 	} );
-} )( jQuery, cart, wp, CheckoutParams );
+} )( jQuery, cart, wp, CartParams );

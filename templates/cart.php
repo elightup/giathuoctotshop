@@ -104,7 +104,7 @@
 					</div>
 
 					<div class="field">
-						<button id="place-order">Đặt hàng</button>
+						<button class="place-checkout">Đặt hàng</button>
 					</div>
 				</div>
 			</div>

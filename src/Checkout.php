@@ -1,5 +1,4 @@
 <?php
-
 namespace ELUSHOP;
 
 class Checkout {
@@ -40,21 +39,30 @@ class Checkout {
 	}
 
 	public function place_checkout() {
-		$data          = isset( $_POST['cart'] ) ? $_POST['cart'] : [];
-		$info          = isset( $_POST['info'] ) ? $_POST['info'] : [];
-		$info_shipping = isset( $_POST['info_shipping'] ) ? $_POST['info_shipping'] : '';
-		$voucher       = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
-		$voucher       = wp_unslash( $voucher );
-		$note          = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
-		// $note = isset( $_POST['note'] ) ? $_POST['note'] : '';
+		$user           = wp_get_current_user();
+		$id             = get_current_user_id();
+		$data           = get_user_meta( $id, 'cart', true );
+		$voucher        = filter_input( INPUT_POST, 'voucher', FILTER_SANITIZE_STRING );
+		$note           = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
+		$payment_method = filter_input( INPUT_POST, 'payment_method', FILTER_SANITIZE_STRING );
 
 		if ( empty( $data ) ) {
-			wp_send_json_error();
+			wp_send_json_error( 'Giỏ hàng trống' );
 		}
 		$amount = 0;
 		foreach ( $data as $product ) {
 			$amount += $product['price'] * $product['quantity'];
 		}
+
+		$info = [
+			'name'           => get_user_meta( $id, 'user_name', true ),
+			'phone'          => $user->user_login,
+			'address'        => get_user_meta( $id, 'user_address', true ),
+			'payment_method' => $payment_method,
+		];
+
+		ray( $info );
+		ray( $data );
 
 		global $wpdb;
 		$wpdb->insert(
@@ -64,15 +72,20 @@ class Checkout {
 				'status'        => 'pending',
 				'push_erp'      => 'pending',
 				'push_message'  => '',
-				'user'          => get_current_user_id(),
+				'user'          => $id,
 				'amount'        => $amount,
 				'note'          => $note,
 				'info'          => json_encode( $info ),
-				'info_shipping' => json_encode( $info_shipping ),
 				'data'          => json_encode( $data ),
 				'voucher'       => $voucher,
 			]
 		);
+
+		// Clear cart.
+		delete_user_meta( $id, 'cart' );
+
+		$this->push_to_erp( $wpdb->insert_id );
+
 		$url = add_query_arg(
 			[
 				'view' => 'order',
@@ -81,11 +94,6 @@ class Checkout {
 			],
 			get_permalink( ps_setting( 'confirmation_page' ) )
 		);
-		$this->push_to_erp( $wpdb->insert_id );
-
-		// Clear cart.
-		delete_user_meta( get_current_user_id(), 'cart' );
-
 		wp_send_json_success( $url );
 	}
 
