@@ -61,9 +61,6 @@ class Checkout {
 			'payment_method' => $payment_method,
 		];
 
-		ray( $info );
-		ray( $data );
-
 		global $wpdb;
 		$wpdb->insert(
 			$wpdb->orders,
