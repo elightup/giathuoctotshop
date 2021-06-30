@@ -71,10 +71,6 @@ $voucher       = json_decode( $item->voucher, true );
 				<th>Họ tên</th>
 				<td><?= $info['name']; ?></td>
 			</tr>
-			<!-- <tr>
-				<th><?php esc_html_e( 'Email', 'gtt-shop' ); ?>:</th>
-				<td><?= $info['email']; ?></td>
-			</tr> -->
 			<tr>
 				<th>Số điện thoại:</th>
 				<td><?= $info['phone']; ?></td>
@@ -82,27 +78,6 @@ $voucher       = json_decode( $item->voucher, true );
 			<tr>
 				<th>Địa chỉ:</th>
 				<td><?= $info['address']; ?></td>
-			</tr>
-		</table>
-	</div>
-	<div class="customer-details float-left col-lg-6 ">
-		<h4>Thông tin nhận hàng</h4>
-		<table class="customer table">
-			<tr>
-				<th>Họ tên người nhận</th>
-				<td><?= $info_shipping['name_shipping']; ?></td>
-			</tr>
-			<tr>
-				<th>Số điện thoại người nhận:</th>
-				<td><?= $info_shipping['phone_shipping']; ?></td>
-			</tr>
-			<tr>
-				<th>Địa chỉ người nhận:</th>
-				<td><?= $info_shipping['address_shipping']; ?></td>
-			</tr>
-			<tr>
-				<th>Ghi chú:</th>
-				<td><?= $item->note; ?></td>
 			</tr>
 		</table>
 	</div>
