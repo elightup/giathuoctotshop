@@ -572,6 +572,7 @@ class Table extends \WP_List_Table {
 		$data_customer = json_decode( $data_customer, true );
 
 		$products_api = [];
+		$payment_method = $data_customer['payment_method'] ? $data_customer['payment_method'] : 'cash';
 		foreach ( $data_product as $product ) {
 			$products_api[] = [
 				'product_code' => $product['ma_sp'],
@@ -582,7 +583,7 @@ class Table extends \WP_List_Table {
 
 		$data_string = json_encode( array(
 			'note'         => $products['note'],
-			'payment_term' => $data_customer['payment_method'],
+			'payment_term' => $payment_method,
 			'products'     => $products_api,
 			'discount'     => $giam_gia,
 			'giathuoc_id'  => (int)$id,

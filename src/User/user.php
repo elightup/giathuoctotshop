@@ -18,7 +18,7 @@ class user {
 		add_action( 'load-users.php', [ $this, 'users_page' ] );
 		add_action( 'wp_ajax_push_user_to_erp', [ $this, 'push_user_to_erp' ] );
 		add_action( 'wp_ajax_active_user', [ $this, 'active_user' ] );
-		// add_action( 'profile_update', [ $this, 'update_user_api' ], 10, 2 );
+		add_action( 'profile_update', [ $this, 'update_user_api' ], 99, 2 );
 		add_action( 'pre_user_query', [ $this, 'user_search_by_multiple_parameters' ] );
 	}
 
@@ -46,12 +46,6 @@ class user {
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
-		// var_dump( $data );
-		// die();
-		// wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
-		// die;
-
-		// $response = json_decode( $data['body'], true );
 	}
 
 	public function user_search_by_multiple_parameters( $query ) {
