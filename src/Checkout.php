@@ -17,7 +17,7 @@ class Checkout {
 		if ( ! is_cart_page() ) {
 			return;
 		}
-		wp_enqueue_script( 'checkout', ELU_SHOP_URL . 'assets/js/checkout.js', [ 'cart', 'wp-util' ], '', true );
+		Assets::enqueue_script( 'checkout', [ 'cart', 'wp-util' ] );
 	}
 
 	public function filter_content( $content ) {

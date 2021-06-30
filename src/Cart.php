@@ -11,18 +11,16 @@ class Cart {
 
 	public function enqueue() {
 		if ( is_cart_page() ) {
-			wp_enqueue_style( 'cart', ELU_SHOP_URL . 'assets/css/cart.css' );
+			Assets::enqueue_style( 'cart' );
 		}
 
-		wp_enqueue_script( 'notification', ELU_SHOP_URL . 'assets/js/notification.min.js', [ 'jquery' ], '', true );
-		wp_enqueue_script( 'alertify', ELU_SHOP_URL . 'assets/js/alertify.min.js', [ 'jquery' ], '1.11.1', true );
-		wp_enqueue_script( 'cart', ELU_SHOP_URL . 'assets/js/cart.js', [ 'jquery', 'notification', 'alertify' ], ELU_SHOP_VER, true );
-		wp_localize_script( 'cart', 'CartParams', [
+		Assets::enqueue_script( 'cart' );
+		Assets::localize( 'cart', [
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
 			'userId'  => get_current_user_id(),
 			'nonce'   => wp_create_nonce( 'cart' ),
-		] );
+		], 'CartParams' );
 	}
 
 	public static function cart( $args = [] ) {

@@ -1,6 +1,7 @@
 <?php
-
 namespace ELUSHOP\Order;
+
+use ELUSHOP\Assets;
 
 class Notification {
 	public function init() {
@@ -18,14 +19,10 @@ class Notification {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return;
 		}
-		wp_enqueue_script( 'order-notification', ELU_SHOP_URL . 'assets/js/order-notification.js', [ 'jquery' ], '', true );
-		wp_localize_script(
-			'order-notification',
-			'OrderNotification',
-			[
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			]
-		);
+		Assets::enqueue_script( 'order-notification' );
+		Assets::localize( 'order-notification', [
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+		] );
 	}
 
 	public function get_pending_orders() {

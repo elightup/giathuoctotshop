@@ -25,9 +25,3 @@
 .badge {
 	margin-right: .5em;
 }
-
-.badge + .button {
-    padding: .35em .4em;
-    height: auto;
-    line-height: 1;
-}
