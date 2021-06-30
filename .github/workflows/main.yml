@@ -15,5 +15,7 @@ jobs:
     - uses: actions/checkout@master
     - name: Install PHP dependencies
       run: composer install
-    - name: Upload
-      run: rsync -razhe "ssh -o StrictHostKeyChecking=no" --exclude={'.git','.github','.gitignore','composer.json'} . ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.PLUGIN_DIR }}
+    - name: Upload to giathuoctot
+      run: rsync -razhe "ssh -o StrictHostKeyChecking=no" --exclude={'.git','.github','.gitignore','composer.json'} . ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:/var/www/giathuoctot.vn/public/wp-content/plugins/gtt-shop/
+    - name: Upload to giathuochapu
+      run: rsync -razhe "ssh -o StrictHostKeyChecking=no" --exclude={'.git','.github','.gitignore','composer.json'} . ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:/var/www/giathuochapu.com/public/wp-content/plugins/gtt-shop/
