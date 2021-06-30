@@ -31,8 +31,8 @@ register_activation_hook( __FILE__, function () use ( $schema ) {
 } );
 
 ( new Product\PostType() )->init();
-( new Cart() )->init();
-( new Checkout() )->init();
+new Cart;
+new Checkout;
 ( new Order\Notification() )->init();
 ( new User\invoice() )->init();
 ( new Account() )->init();

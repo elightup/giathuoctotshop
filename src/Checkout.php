@@ -3,57 +3,38 @@
 namespace ELUSHOP;
 
 class Checkout {
-	public function init() {
+	public function __construct() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_filter( 'the_content', [ $this, 'filter_content' ] );
 		add_action( 'wp_ajax_place_checkout', [ $this, 'place_checkout' ] );
-		add_action( 'wp_ajax_nopriv_place_checkout', [ $this, 'place_checkout' ] );
 
 		add_action( 'wp_ajax_check_voucher', [ $this, 'check_voucher' ] );
-		add_action( 'wp_ajax_nopriv_check_voucher', [ $this, 'check_voucher' ] );
 		add_action( 'wp_ajax_check_remove_voucher', [ $this, 'check_remove_voucher' ] );
-		add_action( 'wp_ajax_nopriv_check_remove_voucher', [ $this, 'check_remove_voucher' ] );
 
 		add_filter( 'body_class', [ $this, 'add_class_body' ] );
 	}
 
 	public function enqueue() {
-		if ( ( ! is_cart_page() ) && ( ! is_checkout_page() ) ) {
+		if ( ! is_cart_page() ) {
 			return;
 		}
-		if ( is_checkout_page() ) {
-			wp_enqueue_style( 'checkout', ELU_SHOP_URL . 'assets/css/checkout.css' );
-		}
 		wp_enqueue_script( 'checkout', ELU_SHOP_URL . 'assets/js/checkout.js', [ 'cart', 'wp-util' ], '', true );
-		wp_localize_script(
-			'checkout',
-			'CheckoutParams',
-			[
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			]
-		);
 	}
 
 	public function filter_content( $content ) {
-		if ( ! is_cart_page() && ! is_checkout_page() ) {
+		if ( ! is_cart_page() ) {
 			return $content;
 		}
 		ob_start();
 		if ( is_cart_page() ) {
 			TemplateLoader::instance()->get_template_part( 'cart' );
 		}
-		if ( is_checkout_page() ) {
-			TemplateLoader::instance()->get_template_part( 'checkout' );
-		}
-		return ob_get_clean();
+		return $content . ob_get_clean();
 	}
 
 	public function add_class_body( $classes ) {
 		if ( is_cart_page() ) {
 			$classes[] = 'cart-page';
-		}
-		if ( is_checkout_page() ) {
-			$classes[] = 'checkout-page';
 		}
 		return $classes;
 	}
