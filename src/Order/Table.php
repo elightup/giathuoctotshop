@@ -167,6 +167,18 @@ class Table extends \WP_List_Table {
 			$where[] = $wpdb->prepare( '`push_erp`=%s', $_REQUEST['push_erp'] );
 		}
 
+		if ( isset( $_REQUEST['s'] ) ) {
+			$where_user            = "WHERE 1=1 AND (user_login LIKE '%" . $_REQUEST['s'] . "%' OR user_email LIKE '%" . $_REQUEST['s'] . "%' OR meta_value LIKE '%" . $_REQUEST['s'] . "%')";
+			$sql                   = "SELECT DISTINCT ID FROM $wpdb->users LEFT JOIN $wpdb->usermeta ON " . $wpdb->usermeta . ".user_id = " . $wpdb->users . ".ID $where_user";
+			$get_user_from_request = $wpdb->get_results( $sql, 'ARRAY_A' );
+
+			$user_id_arr = [];
+			foreach ( $get_user_from_request as $key => $user_id ) {
+				$user_id_arr[] = (int)$user_id['ID'];
+			}
+			$user_id_arr = implode( ',', $user_id_arr );
+			$where[]     = '`user` IN ( ' . $user_id_arr . ' )';
+		}
 		return $where ? 'WHERE ' . implode( ' ', $where ) : '';
 	}
 
