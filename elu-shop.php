@@ -1,14 +1,11 @@
 <?php
 /**
- * Plugin Name: Giathuoctot Shop
- * Plugin URI:  https://elightup.com
- * Description: An easy e-commerce solution for WordPress.
- * Version:     0.1.0
- * Author:      eLightUp
- * Author URI:  https://elightup.com
- * License:     GPL 2+
- * Text Domain: gtt-shop
- * Domain Path: /languages/
+ * Plugin Name: Giá thuốc Shop
+ * Plugin URI:  https://titanweb.vn
+ * Description: Giải pháp thương mại điện tử tối ưu.
+ * Version:     1.0.0
+ * Author:      TitanWeb
+ * Author URI:  https://titanweb.vn
  */
 
 namespace ELUSHOP;
@@ -20,7 +17,7 @@ require 'vendor/autoload.php';
 
 define( 'ELU_SHOP_URL', plugin_dir_url( __FILE__ ) );
 define( 'ELU_SHOP_DIR', plugin_dir_path( __FILE__ ) );
-define( 'ELU_SHOP_VER', '0.1.0' );
+define( 'ELU_SHOP_VER', '1.0.0' );
 
 load_plugin_textdomain( 'gtt-shop', false, plugin_basename( ELU_SHOP_DIR ) . '/languages' );
 
@@ -31,8 +28,8 @@ register_activation_hook( __FILE__, function () use ( $schema ) {
 } );
 
 ( new Product\PostType() )->init();
-( new Cart() )->init();
-( new Checkout() )->init();
+new Cart;
+new Checkout;
 ( new Order\Notification() )->init();
 ( new User\invoice() )->init();
 ( new Account() )->init();

@@ -1,10 +1,13 @@
 .badge {
-    padding: .25em .6em .5em;
-	color: #212529;
+	display: inline-block;
+	padding: 2px 6px;
+	white-space: nowrap;
 	background: #ffc107;
+	border-radius: 2px;
 	font-weight: bold;
 	font-size: 11px;
-	border-radius: .25em;
+	line-height: 16px;
+	color: #212529;
 }
 
 .badge--success {
@@ -20,14 +23,4 @@
 .badge--info {
 	color: #fff;
 	background: #17a2b8;
-}
-
-.badge {
-	margin-right: .5em;
-}
-
-.badge + .button {
-    padding: .35em .4em;
-    height: auto;
-    line-height: 1;
 }

@@ -2,6 +2,8 @@
 
 namespace ELUSHOP\Order;
 
+use ELUSHOP\Assets;
+
 class AdminList {
 	/**
 	 * @var Table
@@ -45,7 +47,7 @@ class AdminList {
 	}
 
 	public function enqueue() {
-		wp_enqueue_style( 'order-list', ELU_SHOP_URL . 'assets/css/order-list.css' );
+		Assets::enqueue_style( 'order-list' );
 	}
 
 	public function render() {

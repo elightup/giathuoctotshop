@@ -99,27 +99,6 @@ $voucher       = json_decode( $item->voucher, true );
 			</tbody>
 		</table>
 	</div>
-	<div class="info-shipping">
-		<h3><?php esc_html_e( 'Thông tin nhận hàng', 'gtt-shop' ) ?></h3>
-		<table class="widefat">
-			<thead>
-			<tr>
-				<td><?php esc_html_e( 'Họ tên người nhận', 'gtt-shop' ) ?></td>
-				<td><?php esc_html_e( 'Số điện thoại người nhận', 'gtt-shop' ) ?></td>
-				<td><?php esc_html_e( 'Địa chỉ nhận hàng', 'gtt-shop' ) ?></td>
-				<td><?php esc_html_e( 'Ghi chú', 'gtt-shop' ) ?></td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td><?= esc_html( $info_shipping['name_shipping'] ); ?></td>
-				<td><?= esc_html( $info_shipping['phone_shipping'] ); ?></td>
-				<td><?= esc_html( $info_shipping['address_shipping'] ); ?></td>
-				<td><?= esc_html( $item->note ); ?></td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
 	<div class="info-product">
 		<h3><?php esc_html_e( 'Sản phẩm', 'gtt-shop' ) ?></h3>
 		<table class="widefat">
