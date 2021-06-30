@@ -121,11 +121,10 @@
 			}, 'json' );
 		} );
 
-		// Check vouchers.
-
-		$d.on( 'click', '.voucher_button', function( e ) {
+		// Check voucher.
+		$d.on( 'click', '.voucher button', function( e ) {
 			e.preventDefault();
-			var voucher = $( '.voucher_input' ).val();
+			const voucher = $( '.voucher input' ).val();
 			let total = 0;
 			$.each( cart.data, function( key, value ) {
 				const subtotal = value.price * value.quantity;
@@ -139,11 +138,10 @@
 				if ( response.success ) {
 					localStorage.setItem( 'voucher', JSON.stringify( response.data ) );
 					updateCartHtml();
-					$( '.vouchers_message' ).html( 'Đã áp dụng mã voucher thành công' );
+					$( '.voucher__message' ).html( 'Đã áp dụng mã voucher thành công' );
 				} else {
-					$( '.vouchers_message' ).html( 'Mã voucher không khớp' );
+					$( '.voucher__message' ).html( 'Mã voucher không khớp' );
 				}
-				$( '.vouchers_message' ).addClass( 'vouchers_repsonse' );
 			}, 'json' );
 		} );
 		$d.on( 'click', '.remove-voucher', function( e ) {
@@ -156,8 +154,7 @@
 				if ( response.success ) {
 					localStorage.removeItem( 'voucher' );
 					updateCartHtml();
-					$( '.vouchers_message' ).addClass( 'vouchers_repsonse' );
-					$( '.vouchers_message' ).html( 'Mã ưu đãi đã được gỡ bỏ' );
+					$( '.voucher__message' ).html( 'Mã ưu đãi đã được gỡ bỏ' );
 				}
 			}, 'json' );
 		} );

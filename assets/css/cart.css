@@ -1,6 +1,3 @@
-#cart {
-	overflow-x: auto;
-}
 .cart__remove {
 	color: #ff0101;
 	font-size: 16px;
@@ -13,9 +10,6 @@
 }
 #cart .product-cart__detail .col-md-5 {
 	border-right: 1px solid rgba(195,204,220,0.4);
-}
-#cart .product-cart__wrapper {
-	top: unset !important;
 }
 .product-cart__button {
 	padding: 12px;
@@ -115,13 +109,39 @@
 	height: 100%;
 }
 
+.field {
+	display: flex;
+	flex-direction: column;
+	padding: 12px;
+	text-align: left;
+	font-weight: normal;
+}
+.field label {
+	font-weight: bold;
+	margin-bottom: 4px;
+}
+
 /* Voucher */
-.vouchers {
-	margin-top: 10px;
+.voucher {
+	flex-direction: row;
+	flex-wrap: wrap;
 }
-.vouchers button {
-	border-radius: 0;
+.voucher button {
+	border-radius: 4px;
 }
-.vouchers input {
+.voucher input {
+	flex: 1;
 	padding: 4px 12px;
+}
+.voucher__message:not(:empty) {
+	width: 100%;
+	margin-top: 8px;
+	font-weight: 400;
+	font-style: italic;
+}
+
+/* Payment methods */
+label.payment-method {
+	font-weight: normal;
+	display: block;
 }
