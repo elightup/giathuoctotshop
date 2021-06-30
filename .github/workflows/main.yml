@@ -16,6 +16,6 @@ jobs:
     - name: Install PHP dependencies
       run: composer install
     - name: Upload to giathuoctot
-      run: rsync -razhe "ssh -o StrictHostKeyChecking=no" --exclude={'.git','.github','.gitignore','composer.json'} . ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:/var/www/giathuoctot.vn/public/wp-content/plugins/gtt-shop/
+      run: rsync -razhe "ssh -o StrictHostKeyChecking=no" --exclude={'.git','.github','.gitignore','composer.json'} . ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:/var/www/giathuoctot.vn/public/wp-content/plugins/giathuoctotshop/
     - name: Upload to giathuochapu
       run: rsync -razhe "ssh -o StrictHostKeyChecking=no" --exclude={'.git','.github','.gitignore','composer.json'} . ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:/var/www/giathuochapu.com/public/wp-content/plugins/gtt-shop/
