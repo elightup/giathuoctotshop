@@ -139,6 +139,11 @@ class Cart {
 
 		// Always refresh the product info, because users might update their prices.
 		foreach ( $data as $product_id => &$product ) {
+			if ( empty( $product['quantity'] ) ) {
+				unset( $data[ $product_id ] );
+				continue;
+			}
+			$product['quantity'] = (int) $product['quantity'];
 			$product = array_merge( $product, self::get_product_info( $product_id ) );
 		}
 
