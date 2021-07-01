@@ -57,7 +57,7 @@
 						</div>
 						<div class="col-md-7">
 							<p>Thành tiền</p>
-							<div class="total-pay-product text-right">
+							<div class="total-pay-product">
 								<#
 								if ( data.voucher ) {
 									if( data.voucher.voucher_type == 'by_price' ) {

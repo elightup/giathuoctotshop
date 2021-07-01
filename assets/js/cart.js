@@ -11,6 +11,7 @@
 				cart.data = JSON.parse( data );
 			}
 			cart.updateMiniCart();
+			cart.updateQuantityInputs();
 			cart.addEventListeners();
 
 			// For logged in users, get from server.
@@ -55,7 +56,6 @@
 				data: cart.data
 			} );
 		},
-
 		clear() {
 			cart.data = {};
 			cart.update();
@@ -98,13 +98,13 @@
 					cart.removeProduct( product['id'] );
 				}
 			} );
+			total = eFormatNumber( 0, 3, '.', ',', parseFloat( total ) );
 			$( '.mini-cart-count span' ).html( count );
 
-			// TODO: update cart on sidebar for quick order & cart page.
-			if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) || $( 'body' ).hasClass( 'cart-page' ) ) {
-				$( '.product-cart__detail .color-secondary' ).html( count );
-				$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( total ) ) );
-			}
+			// Update cart on sidebar for quick order & cart page.
+			$( '.product-cart__detail .color-secondary' ).html( count );
+			$( '.product-cart__detail .color-primary span' ).html( total );
+			$( '.total-pay-product .total__number' ).html( total );
 		},
 		updateQuantityInputs() {
 			$( '.quantity_products' ).each( function() {
