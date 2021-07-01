@@ -23,111 +23,57 @@ class Cart {
 		], 'CartParams' );
 	}
 
-	public static function cart( $args = [] ) {
-		$args             = wp_parse_args(
-			$args,
-			[
-				'id'   => get_the_ID(),
-				'text' => __( 'Buy now', 'gtt-shop' ),
-				'type' => __( 'Added to shopping cart', 'gtt-shop' ),
-				'echo' => true,
-			]
-		);
-		$quantity         = '<div class="quantity">
-		<input type="text" class="quantity_products" step="1" min="0" name="quantity" value="1" size="4" pattern="[0-9]*" inputmode="numeric">
+	public static function add_cart() {
+		echo '<div class="quantity" data-product="' . get_the_ID() . '">
+			<span class="button-minus">-</span>
+			<input type="text" class="quantity_products" value="0" size="4" pattern="[0-9]*" inputmode="numeric">
+			<span class="button-plus">+</span>
 		</div>';
-		$button_view_cart = sprintf(
-			'<a class="add-to-cart buy-now btn btn-primary" data-info="%s" data-type="%s">%s</a>',
-			esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ),
-			esc_attr( $args['type'] ),
-			esc_attr( $args['text'] )
-		);
-		if ( $args['echo'] ) {
-			echo '<div class="cart-button">' . $quantity . $button_view_cart . '</div>';
-		}
 	}
 
-	public static function add_cart( $args = [] ) {
-		$args     = wp_parse_args(
-			$args,
-			[
-				'id'   => get_the_ID(),
-				'text' => __( 'Add cart', 'gtt-shop' ),
-				'type' => __( 'Added to shopping cart', 'gtt-shop' ),
-				'echo' => true,
-			]
-		);
-		$quantity = '<div class="quantity">
-		<span class="button-minus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">-</span>
-		<input type="text" class="quantity_products" step="1" min="0" name="quantity" value="0" size="4" pattern="[0-9]*" inputmode="numeric">
-		<span class="button-plus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">+</span>
-		</div>';
+	private static function get_product_info( $id ) {
+		$price      = (float) get_post_meta( $id, 'price', true );
+		$price_vip2 = (float) get_post_meta( $id, 'price_vip2', true );
+		$price_vip3 = (float) get_post_meta( $id, 'price_vip3', true );
+		$price_vip4 = (float) get_post_meta( $id, 'price_vip4', true );
+		$price_vip5 = (float) get_post_meta( $id, 'price_vip5', true );
+		$price_vip6 = (float) get_post_meta( $id, 'price_vip6', true );
 
-		$button_add_cart = sprintf(
-			'<a class="add-to-cart btn-primary wp-block-button__link" data-info="%s" data-type="%s">%s</a>',
-			esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ),
-			esc_attr( $args['type'] ),
-			esc_attr( $args['text'] )
-		);
-		$cart_page = get_permalink( ps_setting( 'cart_page' ) );
-		if ( $args['echo'] ) {
-			// echo '<div class="cart-button">' . $quantity . $button_add_cart . '
-			// 	<a class="view-cart btn-primary wp-block-button__link" href="' . $cart_page . '" title="' . __( 'View cart', 'gtt-shop' ) . '">'. __( 'View cart', 'gtt-shop' ) .'</a>
-			// </div>';
-			echo '<div class="cart-button">' . $quantity . '</div>';
-		}
-	}
-
-	protected static function get_product_info( $id ) {
-		$price = 0;
-		$price_original = ! empty( get_post_meta( $id, 'price', true ) ) ? get_post_meta( $id, 'price', true ) : 0;
-		$price_vip2 = get_post_meta( $id, 'price_vip2', true );
-		$price_vip3 = get_post_meta( $id, 'price_vip3', true );
-		$price_vip4 = get_post_meta( $id, 'price_vip4', true );
-		$price_vip5 = get_post_meta( $id, 'price_vip5', true );
-		$price_vip6 = get_post_meta( $id, 'price_vip6', true );
-		$price_sale = get_post_meta( $id, 'flash_sale_price', true );
-		$ma_sp      = get_post_meta( $id, 'ma_sp', true );
-		$image_url  = get_post_meta( $id, 'image_url', true );
-
-		$time_start = (int)rwmb_meta( 'flash_sale_time_start', get_queried_object_id() );
-		$time_end   = (int)rwmb_meta( 'flash_sale_time_end', get_queried_object_id() );
+		$price_sale = (float) get_post_meta( $id, 'flash_sale_price', true );
+		$time_start = (int) rwmb_meta( 'flash_sale_time_start', $id );
+		$time_end   = (int) rwmb_meta( 'flash_sale_time_end', $id );
 		$time_now   = strtotime( current_time( 'mysql' ) );
 
 		$role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
 		switch ( $role ) {
 			case 'vip2':
-				$price_original = $price_vip2 ? $price_vip2 : $price_original;
+				$price = $price_vip2 ?: $price;
 				break;
 			case 'vip3':
-				$price_original = $price_vip3 ? $price_vip3 : $price_original;
+				$price = $price_vip3 ?: $price;
 				break;
 			case 'vip4':
-				$price_original = $price_vip4 ? $price_vip4 : $price_original;
+				$price = $price_vip4 ?: $price;
 				break;
 			case 'vip5':
-				$price_original = $price_vip5 ? $price_vip5 : $price_original;
+				$price = $price_vip5 ?: $price;
 				break;
 			case 'vip6':
-				$price_original = $price_vip6 ? $price_vip6 : $price_original;
-				break;
-			default:
-				$price_original = $price_original;
+				$price = $price_vip6 ?: $price;
 				break;
 		}
 
-		if ( $price_sale == NULL || $time_start > $time_now || $time_now > $time_end ) {
-			$price = $price_original;
-		} else {
+		if ( $price_sale && $time_start <= $time_now && $time_now <= $time_end ) {
 			$price = $price_sale;
 		}
+
 		return [
 			'id'    => $id,
 			'title' => get_the_title( $id ),
-			'price' => $price * 1000,
-			'url'   => $image_url,
+			'price' => intval( $price * 1000 ),
+			'url'   => get_post_meta( $id, 'image_url', true ),
 			'link'  => get_permalink( $id ),
-			'ma_sp' => $ma_sp,
+			'ma_sp' => get_post_meta( $id, 'ma_sp', true ),
 		];
 	}
 
@@ -142,6 +88,16 @@ class Cart {
 		$data = get_user_meta( $id, 'cart', true );
 		if ( empty( $data ) ) {
 			$data = [];
+		}
+
+		// Always refresh the product info, because users might update their prices.
+		foreach ( $data as $product_id => &$product ) {
+			if ( empty( $product['quantity'] ) ) {
+				unset( $data[ $product_id ] );
+				continue;
+			}
+			$product['quantity'] = (int) $product['quantity'];
+			$product = array_merge( $product, self::get_product_info( $product_id ) );
 		}
 
 		wp_send_json_success( $data );
