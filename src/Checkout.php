@@ -52,8 +52,18 @@ class Checkout {
 		if ( empty( $data ) ) {
 			wp_send_json_error( 'Giỏ hàng trống' );
 		}
+
 		$amount = 0;
-		foreach ( $data as $product ) {
+
+		// Always refresh the product info, because users might update their prices.
+		foreach ( $data as $product_id => &$product ) {
+			if ( empty( $product['quantity'] ) ) {
+				unset( $data[ $product_id ] );
+				continue;
+			}
+			$product['quantity'] = (int) $product['quantity'];
+			$product = array_merge( $product, Cart::get_product_info( $product_id ) );
+
 			$amount += $product['price'] * $product['quantity'];
 		}
 

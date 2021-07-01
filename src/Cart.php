@@ -31,7 +31,7 @@ class Cart {
 		</div>';
 	}
 
-	private static function get_product_info( $id ) {
+	public static function get_product_info( $id ) {
 		$price      = (float) get_post_meta( $id, 'price', true );
 		$price_vip2 = (float) get_post_meta( $id, 'price_vip2', true );
 		$price_vip3 = (float) get_post_meta( $id, 'price_vip3', true );
