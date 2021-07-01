@@ -33,12 +33,10 @@
 						<div class="product-price">
 							<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( product.price )) }} <?= $symbol; ?></p>
 						</div>
-						<div class="cart-button">
-							<div class="quantity cart__quantity">
-								<span class="button-minus" data-info="{{ JSON.stringify( product ) }}">-</span>
-								<input type="text" class="quantity_products" name="quantity" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
-								<span class="button-plus" data-info="{{ JSON.stringify( product ) }}">+</span>
-							</div>
+						<div class="quantity" data-product={{ product.id }}>
+							<span class="button-minus">-</span>
+							<input type="text" class="quantity_products" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
+							<span class="button-plus">+</span>
 						</div>
 
 						<div class="cart__remove-product">
