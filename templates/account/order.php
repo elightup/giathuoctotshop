@@ -83,7 +83,7 @@ $voucher       = json_decode( $item->voucher, true );
 	</div>
 </div>
 <div class="order-list col-lg-12 clear">
-<h4>Chi tiết sản phẩm</h4>
+	<h4>Chi tiết sản phẩm</h4>
 	<table class="order-products table">
 		<thead>
 		<tr>
@@ -108,3 +108,6 @@ $voucher       = json_decode( $item->voucher, true );
 		</tbody>
 	</table>
 </div>
+<?php if ( ! isset( $_GET['type'] ) ) : ?>
+	<button class="place-checkout-again btn-success">Đặt hàng lại</button>
+<?php endif; ?>
