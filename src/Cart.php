@@ -144,6 +144,11 @@ class Cart {
 			$data = [];
 		}
 
+		// Always refresh the product info, because users might update their prices.
+		foreach ( $data as $product_id => &$product ) {
+			$product = array_merge( $product, self::get_product_info( $product_id ) );
+		}
+
 		wp_send_json_success( $data );
 	}
 
