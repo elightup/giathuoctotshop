@@ -11,6 +11,7 @@
 				cart.data = JSON.parse( data );
 			}
 			cart.updateMiniCart();
+			cart.addEventListeners();
 
 			// For logged in users, get from server.
 			if ( ! CartParams.userId ) {
@@ -24,10 +25,19 @@
 				if ( response.success ) {
 					cart.data = Array.isArray( response.data ) ? {} : response.data;
 					cart.updateMiniCart();
+					cart.updateQuantityInputs();
 
 					$d.trigger( 'cart-loaded' );
 				}
 			} );
+		},
+		addEventListeners() {
+			// Click button plus and minus
+			$d.on( 'click', '.button-plus', cart.onIncreaseDecrease );
+			$d.on( 'click', '.button-minus', cart.onIncreaseDecrease );
+
+			// Update quantity when input change.
+			$d.on( 'change', '.quantity_products', cart.onChangeQuantity );
 		},
 		update() {
 			// Update to local storage first.
@@ -51,21 +61,26 @@
 			cart.update();
 		},
 		hasProduct( id ) {
-			return cart.data.hasOwnProperty( id );
+			return id && cart.data.hasOwnProperty( id );
 		},
 		getProduct( id ) {
 			return cart.hasProduct( id ) ? cart.data[ id ] : null;
 		},
-		addProduct( productInfo, quantity ) {
-			cart.data[productInfo.id] = productInfo;
+		addProduct( productId, quantity ) {
+			if ( ! productId ) {
+				return;
+			}
 			if ( quantity >= 1 ) {
-				cart.data[productInfo.id].quantity = quantity;
+				cart.data[productId] = { quantity };
 			} else {
 				cart.removeProduct( productInfo.id );
 			}
 			cart.update();
 		},
 		updateProduct( productId, quantity ) {
+			if ( ! productId ) {
+				return;
+			}
 			cart.data[productId].quantity = quantity;
 			cart.update();
 		},
@@ -84,76 +99,64 @@
 				}
 			} );
 			$( '.mini-cart-count span' ).html( count );
+
+			// TODO: update cart on sidebar for quick order & cart page.
 			if ( $( 'body' ).hasClass( 'page-template-page-quick-order' ) || $( 'body' ).hasClass( 'cart-page' ) ) {
 				$( '.product-cart__detail .color-secondary' ).html( count );
 				$( '.product-cart__detail .color-primary span' ).html( eFormatNumber(0, 3, '.', ',', parseFloat( total ) ) );
 			}
+		},
+		updateQuantityInputs() {
+			$( '.quantity_products' ).each( function() {
+				const $this = $( this ),
+					id = $this.parent().data( 'product' );
+
+				if ( cart.hasProduct( id ) ) {
+					product = cart.getProduct( id );
+					$this.val( product.quantity );
+				}
+			} );
+		},
+		onIncreaseDecrease( e ) {
+			e.preventDefault();
+
+			const $this        = $( this ),
+				$parent        = $this.parent(),
+				$quantityInput = $parent.find( '.quantity_products' ),
+				amount         = $this.hasClass( 'button-minus' ) ? -1 : 1;
+
+			let quantity = parseInt( $quantityInput.val(), 10 );
+			quantity = quantity + amount;
+			if ( quantity < 0 ) {
+				quantity = 0;
+			}
+
+			$quantityInput.val( quantity );
+
+			const productId = $parent.data( 'product' );
+			if ( cart.hasProduct( productId ) ) {
+				cart.updateProduct( productId, quantity );
+			} else {
+				cart.addProduct( productId, quantity );
+			}
+		},
+		onChangeQuantity( e ) {
+			e.preventDefault();
+
+			const $this = $( this ),
+				quantity = $this.val(),
+				$parent = $this.parent(),
+				productId = $parent.data( 'product' );
+
+			if ( cart.hasProduct( productId ) ) {
+				cart.updateProduct( productId, quantity );
+			} else {
+				cart.addProduct( productId, quantity );
+			}
 		}
 	};
 
-	function clickHandle( e ) {
-		e.preventDefault();
-
-		const $this        = $( this ),
-			$quantityInput = $this.parent().find( '.quantity_products' ),
-			amount         = $this.hasClass( 'button-minus' ) ? -1 : 1;
-
-		let quantity = parseInt( $quantityInput.val(), 10 );
-		quantity = quantity + amount;
-		if ( quantity < 0 ) {
-			quantity = 0;
-		}
-
-		$quantityInput.val( quantity );
-
-		const productInfo = $( this ).data( 'info' );
-		if ( cart.hasProduct( productInfo.id ) ) {
-			cart.updateProduct( productInfo.id, quantity );
-		} else {
-			cart.addProduct( productInfo, quantity );
-		}
-	}
-
-	function onChangeQuantity( e ) {
-		e.preventDefault();
-
-		const $this = $( this );
-		const quantity = $this.val();
-		const productInfo = $this.next().data( 'info' );
-
-		console.log( quantity, productInfo );
-
-		if ( cart.hasProduct( productInfo.id ) ) {
-			cart.updateProduct( productInfo.id, quantity );
-		} else {
-			cart.addProduct( productInfo, quantity );
-		}
-	}
-
-	// addQuantityToInput
-	function addQuantityToInput() {
-		$( '.button-plus' ).each( function() {
-			const $this = $( this ),
-				info = $this.data( 'info' ),
-				id = info.id;
-
-			if ( cart.hasProduct( id ) ) {
-				product = cart.getProduct( id );
-				$this.prev().val( product.quantity );
-			}
-		} );
-	}
-
 	cart.init();
-
-	// Click button plus and minus
-	$d.on( 'click', '.button-plus', clickHandle );
-	$d.on( 'click', '.button-minus', clickHandle );
-
-	// Update quantity when input change.
-	$d.on( 'change', '.quantity_products', onChangeQuantity );
-
-	addQuantityToInput();
 
 	// Export cart object.
 	window.cart = cart;

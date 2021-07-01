@@ -23,59 +23,12 @@ class Cart {
 		], 'CartParams' );
 	}
 
-	public static function cart( $args = [] ) {
-		$args             = wp_parse_args(
-			$args,
-			[
-				'id'   => get_the_ID(),
-				'text' => __( 'Buy now', 'gtt-shop' ),
-				'type' => __( 'Added to shopping cart', 'gtt-shop' ),
-				'echo' => true,
-			]
-		);
-		$quantity         = '<div class="quantity">
-		<input type="text" class="quantity_products" step="1" min="0" name="quantity" value="1" size="4" pattern="[0-9]*" inputmode="numeric">
+	public static function add_cart() {
+		echo '<div class="quantity" data-product="' . get_the_ID() . '">
+			<span class="button-minus">-</span>
+			<input type="text" class="quantity_products" value="0" size="4" pattern="[0-9]*" inputmode="numeric">
+			<span class="button-plus">+</span>
 		</div>';
-		$button_view_cart = sprintf(
-			'<a class="add-to-cart buy-now btn btn-primary" data-info="%s" data-type="%s">%s</a>',
-			esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ),
-			esc_attr( $args['type'] ),
-			esc_attr( $args['text'] )
-		);
-		if ( $args['echo'] ) {
-			echo '<div class="cart-button">' . $quantity . $button_view_cart . '</div>';
-		}
-	}
-
-	public static function add_cart( $args = [] ) {
-		$args     = wp_parse_args(
-			$args,
-			[
-				'id'   => get_the_ID(),
-				'text' => __( 'Add cart', 'gtt-shop' ),
-				'type' => __( 'Added to shopping cart', 'gtt-shop' ),
-				'echo' => true,
-			]
-		);
-		$quantity = '<div class="quantity">
-		<span class="button-minus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">-</span>
-		<input type="text" class="quantity_products" step="1" min="0" name="quantity" value="0" size="4" pattern="[0-9]*" inputmode="numeric">
-		<span class="button-plus" data-info="' . esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ) . '" data-type="' . $args['type'] . '" data-field="quantity">+</span>
-		</div>';
-
-		$button_add_cart = sprintf(
-			'<a class="add-to-cart btn-primary wp-block-button__link" data-info="%s" data-type="%s">%s</a>',
-			esc_attr( wp_json_encode( self::get_product_info( $args['id'] ) ) ),
-			esc_attr( $args['type'] ),
-			esc_attr( $args['text'] )
-		);
-		$cart_page = get_permalink( ps_setting( 'cart_page' ) );
-		if ( $args['echo'] ) {
-			// echo '<div class="cart-button">' . $quantity . $button_add_cart . '
-			// 	<a class="view-cart btn-primary wp-block-button__link" href="' . $cart_page . '" title="' . __( 'View cart', 'gtt-shop' ) . '">'. __( 'View cart', 'gtt-shop' ) .'</a>
-			// </div>';
-			echo '<div class="cart-button">' . $quantity . '</div>';
-		}
 	}
 
 	private static function get_product_info( $id ) {

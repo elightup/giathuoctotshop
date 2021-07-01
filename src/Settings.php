@@ -19,8 +19,6 @@ class Settings {
 			'tabs'        => [
 				'general'  => __( 'Chung', 'gtt-shop' ),
 				'payment'  => __( 'Thanh toán', 'gtt-shop' ),
-				'support'  => __( 'Hỗ trợ', 'gtt-shop' ),
-				// 'vouchers'  => __( 'Vouchers', 'gtt-shop' ),
 			],
 		];
 		$settings_pages[] = [
@@ -115,25 +113,6 @@ class Settings {
 							],
 						],
 					],
-				],
-			],
-		];
-
-		$meta_boxes[] = [
-			'id'             => 'faqs',
-			'title'          => ' ',
-			'settings_pages' => 'gtt-shop',
-			'tab'            => 'support',
-			'fields'         => [
-				[
-					'type' => 'custom_html',
-					'name' => __( 'Add to cart', 'gtt-shop' ),
-					'std'  => '<code>ELUSHOP\Cart::add_cart();</code>',
-				],
-				[
-					'type' => 'custom_html',
-					'name' => __( 'Buy fast', 'gtt-shop' ),
-					'std'  => '<code>ELUSHOP\Cart::cart();</code>',
 				],
 			],
 		];
