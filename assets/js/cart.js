@@ -5,11 +5,6 @@
 		data: {},
 		key: `cart-${ CartParams.userId }`,
 		init() {
-			// Get from local storage first: for current user and guests.
-			const data = localStorage.getItem( cart.key );
-			if ( data ) {
-				cart.data = JSON.parse( data );
-			}
 			cart.updateMiniCart();
 			cart.updateQuantityInputs();
 			cart.addEventListeners();
@@ -23,13 +18,15 @@
 				_ajax_nonce: CartParams.nonce,
 				id: CartParams.userId
 			}, response => {
-				if ( response.success ) {
-					cart.data = Array.isArray( response.data ) ? {} : response.data;
-					cart.updateMiniCart();
-					cart.updateQuantityInputs();
-
-					$d.trigger( 'cart-loaded' );
+				if ( ! response.success ) {
+					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
+					return;
 				}
+				cart.data = Array.isArray( response.data ) ? {} : response.data;
+				cart.updateMiniCart();
+				cart.updateQuantityInputs();
+
+				$d.trigger( 'cart-loaded' );
 			} );
 		},
 		addEventListeners() {
@@ -41,8 +38,6 @@
 			$d.on( 'change', '.quantity_products', cart.onChangeQuantity );
 		},
 		update() {
-			// Update to local storage first.
-			localStorage.setItem( cart.key, JSON.stringify( cart.data ) );
 			cart.updateMiniCart();
 
 			// Update to server.
@@ -54,6 +49,13 @@
 				_ajax_nonce: CartParams.nonce,
 				id: CartParams.userId,
 				data: cart.data
+			}, response => {
+				if ( ! response.success ) {
+					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
+					return;
+				}
+				cart.data = Array.isArray( response.data ) ? {} : response.data;
+				cart.updateMiniCart();
 			} );
 		},
 		clear() {
@@ -93,7 +95,7 @@
 			let total = 0;
 			Object.values( cart.data ).forEach( product => {
 				count += parseInt( product['quantity'] );
-				total += parseInt( product['price'] ) * parseInt( product['quantity'] );
+				total += product['price'] ? parseInt( product['price'] ) * parseInt( product['quantity'] ) : 0;
 				if ( product['quantity'] == 0 ) {
 					cart.removeProduct( product['id'] );
 				}
