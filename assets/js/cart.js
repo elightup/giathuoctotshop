@@ -5,11 +5,6 @@
 		data: {},
 		key: `cart-${ CartParams.userId }`,
 		init() {
-			// Get from local storage first: for current user and guests.
-			const data = localStorage.getItem( cart.key );
-			if ( data ) {
-				cart.data = JSON.parse( data );
-			}
 			cart.updateMiniCart();
 			cart.updateQuantityInputs();
 			cart.addEventListeners();
@@ -43,8 +38,6 @@
 			$d.on( 'change', '.quantity_products', cart.onChangeQuantity );
 		},
 		update() {
-			// Update to local storage first.
-			localStorage.setItem( cart.key, JSON.stringify( cart.data ) );
 			cart.updateMiniCart();
 
 			// Update to server.
