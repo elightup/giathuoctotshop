@@ -14,7 +14,7 @@ class Cart {
 			Assets::enqueue_style( 'cart' );
 		}
 
-		Assets::enqueue_script( 'cart' );
+		wp_enqueue_script( 'cart', trailingslashit( ELU_SHOP_URL ) . 'assets/js/cart.js', ['jquery'], uniqid(), true );
 		Assets::localize( 'cart', [
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
@@ -91,14 +91,7 @@ class Cart {
 		}
 
 		// Always refresh the product info, because users might update their prices.
-		foreach ( $data as $product_id => &$product ) {
-			if ( empty( $product['quantity'] ) ) {
-				unset( $data[ $product_id ] );
-				continue;
-			}
-			$product['quantity'] = (int) $product['quantity'];
-			$product = array_merge( $product, self::get_product_info( $product_id ) );
-		}
+		$this->refresh_cart_data( $data );
 
 		wp_send_json_success( $data );
 	}
@@ -116,8 +109,21 @@ class Cart {
 			$data = [];
 		}
 
+		$this->refresh_cart_data( $data );
+
 		update_user_meta( $id, 'cart', $data );
 
-		wp_send_json_success();
+		wp_send_json_success( $data );
+	}
+
+	private function refresh_cart_data( &$data ) {
+		foreach ( $data as $product_id => &$product ) {
+			if ( empty( $product['quantity'] ) ) {
+				unset( $data[ $product_id ] );
+				continue;
+			}
+			$product['quantity'] = (int) $product['quantity'];
+			$product = array_merge( $product, self::get_product_info( $product_id ) );
+		}
 	}
 }

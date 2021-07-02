@@ -23,13 +23,15 @@
 				_ajax_nonce: CartParams.nonce,
 				id: CartParams.userId
 			}, response => {
-				if ( response.success ) {
-					cart.data = Array.isArray( response.data ) ? {} : response.data;
-					cart.updateMiniCart();
-					cart.updateQuantityInputs();
-
-					$d.trigger( 'cart-loaded' );
+				if ( ! response.success ) {
+					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
+					return;
 				}
+				cart.data = Array.isArray( response.data ) ? {} : response.data;
+				cart.updateMiniCart();
+				cart.updateQuantityInputs();
+
+				$d.trigger( 'cart-loaded' );
 			} );
 		},
 		addEventListeners() {
@@ -54,6 +56,13 @@
 				_ajax_nonce: CartParams.nonce,
 				id: CartParams.userId,
 				data: cart.data
+			}, response => {
+				if ( ! response.success ) {
+					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
+					return;
+				}
+				cart.data = Array.isArray( response.data ) ? {} : response.data;
+				cart.updateMiniCart();
 			} );
 		},
 		clear() {
@@ -93,7 +102,7 @@
 			let total = 0;
 			Object.values( cart.data ).forEach( product => {
 				count += parseInt( product['quantity'] );
-				total += parseInt( product['price'] ) * parseInt( product['quantity'] );
+				total += product['price'] ? parseInt( product['price'] ) * parseInt( product['quantity'] ) : 0;
 				if ( product['quantity'] == 0 ) {
 					cart.removeProduct( product['id'] );
 				}
