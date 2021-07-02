@@ -36,6 +36,9 @@ new Order\OrderAgain;
 ( new Account() )->init();
 
 ( new Settings() )->init();
+
+new Misc;
+
 if ( is_admin() ) {
     ( new Order\AdminList() )->init();
 	( new User\user() )->init();
