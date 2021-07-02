@@ -3,6 +3,8 @@ namespace ELUSHOP\SaveLog;
 
 class SaveLog {
 
+	protected $table;
+
 	function __construct() {
 		add_action( 'profile_update', [ $this, 'user_object_log' ], 99, 2 );
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
@@ -14,10 +16,10 @@ class SaveLog {
 			$wpdb->prefix . 'logs',
 			[
 				'object_type' => '',
-				'object_id'   => $object_id,
+				'object_id'   => $user_id,
 				'action'      => '',
 				'date'        => current_time( 'mysql' ),
-				'user_update' => $user_id,
+				'user_update' => $object_id,
 			]
 		);
 	}
@@ -32,14 +34,13 @@ class SaveLog {
 			'',
 			80
 		);
-		// add_action( "load-$page", [ $this, 'create_table' ] );
-		// add_action( "load-$page", [ $this, 'add_screen_options' ] );
-		// add_action( "admin_print_styles-$page", [ $this, 'enqueue' ] );
+		add_action( "load-$page", [ $this, 'create_table' ] );
 	}
+	public function create_table() {
+		$this->table = new Table();
+	}
+
 	public function render() {
-		$this->renderList();
-	}
-	protected function renderList() {
 		include ELU_SHOP_DIR . 'templates/admin/logs.php';
 	}
 }
