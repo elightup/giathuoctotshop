@@ -40,6 +40,10 @@ $voucher       = json_decode( $item->voucher, true );
 				<td><?= $info['payment_method']; ?></td>
 			</tr>
 			<tr>
+				<th><?php esc_html_e( 'Ghi chú', 'gtt-shop' ) ?></th>
+				<td><?= esc_html( $item->note ); ?></td>
+			</tr>
+			<tr>
 				<th>Tổng tiền:</th>
 				<td><?= number_format( $item->amount, 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?></td>
 			</tr>

@@ -57,6 +57,10 @@ $voucher       = json_decode( $item->voucher, true );
 				<td><?= esc_html( $info['payment_method'] ); ?></td>
 			</tr>
 			<tr>
+				<td><?php esc_html_e( 'Ghi chú', 'gtt-shop' ) ?></td>
+				<td><?= esc_html( $item->note ); ?></td>
+			</tr>
+			<tr>
 				<td><?php esc_html_e( 'Tổng tiền', 'gtt-shop' ) ?></td>
 				<td><?= number_format_i18n( $item->amount, 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
 			</tr>
