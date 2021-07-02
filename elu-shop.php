@@ -40,7 +40,8 @@ if ( is_admin() ) {
     ( new Order\AdminList() )->init();
 	( new User\user() )->init();
 	new User\Views;
-	new Assets;
+    new Assets;
+	new SaveLog\SaveLog;
 }
 
 function is_cart_page() {
