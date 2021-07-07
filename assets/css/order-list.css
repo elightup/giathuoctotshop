@@ -24,3 +24,27 @@
 	color: #fff;
 	background: #17a2b8;
 }
+
+.gtt-button {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	width: 30px;
+	height: 30px;
+	color: #999;
+    border-radius: 4px;
+    transition: all .2s;
+    text-decoration: none;
+	border: 1px solid currentColor;
+	margin: 0 4px 4px 0;
+}
+.gtt-button .dashicons {
+	font-size: 18px;
+    height: 18px;
+    width: 18px;
+}
+.gtt-button:hover {
+    color: inherit;
+    background: #eee;
+}

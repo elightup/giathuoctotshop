@@ -48,6 +48,14 @@ class AdminList {
 
 	public function enqueue() {
 		Assets::enqueue_style( 'order-list' );
+		Assets::enqueue_script( 'order-list' );
+		Assets::localize( 'order-list', [
+			'nonce' => [
+				'close'  => wp_create_nonce( 'close' ),
+				'open'   => wp_create_nonce( 'open' ),
+				'repush' => wp_create_nonce( 'repush' ),
+			],
+		] );
 	}
 
 	public function render() {
