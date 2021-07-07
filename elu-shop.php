@@ -41,6 +41,7 @@ new Misc;
 
 if ( is_admin() ) {
     ( new Order\AdminList() )->init();
+	new Order\Ajax;
 	( new User\user() )->init();
 	new User\Views;
 	new Assets;
