@@ -15,7 +15,10 @@ class Ajax {
 			wp_send_json_error( 'Yêu cầu không hợp lệ' );
 		}
 		$this->update_order_status( $id, 'completed' );
-		wp_send_json_success();
+		wp_send_json_success( [
+			'button' => '<a href="#" class="gtt-button gtt-open" data-id="' . $id . '" title="Đánh dấu đang xử lý"><span class="dashicons dashicons-hourglass"></span></a>',
+			'status' => '<span class="badge badge--success">Đã hoàn thành</span>'
+		] );
 	}
 
 	public function order_open() {
@@ -25,7 +28,10 @@ class Ajax {
 			wp_send_json_error( 'Yêu cầu không hợp lệ' );
 		}
 		$this->update_order_status( $id, 'pending' );
-		wp_send_json_success();
+		wp_send_json_success( [
+			'button' => '<a href="#" class="gtt-button gtt-close" data-id="' . $id . '" title="Đánh dấu hoàn thành"><span class="dashicons dashicons-yes"></span></a>',
+			'status' => '<span class="badge">Đang xử lý</span>'
+		] );
 	}
 
 	public function order_repush() {

@@ -301,12 +301,12 @@ class Table extends \WP_List_Table {
 	public function column_action( $item ) {
 		if ( 'pending' === $item['status'] ) {
 			printf(
-				'<a href="#" class="gtt-button gtt-close" data-id="%d" title="Đánh dấu hoàn thành"><span class="dashicons dashicons-yes-alt"></span></a>',
+				'<a href="#" class="gtt-button gtt-close" data-id="%d" title="Đánh dấu hoàn thành"><span class="dashicons dashicons-yes"></span></a>',
 				$item['id']
 			);
 		} elseif ( 'completed' === $item['status'] ) {
 			printf(
-				'<a href="#" class="gtt-button gtt-open" data-id="%d" title="Đánh dấu đang xử lý><span class="dashicons dashicons-hourglass"></span></a>',
+				'<a href="#" class="gtt-button gtt-open" data-id="%d" title="Đánh dấu đang xử lý"><span class="dashicons dashicons-hourglass"></span></a>',
 				$item['id']
 			);
 		}
