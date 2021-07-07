@@ -91,10 +91,9 @@
 			cart.update();
 		},
 		updateMiniCart() {
-			let count = 0;
+			let count = Object.values( cart.data ).length;
 			let total = 0;
 			Object.values( cart.data ).forEach( product => {
-				count += parseInt( product['quantity'] );
 				total += product['price'] ? parseInt( product['price'] ) * parseInt( product['quantity'] ) : 0;
 				if ( product['quantity'] == 0 ) {
 					cart.removeProduct( product['id'] );
