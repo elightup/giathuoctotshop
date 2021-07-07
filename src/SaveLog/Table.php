@@ -168,23 +168,6 @@ class Table extends \WP_List_Table {
 		return isset( $item[ $column_name ] ) ? $item[ $column_name ] : '';
 	}
 
-
-	public function column_action( $item ) {
-		// printf(
-		// 	'<a href="%s" class="button tips">' . __( 'Đẩy lên lần nữa', 'elu-shop' ) . ' </a>',
-		// 	add_query_arg(
-		// 		[
-		// 			'action'   => 'push_to_erp',
-		// 			'id'       => $item['id'],
-		// 			'user_id'  => $item['user'],
-		// 			'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
-		// 		],
-		// 		$this->base_url
-		// 	)
-		// );
-	}
-
-
 	public function get_bulk_actions() {
 		$actions = [
 			'bulk-trash'  => __( 'Xoá', 'elu-shop' ),

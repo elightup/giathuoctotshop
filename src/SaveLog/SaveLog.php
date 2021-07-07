@@ -5,23 +5,8 @@ class SaveLog {
 
 	protected $table;
 
-	function __construct() {
-		add_action( 'profile_update', [ $this, 'user_object_log' ], 99, 2 );
+	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
-	}
-	public function user_object_log( $user_id, $old_user_data ) {
-		$object_id = get_current_user_id();
-		global $wpdb;
-		$wpdb->insert(
-			$wpdb->prefix . 'logs',
-			[
-				'object_type' => '',
-				'object_id'   => $user_id,
-				'action'      => '',
-				'date'        => current_time( 'mysql' ),
-				'user_update' => $object_id,
-			]
-		);
 	}
 
 	public function add_menu() {
@@ -42,6 +27,25 @@ class SaveLog {
 
 	public function render() {
 		include ELU_SHOP_DIR . 'templates/admin/logs.php';
+	}
+
+	public static function insert_logs_table( $data ) {
+		$object_type = $data['object_type'];
+		$object_id   = $data['object_id'];
+		$action      = $data['action'];
+		$user_update = $data['user_update'];
+
+		global $wpdb;
+		$log_id = $wpdb->insert(
+			$wpdb->prefix . 'logs',
+			[
+				'object_type' => $object_type,
+				'object_id'   => $object_id,
+				'action'      => $action,
+				'date'        => current_time( 'mysql' ),
+				'user_update' => $user_update,
+			]
+		);
 	}
 }
 

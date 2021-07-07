@@ -9,6 +9,7 @@
  */
 
 namespace ELUSHOP\User;
+use ELUSHOP\SaveLog\SaveLog;
 
 class user {
 	/**
@@ -46,6 +47,16 @@ class user {
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
+
+		$user_update = get_current_user_id();
+		$data_insert_log = [
+			'object_type' => 'User',
+			'object_id'   => $user_id,
+			'user_update' => $user_update,
+			'action'      => 'Chỉnh sửa',
+		];
+
+		SaveLog::insert_logs_table( $data_insert_log );
 	}
 
 	public function user_search_by_multiple_parameters( $query ) {
