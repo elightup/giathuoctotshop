@@ -24,3 +24,21 @@
 	color: #fff;
 	background: #17a2b8;
 }
+
+.gtt-button {
+	color: #999;
+    display: inline-block;
+    padding: 6px;
+    border-radius: 4px;
+    transition: all .2s;
+    text-decoration: none;
+}
+.gtt-button .dashicons {
+	font-size: 20px;
+    height: 20px;
+    width: 20px;
+}
+.gtt-button:hover {
+    color: inherit;
+    background: #eee;
+}

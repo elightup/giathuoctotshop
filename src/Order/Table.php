@@ -192,13 +192,13 @@ class Table extends \WP_List_Table {
 		$columns = [
 			'cb'       => '<input type="checkbox">',
 			'id'       => 'ID',
-			'status'   => __( 'Trạng thái', 'elu-shop' ),
 			'customer' => __( 'Khách hàng', 'elu-shop' ),
 			'products' => __( 'Sản phẩm', 'elu-shop' ),
 			'amount'   => __( 'Tổng tiền', 'elu-shop' ),
 			'date'     => __( 'Ngày', 'elu-shop' ),
+			'status'   => __( 'Trạng thái', 'elu-shop' ),
+			'erp'      => 'ERP',
 			'action'   => __( 'Thao tác', 'elu-shop' ),
-			'message'  => __( 'Chi tiết lỗi', 'elu-shop' ),
 		];
 
 		return $columns;
@@ -240,48 +240,15 @@ class Table extends \WP_List_Table {
 
 	public function column_status( $item ) {
 		$statuses = [
-			'pending' => [ 'badge', __( 'Đang xử lý', 'elu-shop' ) ],
-			'completed'  => [ 'badge badge--success', __( 'Đã hoàn thành', 'elu-shop' ) ],
-			'trash'   => [ 'badge badge--danger', __( 'Đã xoá', 'elu-shop' ) ],
+			'pending'   => [ 'badge', __( 'Đang xử lý', 'elu-shop' ) ],
+			'completed' => [ 'badge badge--success', __( 'Đã hoàn thành', 'elu-shop' ) ],
+			'trash'     => [ 'badge badge--danger', __( 'Đã xoá', 'elu-shop' ) ],
 		];
 		$status   = $statuses[ $item['status'] ];
-		$user     = get_userdata( $item['user'] );
 		$payments = $item['info'];
 		$payments = json_decode( $payments, true );
 
 		printf( '<span class="%s">%s</span>', $status[0], $status[1] );
-		if ( 'pending' === $item['status'] ) {
-			printf(
-				'<a href="%s" class="button">' . __( 'Đã hoàn thành', 'elu-shop' ) . ' </a>',
-				add_query_arg(
-					[
-						'action'   => 'close',
-						'id'       => $item['id'],
-						// 'user'     => $user->ID,
-						'amount'   => number_format( $item['amount'], 0, '', '.' ),
-						// 'payments' => $payments[0]['pay'],
-						'_wpnonce' => wp_create_nonce( 'ps_close_order' ),
-					],
-					$this->base_url
-				)
-			);
-		}
-		if ( 'completed' === $item['status'] ) {
-			printf(
-				'<a href="%s" class="button">' . __( 'Đang xử lý', 'elu-shop' ) . ' </a>',
-				add_query_arg(
-					[
-						'action'   => 'open',
-						'id'       => $item['id'],
-						// 'user'     => $user->ID,
-						'amount'   => number_format( $item['amount'], 0, '', '.' ),
-						// 'payments' => $payments[0]['pay'],
-						'_wpnonce' => wp_create_nonce( 'ps_open_order' ),
-					],
-					$this->base_url
-				)
-			);
-		}
 	}
 
 	public function column_products( $item ) {
@@ -332,44 +299,31 @@ class Table extends \WP_List_Table {
 	}
 
 	public function column_action( $item ) {
-		$statuses = [
-			'pending' => [ 'badge', __( 'Có lỗi khi đẩy lên ERP', 'elu-shop' ) ],
-			'completed'  => [ 'badge badge--success', __( 'Đã đẩy lên ERP', 'elu-shop' ) ],
-		];
-		$status   = $statuses[ $item['push_erp'] ];
-		printf( '<span class="%s">%s</span>', $status[0], $status[1] );
-
-		if ( 'pending' === $item['push_erp'] ) {
+		if ( 'pending' === $item['status'] ) {
 			printf(
-				'<a href="%s" class="button tips">' . __( 'Thử lại', 'elu-shop' ) . ' </a>',
-				add_query_arg(
-					[
-						'action'   => 'push_to_erp',
-						'id'       => $item['id'],
-						'user_id'  => $item['user'],
-						'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
-					],
-					$this->base_url
-				)
+				'<a href="#" class="gtt-button gtt-close" data-id="%d" title="Đánh dấu hoàn thành"><span class="dashicons dashicons-yes-alt"></span></a>',
+				$item['id']
 			);
-		} else {
+		} elseif ( 'completed' === $item['status'] ) {
 			printf(
-				'<a href="%s" class="button tips">' . __( 'Đẩy lên lần nữa', 'elu-shop' ) . ' </a>',
-				add_query_arg(
-					[
-						'action'   => 'push_to_erp',
-						'id'       => $item['id'],
-						'user_id'  => $item['user'],
-						'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
-					],
-					$this->base_url
-				)
+				'<a href="#" class="gtt-button gtt-open" data-id="%d" title="Đánh dấu đang xử lý><span class="dashicons dashicons-hourglass"></span></a>',
+				$item['id']
 			);
 		}
+
+		printf(
+			'<a href="#" class="gtt-button gtt-repush" data-id="%d" title="Đẩy lại lên ERP"><span class="dashicons dashicons-cloud-upload"></span></a>',
+			$item['id']
+		);
 	}
 
-	public function column_message( $item ) {
-		echo $item['push_message'];
+	public function column_erp( $item ) {
+		$statuses = [
+			'pending'   => [ 'badge', __( 'Có lỗi khi đẩy lên ERP', 'elu-shop' ) ],
+			'completed' => [ 'badge badge--success', __( 'Đã đẩy lên ERP', 'elu-shop' ) ],
+		];
+		$status   = $statuses[ $item['push_erp'] ];
+		printf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $item['push_message'] );
 	}
 
 	protected function get_row_actions( $item ) {
@@ -421,17 +375,6 @@ class Table extends \WP_List_Table {
 				$this->base_url
 			)
 		);
-		// $actions['push_to_erp'] = sprintf(
-		// 	'<a href="%s">' . esc_html__( 'Đẩy lên ERP', 'elu-shop' ) . '</a>',
-		// 	add_query_arg(
-		// 		[
-		// 			'action'   => 'push_to_erp',
-		// 			'id'       => $item['id'],
-		// 			'_wpnonce' => wp_create_nonce( 'gtt_push_order_to_erp' ),
-		// 		],
-		// 		$this->base_url
-		// 	)
-		// );
 		return $actions;
 	}
 
@@ -467,19 +410,6 @@ class Table extends \WP_List_Table {
 		if ( 'untrash' === $this->current_action() ) {
 			check_admin_referer( 'ps_untrash_order' );
 			$this->update_item_status( $_GET['id'], 'pending' );
-			return;
-		}
-		if ( 'open' === $this->current_action() ) {
-			check_admin_referer( 'ps_open_order' );
-			$check_budget_user = $this->check_budget_user( $_GET['user'], $_GET['amount'] );
-
-			$this->update_item_status( $_GET['id'], 'pending' );
-			return;
-		}
-		if ( 'close' === $this->current_action() ) {
-			check_admin_referer( 'ps_close_order' );
-
-			$this->update_item_status( $_GET['id'], 'completed' );
 			return;
 		}
 		if ( 'push_to_erp' === $this->current_action() ) {
