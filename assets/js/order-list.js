@@ -40,4 +40,23 @@ jQuery( function( $ ) {
 			$this.replaceWith( response.data.button );
 		} );
 	} );
+
+	// Repush to ERP.
+	$d.on( 'click', '.gtt-repush', function( e ) {
+		e.preventDefault();
+
+		const $this = $( this ),
+			id = $this.data( 'id' );
+		$.post( ajaxurl, {
+			action: 'gtt_order_repush',
+			id,
+			_ajax_nonce: OrderList.nonce.repush,
+		}, response => {
+			if ( ! response.success ) {
+				alert( response.data );
+				return;
+			}
+			$this.closest( 'tr' ).find( '.column-status' ).html( response.data.status );
+		} );
+	} );
 } );
