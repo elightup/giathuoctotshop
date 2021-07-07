@@ -56,6 +56,8 @@ class ERP {
 		$status   = $response['code'] == 1 ? 'completed' : 'pending';
 
 		self::update_status( $id, $status, $message );
+
+		return compact( 'status', 'message' );
 	}
 
 	private static function get_order( $id ) {

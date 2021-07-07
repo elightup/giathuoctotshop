@@ -40,8 +40,16 @@ class Ajax {
 		if ( ! $id ) {
 			wp_send_json_error( 'Yêu cầu không hợp lệ' );
 		}
-		ERP::push( $id );
-		wp_send_json_success();
+		$data = ERP::push( $id );
+
+		$statuses = [
+			'pending'   => [ 'badge', __( 'Có lỗi khi đẩy lên ERP', 'elu-shop' ) ],
+			'completed' => [ 'badge badge--success', __( 'Đã đẩy lên ERP', 'elu-shop' ) ],
+		];
+		$status = $statuses[ $data['status'] ];
+		$status = sprintf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $data['message'] );
+
+		wp_send_json_success( $data );
 	}
 
 	private function update_order_status( $id, $status ) {
