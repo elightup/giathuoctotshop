@@ -48,6 +48,7 @@ class Ajax {
 		];
 		$status = $statuses[ $data['status'] ];
 		$status = sprintf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $data['message'] );
+		$data['status'] = $status;
 
 		wp_send_json_success( $data );
 	}

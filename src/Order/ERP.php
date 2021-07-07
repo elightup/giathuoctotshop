@@ -51,13 +51,17 @@ class ERP {
 			'timeout' => 15,
 		] );
 		$response = json_decode( $request['body'], true );
-		$message  = $response['message'] ?: $response['name'];
-		$message  = $response['code'] == 1 ? '' : $message;
-		$status   = $response['code'] == 1 ? 'completed' : 'pending';
+		$status   = 'completed';
+		$message  = '';
+
+		if ( $response['error'] ) {
+			$status  = 'pending';
+			$message = $response['message'] ?? $response['name'];
+		}
 
 		self::update_status( $id, $status, $message );
 
-		return compact( 'status', 'message' );
+		return compact( 'status', 'message', 'response' );
 	}
 
 	private static function get_order( $id ) {
@@ -98,8 +102,7 @@ class ERP {
 				'push_erp'     => $status,
 				'push_message' => $message
 			],
-			[ 'id' => $id ],
-			[ '%d' ]
+			[ 'id' => $id ]
 		);
 	}
 }

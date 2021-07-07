@@ -56,7 +56,7 @@ jQuery( function( $ ) {
 				alert( response.data );
 				return;
 			}
-			$this.closest( 'tr' ).find( '.column-status' ).html( response.data.status );
+			$this.closest( 'tr' ).find( '.column-erp' ).html( response.data.status );
 		} );
 	} );
 } );

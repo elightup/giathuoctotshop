@@ -322,6 +322,9 @@ class Table extends \WP_List_Table {
 			'pending'   => [ 'badge', __( 'Có lỗi khi đẩy lên ERP', 'elu-shop' ) ],
 			'completed' => [ 'badge badge--success', __( 'Đã đẩy lên ERP', 'elu-shop' ) ],
 		];
+		if ( empty( $item['push_erp'] ) || ! isset( $statuses[ $item['push_erp'] ] ) ) {
+			return;
+		}
 		$status   = $statuses[ $item['push_erp'] ];
 		printf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $item['push_message'] );
 	}
