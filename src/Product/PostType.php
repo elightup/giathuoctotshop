@@ -259,6 +259,11 @@ class PostType {
 					'name'    => 'Quy cách',
 					'columns' => 6,
 				],
+				[
+					'id'      => 'product_expiration_date',
+					'name'    => 'Ngày hết hạn',
+					'columns' => 6,
+				],
 			],
 		];
 		return $meta_boxes;
