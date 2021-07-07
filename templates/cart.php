@@ -4,7 +4,6 @@
 <script type="text/html" id="tmpl-cart">
 	<#
 	let total = 0,
-		totalQuantity = 0,
 		giam_gia = 0,
 		cartSubtotal = 0;
 
@@ -18,9 +17,7 @@
 			<div class="col-md-7">
 				<#
 				data.products.forEach( product => {
-					let subtotal = product.price * product.quantity;
-					total += subtotal;
-					totalQuantity += parseInt( product.quantity );
+					total += product.price * product.quantity;
 					#>
 					<div class="product-item">
 						<a class="post-thumbnail" href="{{ product.link }}">
@@ -53,7 +50,7 @@
 					<div class="product-cart__detail d-flex">
 						<div class="col-md-5">
 							<p>Số lượng</p>
-							<p class="color-secondary">{{ totalQuantity }}</p>
+							<p class="color-secondary">{{ data.products.length }}</p>
 						</div>
 						<div class="col-md-7">
 							<p>Thành tiền</p>
