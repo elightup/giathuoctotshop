@@ -412,13 +412,6 @@ class Table extends \WP_List_Table {
 			$this->update_item_status( $_GET['id'], 'pending' );
 			return;
 		}
-		if ( 'push_to_erp' === $this->current_action() ) {
-			check_admin_referer( 'gtt_push_order_to_erp' );
-
-			$this->push_to_erp( $_GET['id'], $_GET['user_id'] );
-			// $this->update_push_erp_status( $_GET['id'], 'completed' );
-			return;
-		}
 		if ( 'delete' === $this->current_action() ) {
 			check_admin_referer( 'ps_delete_order' );
 			$this->delete_item( absint( $_GET['id'] ) );
@@ -489,96 +482,5 @@ class Table extends \WP_List_Table {
 			[ 'id' => $id ],
 			[ '%s' ]
 		);
-	}
-
-	protected function push_to_erp( $id, $user_id ) {
-		$products = $this->get_product_from_order_id( $id );
-		$products = reset( $products );
-
-		$amount  = $products['amount'];
-		$voucher = $products['voucher'];
-		$voucher = json_decode( $voucher, true );
-		if ( ! $voucher ) {
-			$giam_gia = 0;
-		}
-		if ( $voucher['voucher_type'] == 'by_price' ) {
-			$giam_gia = $voucher['voucher_price'] / 1000;
-		} else {
-			$giam_gia = ( $voucher['voucher_price'] * $amount / 100 ) / 1000;
-		}
-
-		$data_product = $products['data'];
-		$data_product = json_decode( $data_product, true );
-
-		$data_customer = $products['info'];
-		$data_customer = json_decode( $data_customer, true );
-
-		$products_api = [];
-		$payment_method = $data_customer['payment_method'] ? $data_customer['payment_method'] : 'cash';
-		foreach ( $data_product as $product ) {
-			$products_api[] = [
-				'product_code' => $product['ma_sp'],
-				'qty'          => (int)$product['quantity'],
-				'unit_price'   => (int)$product['price'] / 1000,
-			];
-		}
-
-		$data_string = json_encode( array(
-			'note'         => $products['note'],
-			'payment_term' => $payment_method,
-			'products'     => $products_api,
-			'discount'     => $giam_gia,
-			'giathuoc_id'  => (int)$id,
-			'giathuoctot'  => 'True',
-		), JSON_UNESCAPED_UNICODE );
-
-		$token      = json_decode( $this->get_token_api( $user_id  ) );
-		$token_data = $token->error ? '' : $token->data->access_token;
-		$data = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/pre_order/create', array(
-			'headers' => [
-				'Content-Type'  => 'application/json',
-				'Authorization' => 'Bearer ' . $token_data,
-			],
-			'method'  => 'POST',
-			'body'    => $data_string,
-			'timeout' => 15,
-		) );
-		$response    = json_decode( $data['body'], true );
-		$erp_message = $response['message'] ? $response['message'] : $response['name'];
-		$erp_message = $response['code'] == 1 ? '' : $erp_message;
-		$erp_status  = $response['code'] == 1 ? 'completed' : 'pending';
-
-		global $wpdb;
-		$this->update_push_erp_status( $_GET['id'], $erp_status, $erp_message );
-	}
-
-	public function get_product_from_order_id( $id ) {
-		global $wpdb;
-
-		$where = $wpdb->prepare( '`id`=%s', $id );
-		$sql    = "SELECT * FROM $wpdb->orders WHERE $where";
-
-		return $wpdb->get_results( $sql, 'ARRAY_A' );
-	}
-
-	public function get_token_api( $user_id  ) {
-		$user_meta   = get_user_meta( $user_id );
-		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
-
-		$data_string = json_encode( array(
-			'login'    => $prefix_user . $user_meta['user_sdt'][0],
-			'password' => '111111',
-		), JSON_UNESCAPED_UNICODE );
-
-		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/login', array(
-			'headers' => [
-				'Content-Type'  => 'application/json',
-			],
-			'method'  => 'POST',
-			'body'    => $data_string,
-			'timeout' => 15,
-		) );
-
-		return wp_remote_retrieve_body( $request );
 	}
 }
