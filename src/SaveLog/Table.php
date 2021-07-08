@@ -143,7 +143,7 @@ class Table extends \WP_List_Table {
 			'object_type' => __( 'Object Type', 'elu-shop' ),
 			'object_id'   => __( 'Object ID', 'elu-shop' ),
 			'action'      => __( 'Thao tác', 'elu-shop' ),
-			'user_update' => __( 'Người chỉnh sửa', 'elu-shop' ),
+			'user_update' => __( 'Người thực hiện', 'elu-shop' ),
 		];
 
 		return $columns;
@@ -169,6 +169,16 @@ class Table extends \WP_List_Table {
 			$user_id   = (int)$item['object_id'];
 			$user_name = get_user_meta( $user_id, 'user_name', true );
 			echo '<a href="' . get_edit_user_link( $user_id ) . '">' . esc_html( $user_name ) . '</a>';
+		}
+		if ( $item['object_type'] == 'Đơn hàng' ) {
+			$link = add_query_arg(
+				[
+					'action' => 'view',
+					'id'     => $item['object_id'],
+				],
+				admin_url( 'edit.php?page=orders&post_type=product' )
+			);
+			echo '<a href="' . $link . '">Đơn hàng #' . esc_html( $item['object_id'] ) . '</a>';
 		}
 	}
 
