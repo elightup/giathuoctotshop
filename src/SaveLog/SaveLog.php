@@ -7,6 +7,7 @@ class SaveLog {
 
 	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
+		add_action( 'save_post_product', [ $this, 'save_log_product' ] );
 	}
 
 	public function add_menu() {
@@ -27,6 +28,16 @@ class SaveLog {
 
 	public function render() {
 		include ELU_SHOP_DIR . 'templates/admin/logs.php';
+	}
+
+	public function save_log_product( $post_id ) {
+		$data = [
+			'object_type' => 'Sản phẩm',
+			'object_id'   => $post_id,
+			'user_update' => get_current_user_id(),
+			'action'      => 'Update Sản phẩm',
+		];
+		self::insert_logs_table( $data );
 	}
 
 	public static function insert_logs_table( $data ) {

@@ -180,6 +180,11 @@ class Table extends \WP_List_Table {
 			);
 			echo '<a href="' . $link . '">Đơn hàng #' . esc_html( $item['object_id'] ) . '</a>';
 		}
+		if ( $item['object_type'] == 'Sản phẩm' ) {
+			$product_id = (int)$item['object_id'];
+
+			echo '<a href="' . get_edit_post_link( $product_id ) . '">' . esc_html( get_the_title( $product_id ) ) . '</a>';
+		}
 	}
 
 	public function column_user_update( $item ) {
