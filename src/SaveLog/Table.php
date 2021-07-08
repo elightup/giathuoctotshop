@@ -164,6 +164,20 @@ class Table extends \WP_List_Table {
 		);
 	}
 
+	public function column_object_id( $item ) {
+		if ( $item['object_type'] == 'User' ) {
+			$user_id   = (int)$item['object_id'];
+			$user_name = get_user_meta( $user_id, 'user_name', true );
+			echo '<a href="' . get_edit_user_link( $user_id ) . '">' . esc_html( $user_name ) . '</a>';
+		}
+	}
+
+	public function column_user_update( $item ) {
+		$user_id   = (int)$item['user_update'];
+		$user_name = get_user_meta( $user_id, 'user_name', true );
+		echo '<a href="' . get_edit_user_link( $user_id ) . '">' . esc_html( $user_name ) . '</a>';
+	}
+
 	public function column_default( $item, $column_name ) {
 		return isset( $item[ $column_name ] ) ? $item[ $column_name ] : '';
 	}
