@@ -48,15 +48,7 @@ class user {
 			'timeout' => 15,
 		) );
 
-		$user_update = get_current_user_id();
-		$data_insert_log = [
-			'object_type' => 'User',
-			'object_id'   => $user_id,
-			'user_update' => $user_update,
-			'action'      => 'Chỉnh sửa',
-		];
-
-		SaveLog::insert_logs_table( $data_insert_log );
+		$this->insert_logs_table( $user_id, 'Chỉnh sửa user' );
 	}
 
 	public function user_search_by_multiple_parameters( $query ) {
@@ -173,6 +165,7 @@ class user {
 	public function active_user() {
 		$user_id = $_GET['user_id'];
 		update_user_meta( $user_id, 'active_user', 1 );
+		$this->insert_logs_table( $user_id, 'Kích hoạt tài khoản' );
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
 	}
@@ -214,6 +207,9 @@ class user {
 		$erp_message = $response['code'] == 1 ? '' : $response['message'];
 		update_user_meta( $user_id, 'erp_response', $response['code'] );
 		update_user_meta( $user_id, 'erp_message', $erp_message );
+
+		$this->insert_logs_table( $user_id, 'Đẩy user lên ERP' );
+
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
 	}
@@ -254,5 +250,15 @@ class user {
 		) );
 
 		return wp_remote_retrieve_body( $request );
+	}
+
+	public function insert_logs_table( $user_id, $action ) {
+		$data_insert_log = [
+			'object_type' => 'User',
+			'object_id'   => $user_id,
+			'user_update' => get_current_user_id(),
+			'action'      => $action,
+		];
+		SaveLog::insert_logs_table( $data_insert_log );
 	}
 }
