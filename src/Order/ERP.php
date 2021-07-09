@@ -54,7 +54,7 @@ class ERP {
 		$status   = 'completed';
 		$message  = '';
 
-		if ( $response['error'] ) {
+		if ( $response['code'] !== 1 ) {
 			$status  = 'pending';
 			$message = $response['message'] ?? $response['name'];
 		}
