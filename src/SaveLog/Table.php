@@ -140,8 +140,8 @@ class Table extends \WP_List_Table {
 			'cb'          => '<input type="checkbox">',
 			'date'        => __( 'Thời gian', 'elu-shop' ),
 			// 'id'          => 'STT',
-			'object_type' => __( 'Object Type', 'elu-shop' ),
-			'object_id'   => __( 'Object ID', 'elu-shop' ),
+			'object_type' => __( 'Loại', 'elu-shop' ),
+			'object_id'   => __( 'Đối tượng', 'elu-shop' ),
 			'action'      => __( 'Thao tác', 'elu-shop' ),
 			'user_update' => __( 'Người thực hiện', 'elu-shop' ),
 		];
