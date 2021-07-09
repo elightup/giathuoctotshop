@@ -1,6 +1,7 @@
 <?php
 namespace ELUSHOP\Order;
 use ELUSHOP\Assets;
+use ELUSHOP\SaveLog\SaveLog;
 
 class OrderAgain {
 	public function __construct() {
@@ -49,6 +50,13 @@ class OrderAgain {
 		);
 
 		ERP::push( $wpdb->insert_id );
+		$data_insert_log = [
+			'object_type' => 'Đơn hàng',
+			'object_id'   => $wpdb->insert_id,
+			'user_update' => $user_id,
+			'action'      => 'Đặt lại đơn hàng',
+		];
+		SaveLog::insert_logs_table( $data_insert_log );
 
 		$url = add_query_arg(
 			[

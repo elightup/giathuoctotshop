@@ -2,6 +2,7 @@
 namespace ELUSHOP;
 
 use ELUSHOP\Order\ERP;
+use ELUSHOP\SaveLog\SaveLog;
 
 class Checkout {
 	public function __construct() {
@@ -98,6 +99,14 @@ class Checkout {
 		delete_user_meta( $id, 'checkout' );
 
 		ERP::push( $wpdb->insert_id );
+
+		$data_insert_log = [
+			'object_type' => 'Đơn hàng',
+			'object_id'   => $wpdb->insert_id,
+			'user_update' => $id,
+			'action'      => 'Đặt hàng',
+		];
+		SaveLog::insert_logs_table( $data_insert_log );
 
 		$url = add_query_arg(
 			[

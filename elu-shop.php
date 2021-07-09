@@ -44,7 +44,8 @@ if ( is_admin() ) {
 	new Order\Ajax;
 	( new User\user() )->init();
 	new User\Views;
-	new Assets;
+    new Assets;
+	new SaveLog\SaveLog;
 }
 
 function is_cart_page() {
