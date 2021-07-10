@@ -94,15 +94,17 @@ class Checkout {
 			]
 		);
 
+		$order_id = $wpdb->insert_id;
+
 		// Clear cart.
 		delete_user_meta( $id, 'cart' );
 		delete_user_meta( $id, 'checkout' );
 
-		ERP::push( $wpdb->insert_id );
+		ERP::push( $order_id );
 
 		$data_insert_log = [
 			'object_type' => 'Đơn hàng',
-			'object_id'   => $wpdb->insert_id,
+			'object_id'   => $order_id,
 			'user_update' => $id,
 			'action'      => 'Đặt hàng',
 		];
@@ -111,7 +113,7 @@ class Checkout {
 		$url = add_query_arg(
 			[
 				'view' => 'order',
-				'id'   => $wpdb->insert_id,
+				'id'   => $order_id,
 				'type' => 'checkout',
 			],
 			get_permalink( ps_setting( 'confirmation_page' ) )
