@@ -48,7 +48,8 @@ class Checkout {
 		$user           = wp_get_current_user();
 		$id             = get_current_user_id();
 		$data           = get_user_meta( $id, 'cart', true );
-		$voucher        = filter_input( INPUT_POST, 'voucher', FILTER_SANITIZE_STRING );
+		$voucher        = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
+		$voucher        = wp_unslash( $voucher );
 		$note           = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 		$payment_method = filter_input( INPUT_POST, 'payment_method', FILTER_SANITIZE_STRING );
 
