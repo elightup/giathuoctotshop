@@ -125,18 +125,35 @@ class Checkout {
 	public function check_voucher() {
 		$voucher_choice = isset( $_POST['voucher'] ) ? $_POST['voucher'] : '';
 		$total_price    = isset( $_POST['total_price'] ) ? $_POST['total_price'] : '';
-		$result = [];
-		$vouchers = ps_setting( 'vouchers_group' );
+		$result         = [];
+		$message        = '';
+		$vouchers       = ps_setting( 'vouchers_group' );
+		$i              = 0;
 		foreach ( $vouchers as $voucher ) {
-			if ( $voucher_choice == $voucher['voucher_id'] && $total_price > $voucher['voucher_dieukien'] ) {
+			$true_choice     = $voucher_choice == $voucher['voucher_id'];
+			$time_now        = strtotime( current_time( 'mysql' ) );
+			$expiration_date = (int) $voucher['voucher_expiration_date']['timestamp'];
+			if ( $true_choice ) {
+				$i ++;
+			}
+			if ( $true_choice && $total_price > $voucher['voucher_dieukien'] ) {
 				$result['voucher_id']       = $voucher['voucher_id'];
 				$result['voucher_type']     = $voucher['voucher_type'];
 				$result['voucher_price']    = $voucher['voucher_price'];
 				$result['voucher_dieukien'] = $voucher['voucher_dieukien'];
 			}
+
+			if ( $true_choice && $expiration_date < $time_now ) {
+				$message = 'Mã voucher đã hết hạn';
+				$result = [];
+			}
+		}
+		if ( $i == 0 ) {
+			$message = 'Mã voucher không khớp';
+			$result = [];
 		}
 		if ( empty( $result ) ) {
-			wp_send_json_error();
+			wp_send_json_error( $message );
 		}
 
 		wp_send_json_success( $result );

@@ -145,7 +145,7 @@
 					updateCartHtml();
 					$( '.voucher__message' ).html( 'Đã áp dụng mã voucher thành công' );
 				} else {
-					$( '.voucher__message' ).html( 'Mã voucher không khớp' );
+					$( '.voucher__message' ).html( response.data );
 				}
 			}, 'json' );
 		} );
@@ -164,17 +164,21 @@
 			}, 'json' );
 		} );
 
-		const $voucher = JSON.parse( localStorage.getItem( 'voucher' ) );
 
-		let total = 0;
-		$.each( cart.data, function( key, value ) {
-			const subtotal = value.price * value.quantity;
-			total += subtotal;
-		} );
+		function updateVoucher() {
+			const $voucher = JSON.parse( localStorage.getItem( 'voucher' ) );
 
-		if ( $voucher && $voucher.voucher_dieukien > total ) {
-			localStorage.removeItem( 'voucher' );
-			updateCartHtml();
+			let total = 0;
+			$.each( cart.data, function( key, value ) {
+				const subtotal = value.price * value.quantity;
+				total += subtotal;
+			} );
+
+			if ( $voucher && $voucher.voucher_dieukien > total ) {
+				localStorage.removeItem( 'voucher' );
+				updateCartHtml();
+			}
 		}
+		$d.on( 'cart-loaded', updateVoucher );
 	} );
 } )( jQuery, cart, wp, CartParams );
