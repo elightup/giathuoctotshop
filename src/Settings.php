@@ -150,9 +150,13 @@ class Settings {
 							'type' => 'number',
 						],
 						[
-							'name' => __( 'Ngày hết hạn', 'gtt-shop' ),
-							'id'   => 'voucher_expiration_date',
-							'type' => 'date',
+							'name'      => __( 'Ngày hết hạn', 'gtt-shop' ),
+							'id'        => 'voucher_expiration_date',
+							'type'      => 'date',
+							'timestamp' => true,
+							'js_options' => [
+								'dateFormat' => 'dd-mm-yy',
+							],
 						],
 						[
 							'name' => __( 'Số lượng giới hạn', 'gtt-shop' ),

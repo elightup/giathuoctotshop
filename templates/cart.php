@@ -64,7 +64,7 @@
 									}
 									#>
 									<p>Tạm tính: <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }} <?= $symbol; ?></span></p>
-									<p>Giảm giá: <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( giam_gia )) }} <?= $symbol; ?></span></p>
+									<p>Giảm giá: <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( giam_gia )) }} <?= $symbol; ?></span><a href="" class="remove-voucher">[Xóa]</a></p>
 									<#
 								}
 								cartSubtotal = total - giam_gia;
