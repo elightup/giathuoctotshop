@@ -17,6 +17,7 @@ class Checkout {
 
 		add_action( 'wp_ajax_get_checkout', [ $this, 'ajax_get_checkout' ] );
 		add_action( 'wp_ajax_set_checkout', [ $this, 'ajax_set_checkout' ] );
+		add_action( 'mb_settings_page_load', [ $this, 'save_setting_to_option' ], 20 );
 	}
 
 	public function enqueue() {
@@ -42,6 +43,16 @@ class Checkout {
 			$classes[] = 'cart-page';
 		}
 		return $classes;
+	}
+
+	public function save_setting_to_option( $args ) {
+		if ( $args['id'] !== 'gtt-shop-voucher' ) {
+			return;
+		}
+		$vouchers = ps_setting( 'vouchers_group' );
+		foreach ( $vouchers as $voucher ) {
+			add_option( 'voucher_' . $voucher['voucher_id'], 0, '', 'yes' );
+		}
 	}
 
 	public function place_checkout() {
@@ -101,6 +112,12 @@ class Checkout {
 		delete_user_meta( $id, 'cart' );
 		delete_user_meta( $id, 'checkout' );
 
+		if ( $voucher ) {
+			$voucher_id  = json_decode( $voucher )->voucher_id;
+			$old_voucher = (int)get_option( 'voucher_' . $voucher_id );
+			update_option( 'voucher_' . $voucher_id, $old_voucher + 1 );
+		}
+
 		ERP::push( $order_id );
 
 		$data_insert_log = [
@@ -145,6 +162,13 @@ class Checkout {
 
 			if ( $true_choice && $expiration_date < $time_now ) {
 				$message = 'Mã voucher đã hết hạn';
+				$result = [];
+			}
+
+			$voucher_used   = (int) get_option( 'voucher_' . $voucher['voucher_id'] );
+			$voucher_number = (int) $voucher['voucher_soluong'];
+			if ( $true_choice && $voucher_used >= $voucher_number ) {
+				$message = 'Đã hết số lượng voucher này';
 				$result = [];
 			}
 		}
