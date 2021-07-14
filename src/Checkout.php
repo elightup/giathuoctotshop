@@ -151,13 +151,16 @@ class Checkout {
 			$time_now        = strtotime( current_time( 'mysql' ) );
 			$expiration_date = (int) $voucher['voucher_expiration_date']['timestamp'];
 			if ( $true_choice ) {
-				$i ++;
-			}
-			if ( $true_choice && $total_price > $voucher['voucher_dieukien'] ) {
 				$result['voucher_id']       = $voucher['voucher_id'];
 				$result['voucher_type']     = $voucher['voucher_type'];
 				$result['voucher_price']    = $voucher['voucher_price'];
 				$result['voucher_dieukien'] = $voucher['voucher_dieukien'];
+				$i ++;
+			}
+
+			if ( $true_choice && $total_price < $voucher['voucher_dieukien'] ) {
+				$message = 'Voucher không hợp lệ';
+				$result = [];
 			}
 
 			if ( $true_choice && $expiration_date < $time_now ) {
