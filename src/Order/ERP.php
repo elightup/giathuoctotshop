@@ -8,11 +8,30 @@ class ERP {
 		$data     = $order['data'];
 		$data     = json_decode( $data, true );
 		$products = [];
+		$role = is_user_logged_in() ? get_userdata( $order['user'] )->roles[0] : '';
 		foreach ( $data as $product ) {
+			$price = $product['price'];
+			switch ( $role ) {
+				case 'vip2':
+					$price = $product['price_vip2'];
+					break;
+				case 'vip3':
+					$price = $product['price_vip3'];
+					break;
+				case 'vip4':
+					$price = $product['price_vip4'];
+					break;
+				case 'vip5':
+					$price = $product['price_vip5'];
+					break;
+				case 'vip6':
+					$price = $product['price_vip6'];
+					break;
+			}
 			$products[] = [
 				'product_code' => $product['ma_sp'],
 				'qty'          => (int) $product['quantity'],
-				'unit_price'   => (int) $product['price'] / 1000,
+				'unit_price'   => (int) $price / 1000,
 			];
 		}
 

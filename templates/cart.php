@@ -1,4 +1,4 @@
-<div id="cart" class="cart"><?= esc_attr__( 'Updating the cart', 'gtt-shop' );?></div>
+<div id="cart" class="cart"><?= esc_attr__( 'Updating the cart', 'gtt-shop' ); ?></div>
 
 <?php $symbol = ps_setting( 'currency' ); ?>
 <script type="text/html" id="tmpl-cart">
@@ -17,7 +17,26 @@
 			<div class="col-md-7">
 				<#
 				data.products.forEach( product => {
-					total += product.price * product.quantity;
+					let price = product.price;
+					switch( CartParams.role ) {
+						case 'vip2':
+							price = product.price_vip2;
+							break;
+						case 'vip3':
+							price = product.price_vip3;
+							break;
+						case 'vip4':
+							price = product.price_vip4;
+							break;
+						case 'vip5':
+							price = product.price_vip5;
+							break;
+						case 'vip6':
+							price = product.price_vip6;
+							break;
+					}
+
+					total += price * product.quantity;
 					#>
 					<div class="product-item">
 						<a class="post-thumbnail" href="{{ product.link }}">
@@ -28,9 +47,9 @@
 							<h3 class="entry-title"><a href="{{ product.link }}">{{ product.title }}</a></h3>
 						</div>
 						<div class="product-price">
-							<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( product.price )) }} <?= $symbol; ?></p>
+							<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( price )) }} <?= $symbol; ?></p>
 						</div>
-						<div class="quantity" data-product={{ product.id }}>
+						<div class="quantity" data-product="{{ product.id }}">
 							<span class="button-minus">-</span>
 							<input type="text" class="quantity_products" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
 							<span class="button-plus">+</span>

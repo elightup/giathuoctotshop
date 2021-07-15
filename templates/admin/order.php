@@ -118,12 +118,31 @@ $voucher       = json_decode( $item->voucher, true );
 			<?php
 			$products = json_decode( $item->data, true );
 			foreach ( $products as $product ) :
+				$price = $product['price'];
+				$role = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
+				switch ( $role ) {
+					case 'vip2':
+						$price = $product['price_vip2'];
+						break;
+					case 'vip3':
+						$price = $product['price_vip3'];
+						break;
+					case 'vip4':
+						$price = $product['price_vip4'];
+						break;
+					case 'vip5':
+						$price = $product['price_vip5'];
+						break;
+					case 'vip6':
+						$price = $product['price_vip6'];
+						break;
+				}
 				?>
 				<tr>
 					<td><?= esc_html( $product['title'] ); ?></td>
 					<td><?= esc_html( $product['quantity'] ); ?></td>
-					<td><?= number_format_i18n( $product['price'], 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
-					<td><?= number_format_i18n( $product['quantity'] * $product['price'], 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
+					<td><?= number_format_i18n( $price, 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
+					<td><?= number_format_i18n( $product['quantity'] * $price, 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>

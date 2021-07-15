@@ -77,7 +77,8 @@
 		function updateCartHtml() {
 			$cart.html( cartTemplate( {
 				products: Object.values( cart.data ),
-				voucher: JSON.parse( localStorage.getItem( 'voucher' ) )
+				voucher: JSON.parse( localStorage.getItem( 'voucher' ) ),
+				role: CartParams.role
 			} ) );
 		}
 

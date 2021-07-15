@@ -94,7 +94,26 @@
 			let count = Object.values( cart.data ).length;
 			let total = 0;
 			Object.values( cart.data ).forEach( product => {
-				total += product['price'] ? parseInt( product['price'] ) * parseInt( product['quantity'] ) : 0;
+				let price = product['price'];
+				switch( CartParams.role ) {
+					case 'vip2':
+						price = product['price_vip2'];
+						break;
+					case 'vip3':
+						price = product['price_vip3'];
+						break;
+					case 'vip4':
+						price = product['price_vip4'];
+						break;
+					case 'vip5':
+						price = product['price_vip5'];
+						break;
+					case 'vip6':
+						price = product['price_vip6'];
+						break;
+				}
+
+				total += price ? parseInt( price ) * parseInt( product['quantity'] ) : 0;
 				if ( product['quantity'] == 0 ) {
 					cart.removeProduct( product['id'] );
 				}

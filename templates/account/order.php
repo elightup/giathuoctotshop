@@ -101,12 +101,31 @@ $voucher       = json_decode( $item->voucher, true );
 		<?php
 		$products = json_decode( $item->data, true );
 		foreach ( $products as $product ) :
+			$price = $product['price'];
+			$role = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
+			switch ( $role ) {
+				case 'vip2':
+					$price = $product['price_vip2'];
+					break;
+				case 'vip3':
+					$price = $product['price_vip3'];
+					break;
+				case 'vip4':
+					$price = $product['price_vip4'];
+					break;
+				case 'vip5':
+					$price = $product['price_vip5'];
+					break;
+				case 'vip6':
+					$price = $product['price_vip6'];
+					break;
+			}
 			?>
 			<tr>
 				<td><?= $product['title']; ?></td>
 				<td><?= $product['quantity']; ?></td>
-				<td><?= number_format( $product['price'], 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?></td>
-				<td><?= number_format( $product['quantity'] * $product['price'], 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?></td>
+				<td><?= number_format( $price, 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?></td>
+				<td><?= number_format( $product['quantity'] * $price, 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?></td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>

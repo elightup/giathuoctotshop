@@ -79,7 +79,26 @@ class Checkout {
 			$product['quantity'] = (int) $product['quantity'];
 			$product = array_merge( $product, Cart::get_product_info( $product_id ) );
 
-			$amount += $product['price'] * $product['quantity'];
+			$price = $product['price'];
+			$role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
+			switch ( $role ) {
+				case 'vip2':
+					$price = $product['price_vip2'];
+					break;
+				case 'vip3':
+					$price = $product['price_vip3'];
+					break;
+				case 'vip4':
+					$price = $product['price_vip4'];
+					break;
+				case 'vip5':
+					$price = $product['price_vip5'];
+					break;
+				case 'vip6':
+					$price = $product['price_vip6'];
+					break;
+			}
+			$amount += $price * $product['quantity'];
 		}
 
 		$info = [
