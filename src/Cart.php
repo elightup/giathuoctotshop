@@ -20,6 +20,7 @@ class Cart {
 			'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
 			'userId'  => get_current_user_id(),
 			'nonce'   => wp_create_nonce( 'cart' ),
+			'role'    => is_user_logged_in() ? wp_get_current_user()->roles[0] : '',
 		], 'CartParams' );
 	}
 
@@ -33,47 +34,33 @@ class Cart {
 
 	public static function get_product_info( $id ) {
 		$price      = (float) get_post_meta( $id, 'price', true );
-		$price_vip2 = (float) get_post_meta( $id, 'price_vip2', true );
-		$price_vip3 = (float) get_post_meta( $id, 'price_vip3', true );
-		$price_vip4 = (float) get_post_meta( $id, 'price_vip4', true );
-		$price_vip5 = (float) get_post_meta( $id, 'price_vip5', true );
-		$price_vip6 = (float) get_post_meta( $id, 'price_vip6', true );
+		$price_vip2 = get_post_meta( $id, 'price_vip2', true ) ?: $price;
+		$price_vip3 = get_post_meta( $id, 'price_vip3', true ) ?: $price;
+		$price_vip4 = get_post_meta( $id, 'price_vip4', true ) ?: $price;
+		$price_vip5 = get_post_meta( $id, 'price_vip5', true ) ?: $price;
+		$price_vip6 = get_post_meta( $id, 'price_vip6', true ) ?: $price;
 
 		$price_sale = (float) get_post_meta( $id, 'flash_sale_price', true );
-		$time_start = (int) rwmb_meta( 'flash_sale_time_start', $id );
-		$time_end   = (int) rwmb_meta( 'flash_sale_time_end', $id );
+		$time_start = (int) rwmb_meta( 'flash_sale_time_start', '', $id );
+		$time_end   = (int) rwmb_meta( 'flash_sale_time_end', '', $id );
 		$time_now   = strtotime( current_time( 'mysql' ) );
 
-		$role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
-		switch ( $role ) {
-			case 'vip2':
-				$price = $price_vip2 ?: $price;
-				break;
-			case 'vip3':
-				$price = $price_vip3 ?: $price;
-				break;
-			case 'vip4':
-				$price = $price_vip4 ?: $price;
-				break;
-			case 'vip5':
-				$price = $price_vip5 ?: $price;
-				break;
-			case 'vip6':
-				$price = $price_vip6 ?: $price;
-				break;
-		}
-
 		if ( $price_sale && $time_start <= $time_now && $time_now <= $time_end ) {
-			$price = $price_sale;
+			$price = $price_vip2 = $price_vip3 = $price_vip4 = $price_vip5 = $price_vip6 = $price_sale;
 		}
 
 		return [
-			'id'    => $id,
-			'title' => get_the_title( $id ),
-			'price' => intval( $price * 1000 ),
-			'url'   => get_post_meta( $id, 'image_url', true ),
-			'link'  => get_permalink( $id ),
-			'ma_sp' => get_post_meta( $id, 'ma_sp', true ),
+			'id'         => $id,
+			'title'      => get_the_title( $id ),
+			'price'      => intval( $price * 1000 ),
+			'price_vip2' => intval( $price_vip2 * 1000 ),
+			'price_vip3' => intval( $price_vip3 * 1000 ),
+			'price_vip4' => intval( $price_vip4 * 1000 ),
+			'price_vip5' => intval( $price_vip5 * 1000 ),
+			'price_vip6' => intval( $price_vip6 * 1000 ),
+			'url'        => get_post_meta( $id, 'image_url', true ),
+			'link'       => get_permalink( $id ),
+			'ma_sp'      => get_post_meta( $id, 'ma_sp', true ),
 		];
 	}
 
