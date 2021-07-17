@@ -1,14 +1,16 @@
 <?php
 namespace ELUSHOP;
 
-class schema {
-	public static function register_tables() {
+class Schema {
+	public function __construct() {
 		global $wpdb;
 		$wpdb->tables[] = 'orders';
 		$wpdb->orders   = $wpdb->prefix . 'orders';
+
+		$this->create_tables();
 	}
 
-	public static function create_tables() {
+	public function create_tables() {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		global $wpdb;
 
@@ -24,9 +26,9 @@ class schema {
 				`amount` int unsigned NOT NULL,
 				`voucher` text,
 				`note` text,
-				`info` text,
-				`info_shipping` text,
-				`data` text,
+				`info` longtext,
+				`info_shipping` longtext,
+				`data` longtext,
 				PRIMARY KEY  (`id`),
 				KEY `date` (`date`),
 				KEY `status` (`status`),

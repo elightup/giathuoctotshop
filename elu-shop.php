@@ -21,11 +21,7 @@ define( 'ELU_SHOP_VER', '1.0.0' );
 
 load_plugin_textdomain( 'gtt-shop', false, plugin_basename( ELU_SHOP_DIR ) . '/languages' );
 
-$schema = new Schema();
-$schema->register_tables();
-register_activation_hook( __FILE__, function () use ( $schema ) {
-	$schema->create_tables();
-} );
+new Schema;
 
 ( new Product\PostType() )->init();
 new Cart;
