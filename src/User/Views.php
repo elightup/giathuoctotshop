@@ -2,8 +2,6 @@
 namespace ELUSHOP\User;
 
 class Views {
-	private $custom_query = false;
-
 	public function __construct() {
 		add_filter( 'views_users', [ $this, 'add_views' ] );
 		add_action( 'admin_bar_menu', [ $this, 'admin_bar_notification' ], 99 );
@@ -12,14 +10,10 @@ class Views {
 	}
 
 	public function add_views( $views ) {
-		$this->custom_query = true;
-
 		$type = filter_input( INPUT_GET, 'gtt-type' );
 
 		$views['today-inactive'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-inactive' ? 'current' : '' ) . '">KH mới chưa kích hoạt <span class="count">(' . $this->get_today_inactive_count() . ')</span></a>';
 		$views['today-active'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-active', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-active' ? 'current' : '' ) . '">KH mới đã kích hoạt <span class="count">(' . $this->get_today_active_count() . ')</span></a>';
-
-		$this->custom_query = false;
 
 		return $views;
 	}
@@ -33,7 +27,7 @@ class Views {
 	}
 
 	public function filter_users( \WP_User_Query $query ) {
-		if ( ! is_admin() || $this->custom_query ) {
+		if ( ! is_admin() ) {
 			return;
 		}
 		$screen = get_current_screen();
@@ -46,6 +40,10 @@ class Views {
 			return;
 		}
 
+		if ( $query->get( 'gtt_custom' ) ) {
+			return;
+		}
+
 		$query->set( 'date_query', [
 			'year'  => date( 'Y' ),
 			'month' => date( 'n' ),
@@ -53,22 +51,33 @@ class Views {
 		] );
 
 		if ( $type === 'today-active' ) {
-			$query->set( 'meta_key', 'active_user' );
-			$query->set( 'meta_value', 1 );
+			$meta_query = $query->get( 'meta_query' );
+			if ( empty( $meta_query ) ) {
+				$meta_query = [];
+			}
+			$meta_query[] = [
+				'key'   => 'active_user',
+				'value' => 1,
+			];
+			$query->set( 'meta_query', $meta_query );
 		}
 		if ( $type === 'today-inactive' ) {
-			$query->set( 'meta_query', [
-				[
-					'key'     => 'active_user',
-					'value'   => 1,
-					'compare' => 'NOT EXISTS',
-				],
-			] );
+			$meta_query = $query->get( 'meta_query' );
+			if ( empty( $meta_query ) ) {
+				$meta_query = [];
+			}
+			$meta_query[] = [
+				'key'     => 'active_user',
+				'value'   => 1,
+				'compare' => 'NOT EXISTS',
+			];
+			$query->set( 'meta_query', $meta_query );
 		}
 	}
 
 	private function get_today_inactive_count() {
 		$users = get_users( [
+			'gtt_custom' => true,
 			'date_query' => [
 				'year'  => date( 'Y' ),
 				'month' => date( 'n' ),
@@ -89,13 +98,18 @@ class Views {
 
 	private function get_today_active_count() {
 		$users = get_users( [
+			'gtt_custom' => true,
 			'date_query' => [
 				'year'  => date( 'Y' ),
 				'month' => date( 'n' ),
 				'day'   => date( 'j' ),
 			],
-			'meta_key'   => 'active_user',
-			'meta_value' => 1,
+			'meta_query' => [
+				[
+					'key'   => 'active_user',
+					'value' => 1,
+				],
+			],
 			'fields'     => 'ID',
 		] );
 
