@@ -22,7 +22,13 @@ class Table extends \WP_List_Table {
 
 		// All items.
 		$class        = $status ? '' : ' class="current"';
-		$links['all'] = "<a href='{$this->base_url}'$class>" . sprintf( 'Tất cả <span class="count">(%s)</span>', $this->get_total_items() ) . '</a>';
+		$links['all'] = sprintf(
+			'<a href="%s"%s>%s <span class="count">(%s)</span></a>',
+			$this->base_url,
+			$class,
+			'Tất cả',
+			$this->get_total_items()
+		);
 
 		$push_erp = isset( $_REQUEST['push_erp'] ) ? $_REQUEST['push_erp'] : '';
 		$statuses_erp = [
@@ -32,7 +38,13 @@ class Table extends \WP_List_Table {
 		foreach ( $statuses_erp as $key => $label ) {
 			$class         = $key === $push_erp ? ' class="current"' : '';
 			$url           = add_query_arg( 'push_erp', $key, $this->base_url );
-			$links[ 'erp_' . $key ] .= "<a href='$url'$class>" . sprintf( "$label <span class='count'>(%s)</span>", $this->get_total_items_by_erp( $key ) ) . '</a>';
+			$links[ "erp_$key" ] = sprintf(
+				'<a href="%s"%s>%s <span class="count">(%s)</span></a>',
+				$url,
+				$class,
+				$label,
+				$this->get_total_items_by_erp( $key )
+			);
 		}
 
 		$statuses = [
@@ -43,7 +55,13 @@ class Table extends \WP_List_Table {
 		foreach ( $statuses as $key => $label ) {
 			$class         = $key === $status ? ' class="current"' : '';
 			$url           = add_query_arg( 'status', $key, $this->base_url );
-			$links[ $key ] .= "<a href='$url'$class>" . sprintf( "$label <span class='count'>(%s)</span>", $this->get_total_items( $key ) ) . '</a>';
+			$links[ $key ] = sprintf(
+				'<a href="%s"%s>%s <span class="count">(%s)</span></a>',
+				$url,
+				$class,
+				$label,
+				$this->get_total_items( $key )
+			);
 		}
 		return $links;
 	}
@@ -168,16 +186,13 @@ class Table extends \WP_List_Table {
 		}
 
 		if ( isset( $_REQUEST['s'] ) ) {
-			$where_user            = "WHERE 1=1 AND (user_login LIKE '%" . $_REQUEST['s'] . "%' OR user_email LIKE '%" . $_REQUEST['s'] . "%' OR meta_value LIKE '%" . $_REQUEST['s'] . "%')";
-			$sql                   = "SELECT DISTINCT ID FROM $wpdb->users LEFT JOIN $wpdb->usermeta ON " . $wpdb->usermeta . ".user_id = " . $wpdb->users . ".ID $where_user";
-			$get_user_from_request = $wpdb->get_results( $sql, 'ARRAY_A' );
+			$s          = esc_sql( $_REQUEST['s'] );
+			$where_user = "WHERE u.user_login LIKE '%" . $s . "%' OR u.user_email LIKE '%" . $s . "%' OR um.meta_value LIKE '%" . $s . "%'";
+			$sql        = "SELECT DISTINCT ID FROM $wpdb->users AS u LEFT JOIN $wpdb->usermeta AS um ON um.user_id=u.ID $where_user";
+			$user_ids   = $wpdb->get_col( $sql );
 
-			$user_id_arr = [];
-			foreach ( $get_user_from_request as $key => $user_id ) {
-				$user_id_arr[] = (int)$user_id['ID'];
-			}
-			$user_id_arr = implode( ',', $user_id_arr );
-			$where[]     = '`user` IN ( ' . $user_id_arr . ' )';
+			$user_ids = implode( ',', $user_ids );
+			$where[]     = '`user` IN ( ' . $user_ids . ' )';
 		}
 		return $where ? 'WHERE ' . implode( ' ', $where ) : '';
 	}
