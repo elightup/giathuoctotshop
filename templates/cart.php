@@ -82,13 +82,13 @@
 										giam_gia = data.voucher.voucher_price * total / 100;
 									}
 									#>
-									<p>Tạm tính: <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }} <?= $symbol; ?></span></p>
-									<p>Giảm giá: <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( giam_gia )) }} <?= $symbol; ?></span><a href="" class="remove-voucher">[Xóa]</a></p>
+									<p>Tạm tính: <span class="total__number has-voucher"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }}</span> <?= $symbol; ?></span></p>
+									<p>Giảm giá: <span class="total__number giam_gia"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( giam_gia )) }}</span> <?= $symbol; ?></span><a href="" class="remove-voucher">[Xóa]</a></p>
 									<#
 								}
 								cartSubtotal = total - giam_gia;
 								#>
-								<p>Tổng: <span class="total__number">{{ eFormatNumber(0, 3, '.', ',', parseFloat( cartSubtotal )) }} <?= $symbol; ?></span></p>
+								<p>Tổng: <span class="total__number no-voucher"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( cartSubtotal )) }}</span> <?= $symbol; ?></span></p>
 							</div>
 						</div>
 					</div>

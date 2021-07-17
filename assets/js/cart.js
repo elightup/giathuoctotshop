@@ -118,13 +118,30 @@
 					cart.removeProduct( product['id'] );
 				}
 			} );
-			total = eFormatNumber( 0, 3, '.', ',', parseFloat( total ) );
+
 			$( '.mini-cart-count span' ).html( count );
 
 			// Update cart on sidebar for quick order & cart page.
 			$( '.product-cart__detail .color-secondary' ).html( count );
-			$( '.product-cart__detail .color-primary span' ).html( total );
-			$( '.total-pay-product .total__number' ).html( total );
+			let voucher = JSON.parse( localStorage.getItem( 'voucher' ) ),
+				giam_gia = 0;
+
+			if ( $( 'body' ).hasClass( 'cart-page' ) && voucher ) {
+				let $voucher_type = voucher['voucher_type'] == 'by_price';
+				giam_gia = $voucher_type ? parseInt( voucher['voucher_price'] ) : parseInt( voucher['voucher_price'] * total / 100 );
+				let cartSubtotal = total - giam_gia;
+				total = eFormatNumber( 0, 3, '.', ',', parseFloat( total ) );
+				giam_gia = eFormatNumber( 0, 3, '.', ',', parseFloat( giam_gia ) );
+				cartSubtotal = eFormatNumber( 0, 3, '.', ',', parseFloat( cartSubtotal ) );
+
+				$( '.total-pay-product .has-voucher span' ).html( total );
+				$( '.total-pay-product .giam_gia span' ).html( giam_gia );
+				$( '.total-pay-product .no-voucher span' ).html( cartSubtotal );
+			} else {
+				total = eFormatNumber( 0, 3, '.', ',', parseFloat( total ) );
+				$( '.product-cart__detail .color-primary span' ).html( total );
+				$( '.total-pay-product .total__number span' ).html( total );
+			}
 		},
 		updateQuantityInputs() {
 			$( '.quantity_products' ).each( function() {
