@@ -62,7 +62,6 @@
 					<#
 				} );
 				#>
-				<div class="product-back">Để thêm sản phẩm vào giỏ hàng, vui lòng quay về trang <a href="/dat-hang-nhanh/">Đặt hàng nhanh</a>.</div>
 			</div>
 			<div class="col-md-5">
 				<div class="product-cart__wrapper">
@@ -117,7 +116,8 @@
 						<?php endif ?>
 					</div>
 
-					<div class="field">
+					<div class="field field-button">
+						<a class="btn-secondary wp-block-button__link" href="<?php echo esc_url( home_url() ); ?>/dat-hang-nhanh/">Thêm sản phẩm</a>
 						<button class="place-checkout">Đặt hàng</button>
 					</div>
 				</div>

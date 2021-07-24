@@ -145,3 +145,15 @@ label.payment-method {
 	font-weight: normal;
 	display: block;
 }
+
+
+.field-button {
+	flex-direction: row;
+}
+.field-button > * {
+	width: 50%;
+	margin: 0 5px;
+}
+.field-button .wp-block-button__link.btn-secondary {
+	color: #ffffff;
+}
