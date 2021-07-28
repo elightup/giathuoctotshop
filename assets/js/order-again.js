@@ -1,5 +1,4 @@
 ( function( $, cart ) {
-	console.log( cart );
 	const $d = $( document );
 	// Check out again.
 	$d.on( 'click', '.place-checkout-again', function( e ) {
