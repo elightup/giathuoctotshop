@@ -41,7 +41,6 @@ if ( is_admin() ) {
 	( new User\user() )->init();
 	new User\Views;
     new Assets;
-	new SaveLog\SaveLog;
 }
 
 function is_cart_page() {

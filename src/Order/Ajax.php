@@ -1,6 +1,5 @@
 <?php
 namespace ELUSHOP\Order;
-use ELUSHOP\SaveLog\SaveLog;
 
 class Ajax {
 	public function __construct() {
@@ -16,7 +15,6 @@ class Ajax {
 			wp_send_json_error( 'Yêu cầu không hợp lệ' );
 		}
 		$this->update_order_status( $id, 'completed' );
-		$this->insert_logs_table( $id, 'Cập nhật trạng thái' );
 
 		wp_send_json_success( [
 			'button' => '<a href="#" class="gtt-button gtt-open" data-id="' . $id . '" title="Đánh dấu đang xử lý"><span class="dashicons dashicons-hourglass"></span></a>',
@@ -31,7 +29,6 @@ class Ajax {
 			wp_send_json_error( 'Yêu cầu không hợp lệ' );
 		}
 		$this->update_order_status( $id, 'pending' );
-		$this->insert_logs_table( $id, 'Cập nhật trạng thái' );
 
 		wp_send_json_success( [
 			'button' => '<a href="#" class="gtt-button gtt-close" data-id="' . $id . '" title="Đánh dấu hoàn thành"><span class="dashicons dashicons-yes"></span></a>',
@@ -46,7 +43,6 @@ class Ajax {
 			wp_send_json_error( 'Yêu cầu không hợp lệ' );
 		}
 		$data = ERP::push( $id );
-		$this->insert_logs_table( $id, 'Đẩy lại lên ERP' );
 
 		$statuses = [
 			'pending'   => [ 'badge', __( 'Có lỗi khi đẩy lên ERP', 'elu-shop' ) ],
@@ -68,15 +64,5 @@ class Ajax {
 			[ 'id' => $id ],
 			[ '%s' ]
 		);
-	}
-
-	public function insert_logs_table( $order_id, $action ) {
-		$data_insert_log = [
-			'object_type' => 'Đơn hàng',
-			'object_id'   => $order_id,
-			'user_update' => get_current_user_id(),
-			'action'      => $action,
-		];
-		SaveLog::insert_logs_table( $data_insert_log );
 	}
 }
