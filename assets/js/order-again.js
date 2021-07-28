@@ -1,22 +1,31 @@
-jQuery( function( $ ) {
+( function( $, cart ) {
+	console.log( cart );
 	const $d = $( document );
 	// Check out again.
 	$d.on( 'click', '.place-checkout-again', function( e ) {
 		e.preventDefault();
 
-		$( this ).prop( 'disabled', true ).text( 'Đang đặt hàng...' );
+		$( this ).prop( 'disabled', true ).text( 'Đang đặt hàng lại...' );
 
 		$.post( OrderAgain.ajaxUrl, {
 			action: 'place_checkout_again',
 			old_order_id: OrderAgain.oldOrderId,
 		}, function ( response ) {
-			console.log( response );
 			if ( ! response.success ) {
 				alert( response.data );
 				return;
 			}
+
+
+			// Update lại cart.
+			cart.data = Array.isArray( response.data.cart ) ? {} : response.data.cart;
+			cart.updateMiniCart();
+			cart.updateQuantityInputs();
+
+			$d.trigger( 'cart-loaded' );
+
 			// Redirect user to confirmation page.
-			location.href = response.data;
+			location.href = response.data.url;
 		}, 'json' );
 	} );
-} );
+} )( jQuery, cart );

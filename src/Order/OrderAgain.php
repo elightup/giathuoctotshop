@@ -16,7 +16,6 @@ class OrderAgain {
 		Assets::enqueue_script( 'order-again' );
 		Assets::localize( 'order-again', [
 			'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-			'userId'     => get_current_user_id(),
 			'oldOrderId' => intval( $_GET['id'] ),
 			'nonce'      => wp_create_nonce( 'order-again' ),
 		], 'OrderAgain' );
@@ -27,36 +26,8 @@ class OrderAgain {
 		$user_id      = get_current_user_id();
 		$old_order_id = (int)$_POST['old_order_id'];
 		$item         = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $old_order_id ) );
-		$data_product = $item->data;
-		$amount       = (int)$item->amount;
-		$info         = $item->info;
-		$voucher      = $item->voucher;
-		$note         = $item->note;
-
-		$wpdb->insert(
-			$wpdb->orders,
-			[
-				'date'         => current_time( 'mysql' ),
-				'status'       => 'pending',
-				'push_erp'     => 'pending',
-				'push_message' => '',
-				'user'         => $user_id,
-				'amount'       => $amount,
-				'note'         => $note,
-				'info'         => $info,
-				'data'         => $data_product,
-				'voucher'      => $voucher,
-			]
-		);
-
-		ERP::push( $wpdb->insert_id );
-		$data_insert_log = [
-			'object_type' => 'Đơn hàng',
-			'object_id'   => $wpdb->insert_id,
-			'user_update' => $user_id,
-			'action'      => 'Đặt lại đơn hàng',
-		];
-		SaveLog::insert_logs_table( $data_insert_log );
+		$data = $item->data;
+		$data = json_decode( $data, true );
 
 		$url = add_query_arg(
 			[
@@ -66,6 +37,33 @@ class OrderAgain {
 			],
 			get_permalink( ps_setting( 'confirmation_page' ) )
 		);
-		wp_send_json_success( $url );
+
+		// B1: lấy sp trong giỏ hàng đang có
+		$cart = get_user_meta( $user_id, 'cart', true );
+		
+
+		// B2: merge cart và data hiện đang có. Giá trị $cart sẽ được update.
+		foreach ( $data as $key => $value ) {
+			if ( ! isset( $cart[ $key ] ) ) {
+				$cart[ $key ] = $value;
+				continue;
+			}
+			if ( ! isset( $cart[ $key ]['quantity'] ) ) {
+				$cart[ $key ]['quantity'] = 0;	
+			}
+			if ( isset( $value['quantity'] ) ) {
+				$cart[ $key ]['quantity'] += $value['quantity'];
+			}
+		}
+
+		// B3: update cart.
+		update_user_meta( $user_id, 'cart', $cart );
+
+		$return = [
+			'cart' => $cart,
+			'url'  => get_permalink( ps_setting( 'cart_page' ) ),
+		];
+		// wp_send_json_success( $url );
+		wp_send_json_success( $return );
 	}
 }
