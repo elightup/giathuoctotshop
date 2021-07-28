@@ -15,7 +15,6 @@
 				return;
 			}
 
-
 			// Update lại cart.
 			cart.data = Array.isArray( response.data.cart ) ? {} : response.data.cart;
 			cart.updateMiniCart();
@@ -23,7 +22,7 @@
 
 			$d.trigger( 'cart-loaded' );
 
-			// Redirect user to confirmation page.
+			// Redirect user to cart page.
 			location.href = response.data.url;
 		}, 'json' );
 	} );
