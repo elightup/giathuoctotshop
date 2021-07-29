@@ -168,7 +168,7 @@ class user {
 				break;
 			case 'time_update':
 				if ( ! empty( $update_log['date'] ) ) {
-					$date_update = strtotime( $update_log['date'] ) + 7 * 3600;
+					$date_update = strtotime( $update_log['date'] );
 					$output = date( 'd.m.Y', $date_update ) . '<br>';
 					$output .= date( 'H:i', $date_update );
 				}

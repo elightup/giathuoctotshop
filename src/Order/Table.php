@@ -357,7 +357,7 @@ class Table extends \WP_List_Table {
 	public function column_time_update( $item ) {
 		if ( ! empty( $item['update_log'] ) ) {
 			$log = json_decode( $item['update_log'] );
-			$date_update = strtotime( $log->date ) + 7 * 3600;
+			$date_update = strtotime( $log->date );
 			echo date( 'd.m.Y H:i', $date_update );
 		}
 	}
