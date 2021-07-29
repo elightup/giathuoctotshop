@@ -145,7 +145,12 @@ label.payment-method {
 	font-weight: normal;
 	display: block;
 }
-
+.payment-description {
+	padding-left: 25px;
+}
+.hidden {
+	display: none;
+}
 
 .field-button {
 	flex-direction: row;

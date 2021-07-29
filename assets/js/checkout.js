@@ -93,6 +93,18 @@
 			updateCartHtml();
 		} );
 
+		// Radio checkout.
+		$d.on( 'click', '.payment-method', function( e ) {
+			let radio_class = $( this ).parent(),
+				payment_description = $( '.payment-description', radio_class );
+				$( '.payment-description' ).addClass( 'hidden' );
+
+				if ( $( this ).attr( 'checked', true ) ) {
+					payment_description.removeClass( 'hidden' );
+				}
+
+		} );
+
 		// Place checkout.
 		$d.on( 'click', '.place-checkout', function( e ) {
 			e.preventDefault();

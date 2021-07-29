@@ -108,10 +108,19 @@
 							<label>Phương thức thanh toán</label>
 							<?php foreach ( $payment_methods as $payment_method ) : ?>
 								<?php $payment_id = $payment_method['payment_method_title'] === 'Thanh toán tiền mặt' ? 'cash' : 'bank' ; ?>
-								<label class="payment-method">
-									<input type="radio" name="payment_method" value="<?= esc_attr( $payment_id ) ?>">
-									<?= wp_kses_post( $payment_method['payment_method_title'] ); ?>
-								</label>
+								<div class="payment-methods__fields">
+									<label class="payment-method">
+										<input type="radio" name="payment_method" value="<?= esc_attr( $payment_id ) ?>">
+										<?= wp_kses_post( $payment_method['payment_method_title'] ); ?>
+									</label>
+									<div class="payment-description hidden">
+										<?php
+										if ( isset( $payment_method['payment_method_description'] ) ) {
+											echo $payment_method['payment_method_description'];
+										}
+										?>
+									</div>
+								</div>
 							<?php endforeach; ?>
 						<?php endif ?>
 					</div>
