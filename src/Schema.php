@@ -26,6 +26,7 @@ class Schema {
 				`amount` int unsigned NOT NULL,
 				`voucher` text,
 				`note` text,
+				`update_log` text,
 				`info` longtext,
 				`info_shipping` longtext,
 				`data` longtext,

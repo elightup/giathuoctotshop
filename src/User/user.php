@@ -18,11 +18,11 @@ class user {
 		add_action( 'load-users.php', [ $this, 'users_page' ] );
 		add_action( 'wp_ajax_push_user_to_erp', [ $this, 'push_user_to_erp' ] );
 		add_action( 'wp_ajax_active_user', [ $this, 'active_user' ] );
-		add_action( 'profile_update', [ $this, 'update_user_api' ], 99, 2 );
+		add_action( 'profile_update', [ $this, 'update_user' ], 99, 2 );
 		add_action( 'pre_user_query', [ $this, 'user_search_by_multiple_parameters' ] );
 	}
 
-	public function update_user_api( $user_id, $old_user_data ) {
+	public function update_user( $user_id, $old_user_data ) {
 		$user_meta = get_user_meta( $user_id );
 		$birthday  = $user_meta['user_date_birth'][0];
 
@@ -35,7 +35,7 @@ class user {
 			// 'state_id'       => (int)$user_meta['user_province'][0],
 		), JSON_UNESCAPED_UNICODE );
 
-
+		// Update user to ERP
 		$token = json_decode( $this->get_user_token( $user_id ) );
 		$data = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/user/change_profile', array(
 			'headers' => [
@@ -46,6 +46,9 @@ class user {
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
+
+		// Log User update
+		$this->logs_user( $user_id );
 	}
 
 	public function user_search_by_multiple_parameters( $query ) {
@@ -91,6 +94,8 @@ class user {
 		$columns['registered'] = 'Thời gian tạo';
 		$columns['action']     = 'Tác vụ';
 		$columns['message']    = 'Chi tiết lỗi';
+		$columns['user_update'] = 'Người cập nhật';
+		$columns['time_update'] = 'Thời gian cập nhật';
 		unset( $columns['posts'] );
 		return $columns;
 	}
@@ -120,6 +125,7 @@ class user {
 	 */
 	public function show_users_columns( $output, $column, $user_id ) {
 		$user = get_userdata( $user_id );
+		$update_log = get_user_meta( $user_id, 'update_log', true );
 		switch ( $column ) {
 			case 'action':
 				$response = get_user_meta( $user_id, 'erp_response', true );
@@ -154,6 +160,19 @@ class user {
 			case 'message':
 				$output .= get_user_meta( $user_id, 'erp_message', true );
 				break;
+			case 'user_update':
+				if ( ! empty( $update_log['user_update'] ) ) {
+					$user_name = get_user_meta( $update_log['user_update'], 'user_name', true );
+					$output .= '<a href="' . get_edit_user_link( $update_log['user_update'] ) . '">' . $user_name . '</a>';
+				}
+				break;
+			case 'time_update':
+				if ( ! empty( $update_log['date'] ) ) {
+					$date_update = strtotime( $update_log['date'] ) + 7 * 3600;
+					$output = date( 'd.m.Y', $date_update ) . '<br>';
+					$output .= date( 'H:i', $date_update );
+				}
+				break;
 		}
 
 		return $output;
@@ -162,6 +181,10 @@ class user {
 	public function active_user() {
 		$user_id = $_GET['user_id'];
 		update_user_meta( $user_id, 'active_user', 1 );
+
+		// Log User update
+		$this->logs_user( $user_id );
+
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
 	}
@@ -204,6 +227,9 @@ class user {
 		update_user_meta( $user_id, 'erp_response', $response['code'] );
 		update_user_meta( $user_id, 'erp_message', $erp_message );
 
+		// Log User update
+		$this->logs_user( $user_id );
+
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
 	}
@@ -244,5 +270,15 @@ class user {
 		) );
 
 		return wp_remote_retrieve_body( $request );
+	}
+
+	public function logs_user( $user_id ) {
+		$current_user = get_current_user_id();
+
+		$data_log = [
+			'user_update' => $current_user,
+			'date'        => current_time( 'mysql' ),
+		];
+		update_user_meta( $user_id, 'update_log', $data_log );
 	}
 }

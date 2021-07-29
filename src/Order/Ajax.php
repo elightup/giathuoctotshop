@@ -16,6 +16,9 @@ class Ajax {
 		}
 		$this->update_order_status( $id, 'completed' );
 
+		// Update log order
+		$this->update_logs_order( $id );
+
 		wp_send_json_success( [
 			'button' => '<a href="#" class="gtt-button gtt-open" data-id="' . $id . '" title="Đánh dấu đang xử lý"><span class="dashicons dashicons-hourglass"></span></a>',
 			'status' => '<span class="badge badge--success">Đã hoàn thành</span>'
@@ -29,6 +32,9 @@ class Ajax {
 			wp_send_json_error( 'Yêu cầu không hợp lệ' );
 		}
 		$this->update_order_status( $id, 'pending' );
+
+		// Update log order
+		$this->update_logs_order( $id );
 
 		wp_send_json_success( [
 			'button' => '<a href="#" class="gtt-button gtt-close" data-id="' . $id . '" title="Đánh dấu hoàn thành"><span class="dashicons dashicons-yes"></span></a>',
@@ -52,6 +58,9 @@ class Ajax {
 		$status = sprintf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $data['message'] );
 		$data['status'] = $status;
 
+		// Update log order
+		$this->update_logs_order( $id );
+		
 		wp_send_json_success( $data );
 	}
 
@@ -61,6 +70,22 @@ class Ajax {
 		$wpdb->update(
 			$wpdb->orders,
 			[ 'status' => $status ],
+			[ 'id' => $id ],
+			[ '%s' ]
+		);
+	}
+
+	private function update_logs_order( $id ) {
+		global $wpdb;
+		$current_user = get_current_user_id();
+		$data_log = [
+			'user_update' => $current_user,
+			'date'        => current_time( 'mysql' ),
+		];
+
+		$wpdb->update(
+			$wpdb->orders,
+			[ 'update_log' => json_encode( $data_log ) ],
 			[ 'id' => $id ],
 			[ '%s' ]
 		);

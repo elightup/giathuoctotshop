@@ -210,10 +210,12 @@ class Table extends \WP_List_Table {
 			'customer' => __( 'Khách hàng', 'elu-shop' ),
 			'products' => __( 'Sản phẩm', 'elu-shop' ),
 			'amount'   => __( 'Tổng tiền', 'elu-shop' ),
-			'date'     => __( 'Ngày', 'elu-shop' ),
+			'date'     => __( 'Ngày tạo', 'elu-shop' ),
 			'status'   => __( 'Trạng thái', 'elu-shop' ),
 			'erp'      => 'ERP',
 			'action'   => __( 'Thao tác', 'elu-shop' ),
+			'user_update'   => __( 'Người chỉnh sửa', 'elu-shop' ),
+			'time_update'   => __( 'Thời gian chỉnh sửa', 'elu-shop' ),
 		];
 
 		return $columns;
@@ -342,6 +344,22 @@ class Table extends \WP_List_Table {
 		}
 		$status   = $statuses[ $item['push_erp'] ];
 		printf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $item['push_message'] );
+	}
+
+	public function column_user_update( $item ) {
+		if ( ! empty( $item['update_log'] ) ) {
+			$log = json_decode( $item['update_log'] );
+			$user_name = get_user_meta( $log->user_update, 'user_name', true );
+			echo '<a href="' . get_edit_user_link( $log->user_update ) . '">' . $user_name . '</a>';
+		}
+	}
+
+	public function column_time_update( $item ) {
+		if ( ! empty( $item['update_log'] ) ) {
+			$log = json_decode( $item['update_log'] );
+			$date_update = strtotime( $log->date ) + 7 * 3600;
+			echo date( 'd.m.Y H:i', $date_update );
+		}
 	}
 
 	protected function get_row_actions( $item ) {
