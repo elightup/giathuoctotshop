@@ -40,6 +40,9 @@ class OrderAgain {
 
 		// B1: lấy sp trong giỏ hàng đang có
 		$cart = get_user_meta( $user_id, 'cart', true );
+		if ( empty( $cart ) ) {
+			$cart = [];
+		}
 		
 
 		// B2: merge cart và data hiện đang có. Giá trị $cart sẽ được update.
