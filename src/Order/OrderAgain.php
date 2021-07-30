@@ -40,7 +40,7 @@ class OrderAgain {
 
 		// B1: lấy sp trong giỏ hàng đang có
 		$cart = get_user_meta( $user_id, 'cart', true );
-		if ( empty( $cart ) ) {
+		if ( empty( $cart ) || ! is_array( $cart ) ) {
 			$cart = [];
 		}
 		
