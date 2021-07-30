@@ -11,7 +11,7 @@ class Views {
 
 	public function add_views( $views ) {
 		$type = filter_input( INPUT_GET, 'gtt-type' );
-
+		$views['inactive'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'inactive' ? 'current' : '' ) . '">KH chưa kích hoạt <span class="count">(' . $this->get_inactive_count() . ')</span></a>';
 		$views['today-inactive'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-inactive' ? 'current' : '' ) . '">KH mới chưa kích hoạt <span class="count">(' . $this->get_today_inactive_count() . ')</span></a>';
 		$views['today-active'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-active', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-active' ? 'current' : '' ) . '">KH mới đã kích hoạt <span class="count">(' . $this->get_today_active_count() . ')</span></a>';
 
@@ -44,12 +44,6 @@ class Views {
 			return;
 		}
 
-		$query->set( 'date_query', [
-			'year'  => date( 'Y' ),
-			'month' => date( 'n' ),
-			'day'   => date( 'j' ),
-		] );
-
 		if ( $type === 'today-active' ) {
 			$meta_query = $query->get( 'meta_query' );
 			if ( empty( $meta_query ) ) {
@@ -60,8 +54,30 @@ class Views {
 				'value' => 1,
 			];
 			$query->set( 'meta_query', $meta_query );
+			$query->set( 'date_query', [
+				'year'  => date( 'Y' ),
+				'month' => date( 'n' ),
+				'day'   => date( 'j' ),
+			] );
 		}
 		if ( $type === 'today-inactive' ) {
+			$meta_query = $query->get( 'meta_query' );
+			if ( empty( $meta_query ) ) {
+				$meta_query = [];
+			}
+			$meta_query[] = [
+				'key'     => 'active_user',
+				'value'   => 1,
+				'compare' => 'NOT EXISTS',
+			];
+			$query->set( 'meta_query', $meta_query );
+			$query->set( 'date_query', [
+				'year'  => date( 'Y' ),
+				'month' => date( 'n' ),
+				'day'   => date( 'j' ),
+			] );
+		}
+		if ( $type === 'inactive' ) {
 			$meta_query = $query->get( 'meta_query' );
 			if ( empty( $meta_query ) ) {
 				$meta_query = [];
@@ -83,6 +99,22 @@ class Views {
 				'month' => date( 'n' ),
 				'day'   => date( 'j' ),
 			],
+			'meta_query' => [
+				[
+					'key'     => 'active_user',
+					'value'   => 1,
+					'compare' => 'NOT EXISTS',
+				],
+			],
+			'fields' => 'ID',
+		] );
+
+		return count( $users );
+	}
+
+	private function get_inactive_count() {
+		$users = get_users( [
+			'gtt_custom' => true,
 			'meta_query' => [
 				[
 					'key'     => 'active_user',
