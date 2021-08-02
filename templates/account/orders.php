@@ -1,4 +1,9 @@
 <?php
+if ( ! is_user_logged_in() ) {
+	echo 'Bạn chưa đăng nhập';
+	return;
+}
+
 global $wpdb;
 $items = $wpdb->get_results( $wpdb->prepare(
 	"SELECT `id`, `date`, `status`, `amount`, `voucher` FROM $wpdb->orders
