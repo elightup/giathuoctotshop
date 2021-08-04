@@ -37,6 +37,7 @@
 			// Update quantity when input change.
 			$d.on( 'change', '.quantity_products', cart.onChangeQuantity );
 		},
+		// Hàm này có lẽ không cần nữa.
 		update() {
 			cart.updateMiniCart();
 
@@ -48,7 +49,9 @@
 				action: 'set_cart',
 				_ajax_nonce: CartParams.nonce,
 				id: CartParams.userId,
-				data: cart.data
+				// data: cart.data
+				product_id: productId, // Ko nen truyen o day.
+				quantity: quantity
 			}, response => {
 				if ( ! response.success ) {
 					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
@@ -60,7 +63,13 @@
 		},
 		clear() {
 			cart.data = {};
-			cart.update();
+			$.post( CartParams.ajaxUrl, {
+				action: 'cart_clear',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				product_id: productId,
+				quantity: quantity
+			}, cart.updateCartFromAjax );
 		},
 		hasProduct( id ) {
 			return id && cart.data.hasOwnProperty( id );
@@ -69,26 +78,41 @@
 			return cart.hasProduct( id ) ? cart.data[ id ] : null;
 		},
 		addProduct( productId, quantity ) {
-			if ( ! productId ) {
-				return;
-			}
-			if ( quantity >= 1 ) {
-				cart.data[productId] = { quantity };
-			} else {
-				cart.removeProduct( productInfo.id );
-			}
-			cart.update();
+			$.post( CartParams.ajaxUrl, {
+				action: 'cart_add_product',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				product_id: productId,
+				quantity: quantity
+			}, cart.updateCartFromAjax );
 		},
 		updateProduct( productId, quantity ) {
-			if ( ! productId ) {
-				return;
-			}
-			cart.data[productId].quantity = quantity;
-			cart.update();
+			// Các phần logic kiểm tra này em đưa hết sang server.
+			// Phía client chỉ gửi request thôi
+			// Khi server xử lý xong => trả về response, mình set lại vào cart.data trong hàm updateCartFromAjax.
+			$.post( CartParams.ajaxUrl, {
+				action: 'cart_update_product',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				product_id: productId,
+				quantity: quantity
+			}, cart.updateCartFromAjax );
 		},
 		removeProduct( productId ) {
-			delete cart.data[productId];
-			cart.update();
+			$.post( CartParams.ajaxUrl, {
+				action: 'cart_remove_product',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				product_id: productId,
+			}, cart.updateCartFromAjax );
+		},
+		updateCartFromAjax( response ) {
+			if ( ! response.success ) {
+				alert( 'Có lỗi xảy ra, vui lòng thử lại' );
+				return;
+			}
+			cart.data = Array.isArray( response.data ) ? {} : response.data;
+			cart.updateMiniCart();
 		},
 		updateMiniCart() {
 			let count = Object.values( cart.data ).length;
@@ -194,6 +218,7 @@
 	};
 
 	cart.init();
+	console.log( cart );
 
 	// Export cart object.
 	window.cart = cart;

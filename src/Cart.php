@@ -7,6 +7,11 @@ class Cart {
 
 		add_action( 'wp_ajax_get_cart', [ $this, 'ajax_get_cart' ] );
 		add_action( 'wp_ajax_set_cart', [ $this, 'ajax_set_cart' ] );
+
+		// Cần viết 3 hàm callback mới cho xử lý add/update/delete product từ cart.
+		add_action( 'wp_ajax_cart_add_product', [ $this, 'ajax_cart_add_product' ] );
+		add_action( 'wp_ajax_cart_update_product', [ $this, 'ajax_cart_update_product' ] );
+		add_action( 'wp_ajax_cart_delete_product', [ $this, 'ajax_cart_delete_product' ] );
 	}
 
 	public function enqueue() {
@@ -92,11 +97,33 @@ class Cart {
 		}
 
 		$data = $_POST['data'] ?? [];
+		var_dump($data);
 		if ( empty( $data ) ) {
 			$data = [];
 		}
 
 		$this->refresh_cart_data( $data );
+
+		update_user_meta( $id, 'cart', $data );
+
+		wp_send_json_success( $data );
+	}
+
+	public function ajax_cart_add_product() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		// $data = $_POST['data'] ?? [];
+		$product_id = $_POST['product_id'];
+		$quantity   = $_POST['quantity'];
+
+		$data = [];
+		$data['quantity'] = (int) $quantity;
+		$data = array_merge( $data, self::get_product_info( $product_id ) );
 
 		update_user_meta( $id, 'cart', $data );
 
