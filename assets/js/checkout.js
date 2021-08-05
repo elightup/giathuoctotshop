@@ -89,8 +89,7 @@
 		$d.on( 'click', '.cart__remove', function( e ) {
 			e.preventDefault();
 			const productId = $( this ).data( 'product_id' );
-			cart.removeProduct( productId );
-			updateCartHtml();
+			cart.removeProduct( productId, updateCartHtml );
 		} );
 
 		// Radio checkout.

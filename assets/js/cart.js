@@ -65,9 +65,6 @@
 			}, cart.updateCartFromAjax );
 		},
 		updateProduct( productId, quantity ) {
-			// Các phần logic kiểm tra này em đưa hết sang server.
-			// Phía client chỉ gửi request thôi
-			// Khi server xử lý xong => trả về response, mình set lại vào cart.data trong hàm updateCartFromAjax.
 			$.post( CartParams.ajaxUrl, {
 				action: 'cart_update_product',
 				_ajax_nonce: CartParams.nonce,
@@ -76,13 +73,18 @@
 				quantity: quantity
 			}, cart.updateCartFromAjax );
 		},
-		removeProduct( productId ) {
+		removeProduct( productId, callback ) {
 			$.post( CartParams.ajaxUrl, {
 				action: 'cart_remove_product',
 				_ajax_nonce: CartParams.nonce,
 				id: CartParams.userId,
 				product_id: productId,
-			}, cart.updateCartFromAjax );
+			}, function ( response ) {
+				cart.updateCartFromAjax( response );
+				if ( callback ) {
+					callback();
+				}
+			} );
 		},
 		updateCartFromAjax( response ) {
 			if ( ! response.success ) {
