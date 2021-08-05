@@ -97,7 +97,7 @@ class Cart {
 		}
 
 		$data = $_POST['data'] ?? [];
-		var_dump($data);
+
 		if ( empty( $data ) ) {
 			$data = [];
 		}
@@ -117,17 +117,20 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		// $data = $_POST['data'] ?? [];
 		$product_id = $_POST['product_id'];
 		$quantity   = $_POST['quantity'];
-
-		$data = [];
+		$data       = self::get_product_info( $product_id );
 		$data['quantity'] = (int) $quantity;
-		$data = array_merge( $data, self::get_product_info( $product_id ) );
 
-		update_user_meta( $id, 'cart', $data );
+		$cart = get_user_meta( $id, 'cart', true );
+		if ( empty( $cart ) || ! is_array( $cart ) ) {
+			$cart = [];
+		}
+		$cart[ $product_id ] = $data;
 
-		wp_send_json_success( $data );
+		update_user_meta( $id, 'cart', $cart );
+
+		wp_send_json_success( $cart );
 	}
 
 	private function refresh_cart_data( &$data ) {

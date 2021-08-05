@@ -22,6 +22,7 @@
 					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
 					return;
 				}
+				console.log( response.data );
 				cart.data = Array.isArray( response.data ) ? {} : response.data;
 				cart.updateMiniCart();
 				cart.updateQuantityInputs();
@@ -37,30 +38,7 @@
 			// Update quantity when input change.
 			$d.on( 'change', '.quantity_products', cart.onChangeQuantity );
 		},
-		// Hàm này có lẽ không cần nữa.
-		update() {
-			cart.updateMiniCart();
-
-			// Update to server.
-			if ( ! CartParams.userId ) {
-				return;
-			}
-			$.post( CartParams.ajaxUrl, {
-				action: 'set_cart',
-				_ajax_nonce: CartParams.nonce,
-				id: CartParams.userId,
-				// data: cart.data
-				product_id: productId, // Ko nen truyen o day.
-				quantity: quantity
-			}, response => {
-				if ( ! response.success ) {
-					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
-					return;
-				}
-				cart.data = Array.isArray( response.data ) ? {} : response.data;
-				cart.updateMiniCart();
-			} );
-		},
+		
 		clear() {
 			cart.data = {};
 			$.post( CartParams.ajaxUrl, {
@@ -218,7 +196,6 @@
 	};
 
 	cart.init();
-	console.log( cart );
 
 	// Export cart object.
 	window.cart = cart;
