@@ -207,11 +207,8 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		$cart = [];
-
-		update_user_meta( $id, 'cart', $cart );
-
-		wp_send_json_success( $cart );
+		delete_user_meta( $id, 'cart' );
+		wp_send_json_success( [] );
 	}
 
 	private function refresh_cart_data( &$data ) {
