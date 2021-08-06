@@ -37,30 +37,14 @@
 			// Update quantity when input change.
 			$d.on( 'change', '.quantity_products', cart.onChangeQuantity );
 		},
-		update() {
-			cart.updateMiniCart();
-
-			// Update to server.
-			if ( ! CartParams.userId ) {
-				return;
-			}
-			$.post( CartParams.ajaxUrl, {
-				action: 'set_cart',
-				_ajax_nonce: CartParams.nonce,
-				id: CartParams.userId,
-				data: cart.data
-			}, response => {
-				if ( ! response.success ) {
-					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
-					return;
-				}
-				cart.data = Array.isArray( response.data ) ? {} : response.data;
-				cart.updateMiniCart();
-			} );
-		},
+		
 		clear() {
 			cart.data = {};
-			cart.update();
+			$.post( CartParams.ajaxUrl, {
+				action: 'cart_clear',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+			}, cart.updateCartFromAjax );
 		},
 		hasProduct( id ) {
 			return id && cart.data.hasOwnProperty( id );
@@ -69,26 +53,43 @@
 			return cart.hasProduct( id ) ? cart.data[ id ] : null;
 		},
 		addProduct( productId, quantity ) {
-			if ( ! productId ) {
-				return;
-			}
-			if ( quantity >= 1 ) {
-				cart.data[productId] = { quantity };
-			} else {
-				cart.removeProduct( productInfo.id );
-			}
-			cart.update();
+			$.post( CartParams.ajaxUrl, {
+				action: 'cart_add_product',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				product_id: productId,
+				quantity: quantity
+			}, cart.updateCartFromAjax );
 		},
 		updateProduct( productId, quantity ) {
-			if ( ! productId ) {
+			$.post( CartParams.ajaxUrl, {
+				action: 'cart_update_product',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				product_id: productId,
+				quantity: quantity
+			}, cart.updateCartFromAjax );
+		},
+		removeProduct( productId, callback ) {
+			$.post( CartParams.ajaxUrl, {
+				action: 'cart_remove_product',
+				_ajax_nonce: CartParams.nonce,
+				id: CartParams.userId,
+				product_id: productId,
+			}, function ( response ) {
+				cart.updateCartFromAjax( response );
+				if ( callback ) {
+					callback();
+				}
+			} );
+		},
+		updateCartFromAjax( response ) {
+			if ( ! response.success ) {
+				alert( 'Có lỗi xảy ra, vui lòng thử lại' );
 				return;
 			}
-			cart.data[productId].quantity = quantity;
-			cart.update();
-		},
-		removeProduct( productId ) {
-			delete cart.data[productId];
-			cart.update();
+			cart.data = Array.isArray( response.data ) ? {} : response.data;
+			cart.updateMiniCart();
 		},
 		updateMiniCart() {
 			let count = Object.values( cart.data ).length;

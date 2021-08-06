@@ -7,6 +7,12 @@ class Cart {
 
 		add_action( 'wp_ajax_get_cart', [ $this, 'ajax_get_cart' ] );
 		add_action( 'wp_ajax_set_cart', [ $this, 'ajax_set_cart' ] );
+
+		// Cần viết 3 hàm callback mới cho xử lý add/update/delete product từ cart.
+		add_action( 'wp_ajax_cart_add_product', [ $this, 'ajax_cart_add_product' ] );
+		add_action( 'wp_ajax_cart_update_product', [ $this, 'ajax_cart_update_product' ] );
+		add_action( 'wp_ajax_cart_remove_product', [ $this, 'ajax_cart_remove_product' ] );
+		add_action( 'wp_ajax_clear_cart', [ $this, 'ajax_clear_cart' ] );
 	}
 
 	public function enqueue() {
@@ -92,6 +98,7 @@ class Cart {
 		}
 
 		$data = $_POST['data'] ?? [];
+
 		if ( empty( $data ) ) {
 			$data = [];
 		}
@@ -101,6 +108,107 @@ class Cart {
 		update_user_meta( $id, 'cart', $data );
 
 		wp_send_json_success( $data );
+	}
+
+	public function ajax_cart_add_product() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$product_id = isset( $_POST['product_id'] ) ? (int) $_POST['product_id'] : 0;
+		$quantity   = isset( $_POST['quantity'] ) ? (int) $_POST['quantity'] : 0;
+
+		if ( ! $product_id || ! $quantity ) {
+			wp_send_json_error();
+		}
+
+		$data = self::get_product_info( $product_id );
+		if ( empty( $data ) ) {
+			wp_send_json_error();
+		}
+
+		$data['quantity'] = $quantity;
+
+		$cart = get_user_meta( $id, 'cart', true );
+		if ( empty( $cart ) || ! is_array( $cart ) ) {
+			$cart = [];
+		}
+		$cart[ $product_id ] = $data;
+
+		update_user_meta( $id, 'cart', $cart );
+
+		wp_send_json_success( $cart );
+	}
+
+	public function ajax_cart_update_product() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$product_id = isset( $_POST['product_id'] ) ? (int) $_POST['product_id'] : 0;
+		$quantity   = isset( $_POST['quantity'] ) ? (int) $_POST['quantity'] : 0;
+
+		if ( ! $product_id || ! $quantity ) {
+			wp_send_json_error();
+		}
+
+		$cart = get_user_meta( $id, 'cart', true );
+		if ( empty( $cart ) || ! is_array( $cart ) ) {
+			$cart = [];
+		}
+
+		if ( empty( $cart[ $product_id ] ) || empty( $cart[ $product_id ]['quantity'] ) ) {
+			wp_send_json_error();
+		}
+
+		$cart[ $product_id ]['quantity'] = $quantity;
+
+		update_user_meta( $id, 'cart', $cart );
+
+		wp_send_json_success( $cart );
+	}
+
+	public function ajax_cart_remove_product() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$product_id = isset( $_POST['product_id'] ) ? (int) $_POST['product_id'] : 0;
+
+		if ( ! $product_id ) {
+			wp_send_json_error();
+		}
+
+		$cart = get_user_meta( $id, 'cart', true );
+		if ( empty( $cart ) || ! is_array( $cart ) ) {
+			$cart = [];
+		}
+		unset( $cart[ $product_id ] );
+
+		update_user_meta( $id, 'cart', $cart );
+
+		wp_send_json_success( $cart );
+	}
+
+	public function ajax_clear_cart() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		delete_user_meta( $id, 'cart' );
+		wp_send_json_success( [] );
 	}
 
 	private function refresh_cart_data( &$data ) {
