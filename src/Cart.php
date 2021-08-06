@@ -117,9 +117,9 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		$product_id = $_POST['product_id'];
-		$quantity   = $_POST['quantity'];
-		$data       = self::get_product_info( $product_id );
+		$product_id = isset( $_POST['product_id'] ) ? $_POST['product_id'] : '';
+		$quantity   = isset( $_POST['quantity'] ) ? $_POST['quantity'] : '';
+		$data       = self::get_product_info( $product_id ) ?? [];
 		$data['quantity'] = (int) $quantity;
 
 		$cart = get_user_meta( $id, 'cart', true );
@@ -141,11 +141,14 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		$product_id = $_POST['product_id'];
-		$quantity   = $_POST['quantity'];
+		$product_id = isset( $_POST['product_id'] ) ? $_POST['product_id'] : '';
+		$quantity   = isset( $_POST['quantity'] ) ? $_POST['quantity'] : '';
 		
 
 		$cart = get_user_meta( $id, 'cart', true );
+		if ( empty( $cart ) || ! is_array( $cart ) ) {
+			$cart = [];
+		}
 		$cart[$product_id]['quantity'] = $quantity;
 
 		update_user_meta( $id, 'cart', $cart );
@@ -161,9 +164,12 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		$product_id = $_POST['product_id'];
+		$product_id = isset( $_POST['product_id'] ) ? $_POST['product_id'] : '';
 
 		$cart = get_user_meta( $id, 'cart', true );
+		if ( empty( $cart ) || ! is_array( $cart ) ) {
+			$cart = [];
+		}
 		unset( $cart[$product_id] );
 
 		update_user_meta( $id, 'cart', $cart );

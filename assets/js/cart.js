@@ -22,7 +22,6 @@
 					alert( 'Có lỗi xảy ra, vui lòng thử lại' );
 					return;
 				}
-				console.log( response.data );
 				cart.data = Array.isArray( response.data ) ? {} : response.data;
 				cart.updateMiniCart();
 				cart.updateQuantityInputs();
