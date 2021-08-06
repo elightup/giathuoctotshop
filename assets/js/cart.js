@@ -44,8 +44,6 @@
 				action: 'cart_clear',
 				_ajax_nonce: CartParams.nonce,
 				id: CartParams.userId,
-				product_id: productId,
-				quantity: quantity
 			}, cart.updateCartFromAjax );
 		},
 		hasProduct( id ) {

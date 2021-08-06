@@ -12,6 +12,7 @@ class Cart {
 		add_action( 'wp_ajax_cart_add_product', [ $this, 'ajax_cart_add_product' ] );
 		add_action( 'wp_ajax_cart_update_product', [ $this, 'ajax_cart_update_product' ] );
 		add_action( 'wp_ajax_cart_remove_product', [ $this, 'ajax_cart_remove_product' ] );
+		add_action( 'wp_ajax_clear_cart', [ $this, 'ajax_clear_cart' ] );
 	}
 
 	public function enqueue() {
@@ -192,6 +193,21 @@ class Cart {
 			$cart = [];
 		}
 		unset( $cart[ $product_id ] );
+
+		update_user_meta( $id, 'cart', $cart );
+
+		wp_send_json_success( $cart );
+	}
+
+	public function ajax_clear_cart() {
+		check_ajax_referer( 'cart' );
+
+		$id = (int) filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id || $id !== get_current_user_id() ) {
+			wp_send_json_error();
+		}
+
+		$cart = [];
 
 		update_user_meta( $id, 'cart', $cart );
 
