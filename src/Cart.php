@@ -117,10 +117,19 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		$product_id = isset( $_POST['product_id'] ) ? $_POST['product_id'] : '';
-		$quantity   = isset( $_POST['quantity'] ) ? $_POST['quantity'] : '';
-		$data       = self::get_product_info( $product_id ) ?? [];
-		$data['quantity'] = (int) $quantity;
+		$product_id = isset( $_POST['product_id'] ) ? (int) $_POST['product_id'] : 0;
+		$quantity   = isset( $_POST['quantity'] ) ? (int) $_POST['quantity'] : 0;
+
+		if ( ! $product_id || ! $quantity ) {
+			wp_send_json_error();
+		}
+
+		$data = self::get_product_info( $product_id );
+		if ( empty( $data ) ) {
+			wp_send_json_error();
+		}
+
+		$data['quantity'] = $quantity;
 
 		$cart = get_user_meta( $id, 'cart', true );
 		if ( empty( $cart ) || ! is_array( $cart ) ) {
@@ -141,15 +150,23 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		$product_id = isset( $_POST['product_id'] ) ? $_POST['product_id'] : '';
-		$quantity   = isset( $_POST['quantity'] ) ? $_POST['quantity'] : '';
-		
+		$product_id = isset( $_POST['product_id'] ) ? (int) $_POST['product_id'] : 0;
+		$quantity   = isset( $_POST['quantity'] ) ? (int) $_POST['quantity'] : 0;
+
+		if ( ! $product_id || ! $quantity ) {
+			wp_send_json_error();
+		}
 
 		$cart = get_user_meta( $id, 'cart', true );
 		if ( empty( $cart ) || ! is_array( $cart ) ) {
 			$cart = [];
 		}
-		$cart[$product_id]['quantity'] = $quantity;
+
+		if ( empty( $cart[ $product_id ] ) || empty( $cart[ $product_id ]['quantity'] ) ) {
+			wp_send_json_error();
+		}
+
+		$cart[ $product_id ]['quantity'] = $quantity;
 
 		update_user_meta( $id, 'cart', $cart );
 
@@ -164,13 +181,17 @@ class Cart {
 			wp_send_json_error();
 		}
 
-		$product_id = isset( $_POST['product_id'] ) ? $_POST['product_id'] : '';
+		$product_id = isset( $_POST['product_id'] ) ? (int) $_POST['product_id'] : 0;
+
+		if ( ! $product_id ) {
+			wp_send_json_error();
+		}
 
 		$cart = get_user_meta( $id, 'cart', true );
 		if ( empty( $cart ) || ! is_array( $cart ) ) {
 			$cart = [];
 		}
-		unset( $cart[$product_id] );
+		unset( $cart[ $product_id ] );
 
 		update_user_meta( $id, 'cart', $cart );
 
