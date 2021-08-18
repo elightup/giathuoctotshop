@@ -66,7 +66,14 @@ class export {
 				->setCellValue( 'L1', 'Ngày đăng ký' );
 
 
-		$users = get_users( [] );
+		$args = array(
+			'meta_key'     => 'user_province',
+			'meta_value'   => $_POST['address-users'],
+			'meta_compare' => 'LIKE',
+		);
+
+		$users = get_users( $args );
+		// $users = get_users( [] );
 
 		$row = 1;
 		foreach ( $users as $user ) {
@@ -156,6 +163,74 @@ class export {
 
 		<form method="post" action="" enctype="multipart/form-data" novalidate>
 			<?php wp_nonce_field( 'export-users', '_wpnonce-export-users' ); ?>
+			<p id="action-address">
+				<label>Chọn tỉnh:</label>
+				<select name="address-users" id="number-users">
+					<option value="803">An Giang</option>
+					<option value="743">Bắc Giang</option>
+					<option value="744">Bắc Kạn</option>
+					<option value="745">Bạc Liêu</option>
+					<option value="746">Bắc Ninh</option>
+					<option value="747">Bà Rịa - Vũng Tàu</option>
+					<option value="748">Bến Tre</option>
+					<option value="741">Bình Định</option>
+					<option value="742">Bình Dương</option>
+					<option value="780">Bình Phước</option>
+					<option value="749">Bình Thuận</option>
+					<option value="751">Cà Mau</option>
+					<option value="781">Cần Thơ</option>
+					<option value="750">Cao Bằng</option>
+					<option value="753">Đắk Lắk</option>
+					<option value="755">Đắk Nông</option>
+					<option value="754">Đà Nẵng</option>
+					<option value="752">Điện Biên</option>
+					<option value="756">Đồng Nai</option>
+					<option value="757">Đồng Tháp</option>
+					<option value="758">Gia Lai</option>
+					<option value="762">Hà Giang</option>
+					<option value="760">Hải Dương</option>
+					<option value="764">Hải Phòng</option>
+					<option value="763">Hà Nam</option>
+					<option value="784">Hà Nội</option>
+					<option value="765">Hà Tĩnh</option>
+					<option value="761">Hậu Giang</option>
+					<option value="759">Hoà Bình</option>
+					<option value="782">Huế</option>
+					<option value="766">Hưng Yên</option>
+					<option value="768">Khánh Hoà</option>
+					<option value="767">Kiên Giang</option>
+					<option value="769">Kon Tum</option>
+					<option value="772">Lai Châu</option>
+					<option value="773">Lâm Đồng</option>
+					<option value="774">Lạng Sơn</option>
+					<option value="771">Lào Cai</option>
+					<option value="770">Long An</option>
+					<option value="777">Nam Định</option>
+					<option value="775">Nghệ An</option>
+					<option value="776">Ninh Bình</option>
+					<option value="778">Ninh Thuận</option>
+					<option value="785">Phú Thọ</option>
+					<option value="786">Phú Yên</option>
+					<option value="787">Quảng Bình</option>
+					<option value="790">Quảng Nam</option>
+					<option value="789">Quảng Ngãi</option>
+					<option value="788">Quảng Ninh</option>
+					<option value="791">Quảng Trị</option>
+					<option value="793">Sóc Trăng</option>
+					<option value="792">Sơn La</option>
+					<option value="797">Tây Ninh</option>
+					<option value="794">Thái Bình</option>
+					<option value="779">Thái Nguyên</option>
+					<option value="796">Thanh Hoá</option>
+					<option value="795">Tiền Giang</option>
+					<option value="783">TP Hồ Chí Minh</option>
+					<option value="799">Trà Vinh</option>
+					<option value="798">Tuyên Quang</option>
+					<option value="800">Vĩnh Long</option>
+					<option value="801">Vĩnh Phúc</option>
+					<option value="802">Yên Bái</option>
+				</select>
+			</p>
 			<div class="option">
 				<input type="checkbox" name="user_fields[]" value="user_login" checked>Tên truy cập<br>
 				<input type="checkbox" name="user_fields[]" value="user_email" checked>Email<br>
