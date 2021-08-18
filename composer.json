@@ -1,7 +1,8 @@
 {
   "require": {
     "php": ">=5.4",
-    "gamajo/template-loader": "^1.3"
+    "gamajo/template-loader": "^1.3",
+    "phpoffice/phpspreadsheet": "^1.18"
   },
   "autoload": {
     "psr-4": {
