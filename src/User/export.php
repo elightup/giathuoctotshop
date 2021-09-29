@@ -66,10 +66,11 @@ class export {
 				->setCellValue( 'L1', 'Ngày đăng ký' );
 
 
-		$start_date = $_POST['start_date'];
-		$end_date 	= $_POST['end_date'];
-		$address 	= $_POST['address-users'];
-		$date_query = array(
+		$start_date 	= $_POST['start_date'];
+		$end_date 		= $_POST['end_date'];
+		$address 		= $_POST['address-users'];
+		$active_user 	= $_POST['user_active'];
+		$date_query 	= array(
 			'relation' => 'AND',
 			array(
 				'before'        => $end_date,
@@ -77,9 +78,26 @@ class export {
 				'inclusive'     => true,
 			),
 		);
+		if ( $active_user == 1 ) {
+			$active = [
+				'key'	 => 'active_user',
+				'value'  => $active_user,
+			];
+		} else {
+			$active = [
+				'key'	 	=> 'active_user',
+				'value'  	=> $active_user,
+				'compare' 	=> 'NOT EXISTS',
+			];
+		}
 		$args = array(
-			'meta_key'	 => 'user_province',
-			'meta_value' => $address,
+			'meta_query'	=> array(
+				[
+					'key'	 => 'user_province',
+					'value'  => $address,
+				],
+				$active,
+			),
 			'date_query' => $date_query,
 			'meta_compare'	=> 'LIKE',
 		 );
@@ -180,7 +198,7 @@ class export {
 			<div class="option_choose">
 				<div id="action-address">
 					<label>Chọn tỉnh:</label>
-					<select name="address-users" id="number-users">
+					<select name="address-users" id="number-users" >
 						<option value="803">An Giang</option>
 						<option value="743">Bắc Giang</option>
 						<option value="744">Bắc Kạn</option>
@@ -246,13 +264,19 @@ class export {
 						<option value="802">Yên Bái</option>
 					</select>
 				</div>
-				<div>
+				<div class="start_date">
 					<label>Ngày bắt đầu:</label>
 					<input type="date" class="date" id="start_date" name="start_date">
 				</div>
-				<div>
+				<div class="end_date">
 					<label>Ngày kết thúc:</label>
 					<input type="date" class="date" id="end_date" name="end_date">
+				</div>
+				<div class="user_active">
+					<select name="user_active" id="user_active">
+						<option value="1">Khách hàng đã kích hoạt</option>
+						<option value="0">Khách hàng chưa kích hoạt</option>
+					</select>
 				</div>
 			</div>
 			<div class="option">
