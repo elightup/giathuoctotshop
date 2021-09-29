@@ -198,7 +198,7 @@ class export {
 			<div class="option_choose">
 				<div id="action-address">
 					<label>Chọn tỉnh:</label>
-					<select name="address-users" id="number-users" >
+					<select name="address-users[]" id="number-users" multiple="multiple">
 						<option value="803">An Giang</option>
 						<option value="743">Bắc Giang</option>
 						<option value="744">Bắc Kạn</option>
