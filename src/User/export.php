@@ -65,11 +65,17 @@ class export {
 				->setCellValue( 'K1', 'Cơ sở kinh doanh' )
 				->setCellValue( 'L1', 'Ngày đăng ký' );
 
-
+		global $wpdb;
 		$start_date 	= $_POST['start_date'];
 		$end_date 		= $_POST['end_date'];
 		$address 		= $_POST['address-users'];
 		$active_user 	= $_POST['user_active'];
+		$date_order		= $_POST['date_order'];
+		$user_ids 		= $wpdb->get_col( $wpdb->prepare(
+			"SELECT `user` FROM $wpdb->orders WHERE DATE(`date`) = %s",
+			$date_order
+		) );
+		$user_ids = array_map( 'absint', $user_ids );
 		$date_query 	= array(
 			'relation' => 'AND',
 			array(
@@ -98,7 +104,9 @@ class export {
 				],
 				$active,
 			),
-			'date_query' => $date_query,
+			'include'		=> $user_ids,
+			'fields'		=> [ 'ID' ],
+			'date_query' 	=> $date_query,
 			'meta_compare'	=> 'LIKE',
 		 );
 
@@ -277,6 +285,10 @@ class export {
 						<option value="1">Khách hàng đã kích hoạt</option>
 						<option value="0">Khách hàng chưa kích hoạt</option>
 					</select>
+				</div>
+				<div class="date_order">
+					<label>Ngày cuối cùng ra đơn:</label>
+					<input type="date" class="date" id="date_order" name="date_order">
 				</div>
 			</div>
 			<div class="option">
