@@ -105,7 +105,7 @@ class export {
 				$active,
 			),
 			'include'		=> $user_ids,
-			'fields'		=> [ 'ID' ],
+			//'fields'		=> [ 'ID' ],
 			'date_query' 	=> $date_query,
 			'meta_compare'	=> 'LIKE',
 		 );
