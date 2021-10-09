@@ -62,7 +62,8 @@ class export {
 				->setCellValue( 'I1', 'Tỉnh' )
 				->setCellValue( 'J1', 'Địa chỉ' )
 				->setCellValue( 'K1', 'Cơ sở kinh doanh' )
-				->setCellValue( 'L1', 'Ngày đăng ký' );
+				->setCellValue( 'L1', 'Ngày đăng ký' )
+				->setCellValue( 'M1', 'Ngày ra đơn cuối cùng' );
 
 		global $wpdb;
 		$start_date 	= $_POST['start_date'];
@@ -71,12 +72,12 @@ class export {
 		$active_user 	= $_POST['user_active'];
 		$erp_active		= $_POST['erp_active'];
 		// Ngày xuất đơn
-		$date_order		= $_POST['date_order'];
-		$user_ids 		= $wpdb->get_col( $wpdb->prepare(
-			"SELECT `user` FROM $wpdb->orders WHERE DATE(`date`) = %s",
-			$date_order
-		) );
-		$user_ids = array_map( 'absint', $user_ids );
+		// $date_order		= $_POST['date_order'];
+		// $user_ids 		= $wpdb->get_col( $wpdb->prepare(
+		// 	"SELECT `user` FROM $wpdb->orders WHERE DATE(`date`) = %s",
+		// 	$date_order
+		// ) );
+		// $user_ids = array_map( 'absint', $user_ids );
 		$date_query 	= array(
 			'relation' => 'AND',
 			array(
@@ -119,7 +120,7 @@ class export {
 				$active,
 				$active_erp,
 			),
-			'include'		=> $user_ids,
+			//'include'		=> $user_ids,
 			'date_query' 	=> $date_query,
 			'meta_compare'	=> 'LIKE',
 		 );
@@ -171,7 +172,12 @@ class export {
 				if ( 'user_registered' == $fields ) {
 					$user_registered = date( 'd.m.Y', strtotime( $user->user_registered ) );
 				}
-
+				if( 'last_date'	== $fields ) {
+					$order_date 		= $wpdb->get_col( $wpdb->prepare(
+						"SELECT `date` FROM $wpdb->orders WHERE `user` = $user->ID;",
+					) );
+					$last_date = date( 'd.m.Y', strtotime( end($order_date) ) );
+				}
 			}
 
 			$row ++;
@@ -187,7 +193,8 @@ class export {
 					->setCellValue( 'I' . $row, $user_province )
 					->setCellValue( 'J' . $row, $user_address )
 					->setCellValue( 'K' . $row, $user_ten_csdk )
-					->setCellValue( 'L' . $row, $user_registered );
+					->setCellValue( 'L' . $row, $user_registered )
+					->setCellValue( 'M' . $row, $last_date );
 
 		}
 
@@ -225,10 +232,10 @@ class export {
 
 		<form method="post" action="" enctype="multipart/form-data" novalidate>
 			<?php wp_nonce_field( 'export-users', '_wpnonce-export-users' ); ?>
-			<div class="option_choose">
-				<div id="action-address">
-					<label>Chọn tỉnh:</label>
-					<select name="address-users[]" id="number-users" multiple="multiple">
+			<div class="option_choose" style="display: flex; flex-wrap: wrap; margin-bottom: 20px;">
+				<div id="action-address" style="width: 20%;">
+					<label>Chọn tỉnh:</label><br>
+					<select name="address-users[]" id="number-users" multiple="multiple" style="width: 90%">
 						<option value="803">An Giang</option>
 						<option value="743">Bắc Giang</option>
 						<option value="744">Bắc Kạn</option>
@@ -294,29 +301,27 @@ class export {
 						<option value="802">Yên Bái</option>
 					</select>
 				</div>
-				<div class="start_date">
-					<label>Ngày bắt đầu:</label>
-					<input type="date" class="date" id="start_date" name="start_date">
+				<div class="start_date" style="width: 20%;">
+					<label>Ngày bắt đầu:</label><br>
+					<input type="date" class="date" id="start_date" name="start_date" style="width: 90%">
 				</div>
-				<div class="end_date">
-					<label>Ngày kết thúc:</label>
-					<input type="date" class="date" id="end_date" name="end_date">
+				<div class="end_date" style="width: 20%;">
+					<label>Ngày kết thúc:</label><br>
+					<input type="date" class="date" id="end_date" name="end_date" style="width: 90%">
 				</div>
-				<div class="user_active">
-					<select name="user_active" id="user_active">
+				<div class="user_active" style="width: 20%;">
+					<label>Khách hàng:</label><br>
+					<select name="user_active" id="user_active" style="width: 90%">
 						<option value="1">Khách hàng đã kích hoạt</option>
 						<option value="0">Khách hàng chưa kích hoạt</option>
 					</select>
 				</div>
-				<div class="user_active">
-					<select name="erp_active" id="erp_active">
+				<div class="user_active" style="width: 20%;">
+					<label>ERP:</label><br>
+					<select name="erp_active" id="erp_active" style="width: 90%">
 						<option value="1">Đã kích hoạt ERP</option>
 						<option value="0">Chưa kích hoạt ERP</option>
 					</select>
-				</div>
-				<div class="date_order">
-					<label>Ngày cuối cùng ra đơn:</label>
-					<input type="date" class="date" id="date_order" name="date_order">
 				</div>
 			</div>
 			<div class="option">
@@ -331,6 +336,7 @@ class export {
 				<input type="checkbox" name="user_fields[]" value="user_address" checked>Địa chỉ<br>
 				<input type="checkbox" name="user_fields[]" value="user_ten_csdk" checked>Tên cơ sở kd<br>
 				<input type="checkbox" name="user_fields[]" value="user_registered" checked>Ngày đăng ký<br>
+				<input type="checkbox" name="user_fields[]" value="last_date" checked>Ngày cuối ra đơn<br>
 			</div>
 			<p class="submit">
 				<input type="submit" class="button-primary" value="Export"/>
