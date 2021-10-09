@@ -46,7 +46,6 @@ class export {
 		 * @link https://github.com/mk-j/PHP_XLSXWriter
 		 */
 
-
 		// Create new PHPExcel object
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet();
@@ -70,6 +69,8 @@ class export {
 		$end_date 		= $_POST['end_date'];
 		$address 		= $_POST['address-users'];
 		$active_user 	= $_POST['user_active'];
+		$erp_active		= $_POST['erp_active'];
+		// Ngày xuất đơn
 		$date_order		= $_POST['date_order'];
 		$user_ids 		= $wpdb->get_col( $wpdb->prepare(
 			"SELECT `user` FROM $wpdb->orders WHERE DATE(`date`) = %s",
@@ -96,6 +97,19 @@ class export {
 				'compare' 	=> 'NOT EXISTS',
 			];
 		}
+
+		if ( $erp_active == 1 ) {
+			$active_erp = [
+				'key'	 => 'erp_response',
+				'value'  => $erp_active,
+			];
+		} else {
+			$active_erp = [
+				'key'	 	=> 'erp_response',
+				'value'  	=> $erp_active,
+				'compare' 	=> 'NOT EXISTS',
+			];
+		}
 		$args = array(
 			'meta_query'	=> array(
 				[
@@ -103,9 +117,9 @@ class export {
 					'value'  => $address,
 				],
 				$active,
+				$active_erp,
 			),
 			'include'		=> $user_ids,
-			//'fields'		=> [ 'ID' ],
 			'date_query' 	=> $date_query,
 			'meta_compare'	=> 'LIKE',
 		 );
@@ -138,7 +152,15 @@ class export {
 					$user_hinhthuc_kd = get_user_meta( $user->ID, 'user_hinhthuc_kd', true );
 				}
 				if ( 'user_province' == $fields ) {
-					$user_province = get_user_meta( $user->ID, 'user_province', true );
+					$cities = get_cities_array();
+					$province_id = get_user_meta( $user->ID, 'user_province', true );
+					foreach ( $cities as $city ) {
+						$key = $city['key'];
+						$name = $city['value'];
+						if ( $province_id == $key ) {
+							$user_province = $name;
+						}
+					}
 				}
 				if ( 'user_address' == $fields ) {
 					$user_address = get_user_meta( $user->ID, 'user_address', true );
@@ -284,6 +306,12 @@ class export {
 					<select name="user_active" id="user_active">
 						<option value="1">Khách hàng đã kích hoạt</option>
 						<option value="0">Khách hàng chưa kích hoạt</option>
+					</select>
+				</div>
+				<div class="user_active">
+					<select name="erp_active" id="erp_active">
+						<option value="1">Đã kích hoạt ERP</option>
+						<option value="0">Chưa kích hoạt ERP</option>
 					</select>
 				</div>
 				<div class="date_order">
