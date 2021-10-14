@@ -206,12 +206,10 @@
 					</svg>
 				</div>
 			</div>`;
-			let hastoast = $( '.toast' );
-			if ( hastoast ) {
-				hastoast.remove();
-				$( 'body' ).append( toast );
-			}
 
+			$( 'body' ).append( toast ).fadeTo( 2000, 1, function() {
+				$( '.toast' ).css( 'z-index', '0' ).fadeTo( 1000, 0 );
+			} );
 
 		}
 	};
