@@ -6,6 +6,7 @@ class Views {
 		add_filter( 'views_users', [ $this, 'add_views' ] );
 		add_action( 'admin_bar_menu', [ $this, 'admin_bar_notification' ], 99 );
 
+		add_action( 'restrict_manage_users', [ $this, 'filter_user_restrict'] );
 		add_action( 'pre_get_users', [ $this, 'filter_users' ] );
 	}
 
@@ -26,7 +27,57 @@ class Views {
 		] );
 	}
 
+	public function filter_user_restrict ( $which ) {
+		$date_start = '<input type="date" name="start_date_%s" id="user_date" value="" style="margin-left: 10px">';
+		$date_end = '<input type="date" name="end_date_%s" id="user_date" value="" style="margin-left: 10px">';
+		$ct = '<select name="city_%s" id="city" style="float:none;margin-left:10px;">
+					<option value="">%s</option>%s</select>';
+		$cities = get_cities_array();
+		$options = [];
+		foreach ( $cities as $city ) {
+			$id = $city['key'];
+			$name = $city['value'];
+			$options .= '<option value="'. $id .'">'.$name.'</option>';
+		}
+		$select = sprintf( $ct, $which, __( 'Thành phố' ), $options );
+		$date_st = sprintf( $date_start, $which );
+		$date_ed = sprintf( $date_end, $which );
+		echo $date_st;
+		echo $date_ed;
+		echo $select;
+		submit_button(__( 'Filter' ), null, $which, false);
+	}
+
 	public function filter_users( \WP_User_Query $query ) {
+		$city_top = $_GET['city_top'] ? $_GET['city_top'] : null;
+		$city_bottom = $_GET['city_bottom'] ? $_GET['city_bottom'] : null;
+		$dateStart_top = $_GET['start_date_top'] ? $_GET['start_date_top'] : null;
+		$dateStart_bottom = $_GET['start_date_bottom'] ? $_GET['start_date_bottom'] : null;
+		$dateEnd_top = $_GET['end_date_top'] ? $_GET['end_date_top'] : null;
+		$dateEnd_bottom = $_GET['end_date_bottom'] ? $_GET['end_date_bottom'] : null;
+		if ( !empty($city_top) OR !empty($city_bottom) ) {
+			$city = !empty($city_top) ? $city_top : $city_bottom;
+			$meta_query = array (array (
+				'key' => 'user_province',
+				'value' => $city,
+				'compare' => 'LIKE'
+			 ));
+			 $query->set('meta_query', $meta_query);
+		}
+		if ( !empty($dateStart_top) && !empty($dateEnd_top) OR !empty($dateStart_bottom) && !empty($dateEnd_bottom) ) {
+			$dateStart 	= !empty($dateStart_top) ? $dateStart_top : $dateStart_bottom;
+			$dateEnd 	= !empty($dateEnd_top) ? $dateEnd_top : $dateEnd_bottom;
+			$date_query = array(
+				'relation' => 'AND',
+				array(
+					'before'        => $dateEnd,
+					'after'         => $dateStart,
+					'inclusive'     => true,
+				),
+			);
+			$query->set( 'date_query', $date_query );
+		}
+
 		if ( ! is_admin() ) {
 			return;
 		}

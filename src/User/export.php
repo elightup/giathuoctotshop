@@ -71,13 +71,7 @@ class export {
 		$address 		= $_POST['address-users'];
 		$active_user 	= $_POST['user_active'];
 		$erp_active		= $_POST['erp_active'];
-		// Ngày xuất đơn
-		// $date_order		= $_POST['date_order'];
-		// $user_ids 		= $wpdb->get_col( $wpdb->prepare(
-		// 	"SELECT `user` FROM $wpdb->orders WHERE DATE(`date`) = %s",
-		// 	$date_order
-		// ) );
-		// $user_ids = array_map( 'absint', $user_ids );
+
 		$date_query 	= array(
 			'relation' => 'AND',
 			array(
@@ -120,7 +114,6 @@ class export {
 				$active,
 				$active_erp,
 			),
-			//'include'		=> $user_ids,
 			'date_query' 	=> $date_query,
 			'meta_compare'	=> 'LIKE',
 		 );
