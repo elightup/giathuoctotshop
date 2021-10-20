@@ -176,8 +176,10 @@
 				cart.updateProduct( productId, quantity );
 			} else {
 				cart.addProduct( productId, quantity );
-				cart.showToast();
+			}
 
+			if ( ! cart.hasProduct( productId ) && quantity !== 0 ) {
+				cart.showToast();
 			}
 		},
 

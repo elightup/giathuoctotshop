@@ -154,7 +154,7 @@ class Cart {
 		$product_id = isset( $_POST['product_id'] ) ? (int) $_POST['product_id'] : 0;
 		$quantity   = isset( $_POST['quantity'] ) ? (int) $_POST['quantity'] : 0;
 
-		if ( ! $product_id || ! $quantity ) {
+		if ( ! $product_id || ! isset( $quantity ) ) {
 			wp_send_json_error();
 		}
 
