@@ -30,7 +30,7 @@ class user {
 			'name'           => $user_meta['user_name'][0],
 			'birthday'       => date( 'Y-m-d', strtotime( $birthday ) ),
 			'drugstore_name' => $user_meta['user_ten_csdk'][0],
-			'phone'          => $user_meta['user_sdt'][0],
+			'phone'          => $user_meta['user_phone2'][0],
 			'street'         => $user_meta['user_address'][0],
 			// 'state_id'       => (int)$user_meta['user_province'][0],
 		), JSON_UNESCAPED_UNICODE );
@@ -198,6 +198,7 @@ class user {
 		$user_id     = $_GET['user_id'];
 		$user_meta   = get_user_meta( $user_id );
 		$user_data   = get_userdata( $user_id );
+		$user_phone  = $user_meta['user_phone2'][0] ?? $user_meta['user_sdt'][0];
 		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
 
 		$data_string = json_encode( array(
@@ -206,7 +207,7 @@ class user {
 			'confirm_password' => "111111",
 			'name'             => $user_meta['user_name'][0],
 			'drugstore_name'   => $user_meta['user_ten_csdk'][0],
-			'phone'            => $user_meta['user_sdt'][0],
+			'phone'            => $user_phone,
 			'mail'             => $user_data->user_email,
 			'street'           => $user_meta['user_address'][0],
 			'state_id'         => (int)$user_meta['user_province'][0],

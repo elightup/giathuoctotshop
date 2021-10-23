@@ -49,12 +49,12 @@ class Views {
 	}
 
 	public function filter_users( \WP_User_Query $query ) {
-		$city_top = $_GET['city_top'] ? $_GET['city_top'] : null;
-		$city_bottom = $_GET['city_bottom'] ? $_GET['city_bottom'] : null;
-		$dateStart_top = $_GET['start_date_top'] ? $_GET['start_date_top'] : null;
-		$dateStart_bottom = $_GET['start_date_bottom'] ? $_GET['start_date_bottom'] : null;
-		$dateEnd_top = $_GET['end_date_top'] ? $_GET['end_date_top'] : null;
-		$dateEnd_bottom = $_GET['end_date_bottom'] ? $_GET['end_date_bottom'] : null;
+		$city_top         = isset( $_GET['city_top'] ) ? $_GET['city_top'] : null;
+		$city_bottom      = isset( $_GET['city_bottom'] ) ? $_GET['city_bottom'] : null;
+		$dateStart_top    = isset( $_GET['start_date_top']  )? $_GET['start_date_top'] : null;
+		$dateStart_bottom = isset( $_GET['start_date_bottom'] ) ? $_GET['start_date_bottom'] : null;
+		$dateEnd_top      = isset( $_GET['end_date_top'] ) ? $_GET['end_date_top'] : null;
+		$dateEnd_bottom   = isset( $_GET['end_date_bottom'] ) ? $_GET['end_date_bottom'] : null;
 		if ( !empty($city_top) OR !empty($city_bottom) ) {
 			$city = !empty($city_top) ? $city_top : $city_bottom;
 			$meta_query = array (array (
