@@ -36,20 +36,23 @@ class user {
 			// 'state_id'       => (int)$user_meta['user_province'][0],
 		), JSON_UNESCAPED_UNICODE );
 
-		// Update user to ERP
-		$token = json_decode( $this->get_user_token( $user_id ) );
-		$data = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/user/change_profile', array(
-			'headers' => [
-				'Content-Type'  => 'application/json',
-				'Authorization' => 'Bearer ' . $token->data->access_token,
-			],
-			'method'  => 'POST',
-			'body'    => $data_string,
-			'timeout' => 15,
-		) );
+		$response = get_user_meta( $user_id, 'erp_response', true );
+		if ( $response == '1' ) {
+			// Update user to ERP
+			$token = json_decode( $this->get_user_token( $user_id ) );
+			$data = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/user/change_profile', array(
+				'headers' => [
+					'Content-Type'  => 'application/json',
+					'Authorization' => 'Bearer ' . $token->data->access_token,
+				],
+				'method'  => 'POST',
+				'body'    => $data_string,
+				'timeout' => 15,
+			) );
 
-		// Log User update
-		$this->logs_user( $user_id );
+			// Log User update
+			$this->logs_user( $user_id );
+		}
 	}
 
 	public function user_search_by_multiple_parameters( $query ) {
