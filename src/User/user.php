@@ -23,14 +23,15 @@ class user {
 	}
 
 	public function update_user( $user_id, $old_user_data ) {
-		$user_meta = get_user_meta( $user_id );
-		$birthday  = $user_meta['user_date_birth'][0];
+		$user_meta  = get_user_meta( $user_id );
+		$birthday   = $user_meta['user_date_birth'][0];
+		$user_phone = $user_meta['user_phone2'][0] ?? $user_meta['user_sdt'][0];
 
 		$data_string = json_encode( array(
 			'name'           => $user_meta['user_name'][0],
 			'birthday'       => date( 'Y-m-d', strtotime( $birthday ) ),
 			'drugstore_name' => $user_meta['user_ten_csdk'][0],
-			'phone'          => $user_meta['user_phone2'][0],
+			'phone'          => $user_phone,
 			'street'         => $user_meta['user_address'][0],
 			// 'state_id'       => (int)$user_meta['user_province'][0],
 		), JSON_UNESCAPED_UNICODE );
