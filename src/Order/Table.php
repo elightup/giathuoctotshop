@@ -205,17 +205,17 @@ class Table extends \WP_List_Table {
 
 	public function get_columns() {
 		$columns = [
-			'cb'       => '<input type="checkbox">',
-			'id'       => 'ID',
-			'customer' => __( 'Khách hàng', 'elu-shop' ),
-			'products' => __( 'Sản phẩm', 'elu-shop' ),
-			'amount'   => __( 'Tổng tiền', 'elu-shop' ),
-			'date'     => __( 'Ngày tạo', 'elu-shop' ),
-			'status'   => __( 'Trạng thái', 'elu-shop' ),
-			'erp'      => 'ERP',
-			'action'   => __( 'Thao tác', 'elu-shop' ),
-			'user_update'   => __( 'Người chỉnh sửa', 'elu-shop' ),
-			'time_update'   => __( 'Thời gian chỉnh sửa', 'elu-shop' ),
+			'cb'          => '<input type="checkbox">',
+			'id'          => 'ID',
+			'customer'    => __( 'Khách hàng', 'elu-shop' ),
+			'products'    => __( 'Sản phẩm', 'elu-shop' ),
+			'amount'      => __( 'Tổng tiền', 'elu-shop' ),
+			'date'        => __( 'Ngày tạo', 'elu-shop' ),
+			'status'      => __( 'Trạng thái', 'elu-shop' ),
+			'erp'         => 'ERP',
+			'action'      => __( 'Thao tác', 'elu-shop' ),
+			'user_update' => __( 'Người chỉnh sửa', 'elu-shop' ),
+			'time_update' => __( 'Thời gian chỉnh sửa', 'elu-shop' ),
 		];
 
 		return $columns;

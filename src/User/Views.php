@@ -45,7 +45,7 @@ class Views {
 		echo $date_st;
 		echo $date_ed;
 		echo $select;
-		submit_button(__( 'Filter' ), null, $which, false);
+		submit_button( __( 'Filter' ), null, $which, false );
 	}
 
 	public function filter_users( \WP_User_Query $query ) {
@@ -55,24 +55,24 @@ class Views {
 		$dateStart_bottom = isset( $_GET['start_date_bottom'] ) ? $_GET['start_date_bottom'] : null;
 		$dateEnd_top      = isset( $_GET['end_date_top'] ) ? $_GET['end_date_top'] : null;
 		$dateEnd_bottom   = isset( $_GET['end_date_bottom'] ) ? $_GET['end_date_bottom'] : null;
-		if ( !empty($city_top) OR !empty($city_bottom) ) {
-			$city = !empty($city_top) ? $city_top : $city_bottom;
-			$meta_query = array (array (
-				'key' => 'user_province',
-				'value' => $city,
+		if ( !empty( $city_top ) OR !empty( $city_bottom ) ) {
+			$city = !empty( $city_top ) ? $city_top : $city_bottom;
+			$meta_query = array( array(
+				'key'     => 'user_province',
+				'value'   => $city,
 				'compare' => 'LIKE'
 			 ));
-			 $query->set('meta_query', $meta_query);
+			 $query->set( 'meta_query', $meta_query );
 		}
-		if ( !empty($dateStart_top) && !empty($dateEnd_top) OR !empty($dateStart_bottom) && !empty($dateEnd_bottom) ) {
-			$dateStart 	= !empty($dateStart_top) ? $dateStart_top : $dateStart_bottom;
-			$dateEnd 	= !empty($dateEnd_top) ? $dateEnd_top : $dateEnd_bottom;
+		if ( !empty( $dateStart_top ) && !empty( $dateEnd_top ) OR !empty( $dateStart_bottom ) && !empty( $dateEnd_bottom ) ) {
+			$dateStart 	= !empty( $dateStart_top ) ? $dateStart_top : $dateStart_bottom;
+			$dateEnd 	= !empty( $dateEnd_top ) ? $dateEnd_top : $dateEnd_bottom;
 			$date_query = array(
 				'relation' => 'AND',
 				array(
-					'before'        => $dateEnd,
-					'after'         => $dateStart,
-					'inclusive'     => true,
+					'before'    => $dateEnd,
+					'after'     => $dateStart,
+					'inclusive' => true,
 				),
 			);
 			$query->set( 'date_query', $date_query );

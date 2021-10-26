@@ -36,12 +36,12 @@ new Order\OrderAgain;
 new Misc;
 
 if ( is_admin() ) {
-    ( new Order\AdminList() )->init();
+	( new Order\AdminList() )->init();
 	new Order\Ajax;
 	( new User\user() )->init();
-    new User\Views;
+	new User\Views;
 	new User\export;
-    new Assets;
+	new Assets;
 }
 
 function is_cart_page() {
