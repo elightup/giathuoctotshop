@@ -89,6 +89,10 @@
 		$d.on( 'click', '.cart__remove', function( e ) {
 			e.preventDefault();
 			const productId = $( this ).data( 'product_id' );
+			cart.showConfirmDelete( productId );
+		} );
+		$d.on( 'click', '.confirm-delete .btn-primary', function() {
+			const productId = $( this ).data( 'id' );
 			cart.removeProduct( productId, updateCartHtml );
 		} );
 
