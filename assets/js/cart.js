@@ -42,7 +42,7 @@
 				let productID = $( this ).data( 'id' );
 				cart.removeProduct( productID );
 				$( '.confirm-delete' ).css( 'display', 'none' );
-				$( '.product-item' ).find( `[data-product='${productID}']` ).find( '.quantity_products' ).val( 0 );
+				$( `[data-product='${productID}']` ).find( '.quantity_products' ).val( 0 );
 			} );
 			$d.on( 'click', '.confirm-delete .btn-secondary', function() {
 				$( '.confirm-delete' ).css( 'display', 'none' );
