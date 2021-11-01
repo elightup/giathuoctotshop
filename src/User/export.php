@@ -16,6 +16,7 @@ class export {
 		add_action( 'init', array( $this, 'generate_xlsx' ) );
 	}
 
+
 	/**
 	 * Add administration menus
 	 *
