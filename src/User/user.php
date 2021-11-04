@@ -95,10 +95,11 @@ class user {
 	 * @return array
 	 */
 	public function users_columns( $columns ) {
-		$columns['user_name'] = 'Khách hàng';
-		$columns['registered'] = 'Thời gian tạo';
-		$columns['action']     = 'Tác vụ';
-		$columns['message']    = 'Chi tiết lỗi';
+		$columns['user_name'] 	= 'Khách hàng';
+		$columns['address'] 	= 'Địa chỉ';
+		$columns['registered'] 	= 'Thời gian tạo';
+		$columns['action']     	= 'Tác vụ';
+		$columns['message']    	= 'Chi tiết lỗi';
 		$columns['user_update'] = 'Người cập nhật';
 		$columns['time_update'] = 'Thời gian cập nhật';
 		unset( $columns['posts'] );
@@ -169,6 +170,9 @@ class user {
 				break;
 			case 'message':
 				$output .= get_user_meta( $user_id, 'erp_message', true );
+				break;
+			case 'address':
+				$output .= get_user_meta( $user_id, 'user_address', true );
 				break;
 			case 'user_update':
 				if ( ! empty( $update_log['user_update'] ) ) {

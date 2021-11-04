@@ -105,6 +105,7 @@ class Checkout {
 			'phone'          => $user->user_login,
 			'address'        => get_user_meta( $id, 'user_address', true ),
 			'payment_method' => $payment_method,
+			'province' => get_user_meta( $id, 'user_province', true ),
 		];
 
 		global $wpdb;
