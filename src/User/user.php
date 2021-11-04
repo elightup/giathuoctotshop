@@ -97,6 +97,7 @@ class user {
 	public function users_columns( $columns ) {
 		$columns['user_name'] 	= 'Khách hàng';
 		$columns['address'] 	= 'Địa chỉ';
+		$columns['orders'] 		= 'Số đơn hàng';
 		$columns['registered'] 	= 'Thời gian tạo';
 		$columns['action']     	= 'Tác vụ';
 		$columns['message']    	= 'Chi tiết lỗi';
@@ -131,8 +132,10 @@ class user {
 	 * @return string
 	 */
 	public function show_users_columns( $output, $column, $user_id ) {
+		global $wpdb;
 		$user = get_userdata( $user_id );
 		$update_log = get_user_meta( $user_id, 'update_log', true );
+		$count_order = $wpdb->get_col( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->orders WHERE `user` = $user_id;" ) );
 
 		switch ( $column ) {
 			case 'user_name':
@@ -173,6 +176,9 @@ class user {
 				break;
 			case 'address':
 				$output .= get_user_meta( $user_id, 'user_address', true );
+				break;
+			case 'orders':
+				$output .= $count_order[0];
 				break;
 			case 'user_update':
 				if ( ! empty( $update_log['user_update'] ) ) {
