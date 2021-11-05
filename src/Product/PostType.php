@@ -264,6 +264,11 @@ class PostType {
 					'name'    => 'Ngày hết hạn',
 					'columns' => 6,
 				],
+				[
+					'id'      => 'product_invoice',
+					'name'    => 'Hóa đơn',
+					'columns' => 6,
+				],
 			],
 		];
 		return $meta_boxes;
