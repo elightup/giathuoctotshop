@@ -50,11 +50,14 @@ class ERP {
 			$discount = ( $voucher['voucher_price'] * $amount / 100 ) / 1000;
 		}
 
+		$voucher_name = isset( $voucher ) ? $voucher['voucher_id'] : '';
+
 		$body = json_encode( [
 			'note'         => $order['note'],
 			'payment_term' => $info['payment_method'],
 			'products'     => $products,
 			'discount'     => $discount,
+			'voucher_name' => $voucher_name,
 			'giathuoc_id'  => (int) $id,
 			'giathuoctot'  => 'True',
 		], JSON_UNESCAPED_UNICODE );
