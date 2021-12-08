@@ -1,5 +1,4 @@
 <?php
-
 namespace ELUSHOP\Order;
 
 class Table extends \WP_List_Table {
@@ -30,14 +29,14 @@ class Table extends \WP_List_Table {
 			$this->get_total_items()
 		);
 
-		$push_erp = isset( $_REQUEST['push_erp'] ) ? $_REQUEST['push_erp'] : '';
+		$push_erp     = isset( $_REQUEST['push_erp'] ) ? $_REQUEST['push_erp'] : '';
 		$statuses_erp = [
-			'completed'  => __( 'Đã đẩy lên ERP', 'elu-shop' ),
-			'pending' => __( 'Lỗi khi đẩy lên ERP', 'elu-shop' ),
+			'completed' => __( 'Đã đẩy lên ERP', 'elu-shop' ),
+			'pending'   => __( 'Lỗi khi đẩy lên ERP', 'elu-shop' ),
 		];
 		foreach ( $statuses_erp as $key => $label ) {
-			$class         = $key === $push_erp ? ' class="current"' : '';
-			$url           = add_query_arg( 'push_erp', $key, $this->base_url );
+			$class               = $key === $push_erp ? ' class="current"' : '';
+			$url                 = add_query_arg( 'push_erp', $key, $this->base_url );
 			$links[ "erp_$key" ] = sprintf(
 				'<a href="%s"%s>%s <span class="count">(%s)</span></a>',
 				$url,
@@ -48,9 +47,9 @@ class Table extends \WP_List_Table {
 		}
 
 		$statuses = [
-			'completed'  => __( 'Đã hoàn thành', 'elu-shop' ),
-			'pending' => __( 'Đang xử lý', 'elu-shop' ),
-			'trash'   => __( 'Thùng rác', 'elu-shop' ),
+			'completed' => __( 'Đã hoàn thành', 'elu-shop' ),
+			'pending'   => __( 'Đang xử lý', 'elu-shop' ),
+			'trash'     => __( 'Thùng rác', 'elu-shop' ),
 		];
 		foreach ( $statuses as $key => $label ) {
 			$class         = $key === $status ? ' class="current"' : '';
@@ -192,7 +191,7 @@ class Table extends \WP_List_Table {
 			$user_ids   = $wpdb->get_col( $sql );
 
 			$user_ids = implode( ',', $user_ids );
-			$where[]     = '`user` IN ( ' . $user_ids . ' )';
+			$where[]  = '`user` IN ( ' . $user_ids . ' )';
 		}
 		return $where ? 'WHERE ' . implode( ' ', $where ) : '';
 	}
@@ -223,7 +222,7 @@ class Table extends \WP_List_Table {
 
 	public function get_sortable_columns() {
 		$sortable_columns = [
-			'date'   => [ 'date', true ],
+			'date' => [ 'date', true ],
 		];
 
 		return $sortable_columns;
@@ -239,13 +238,10 @@ class Table extends \WP_List_Table {
 	public function column_id( $item ) {
 		$title = sprintf(
 			'<a href="%s"><strong>' . __( 'Đơn hàng', 'elu-shop' ) . ': #%d</strong></a>',
-			add_query_arg(
-				[
-					'action' => 'view',
-					'id'     => $item['id'],
-				],
-				$this->base_url
-			),
+			add_query_arg( [
+				'action' => 'view',
+				'id'     => $item['id'],
+			], $this->base_url ),
 			$item['id']
 		);
 		return $title . $this->row_actions( $this->get_row_actions( $item ) );
@@ -306,13 +302,15 @@ class Table extends \WP_List_Table {
 			$giam_gia = $voucher['voucher_price'] * $item['amount'] / 100;
 		}
 		$amount = $item['amount'] - $giam_gia;
-		echo number_format( $amount, 0, '', '.' ); ?> <?= ps_setting( 'currency' );
+		echo number_format( $amount, 0, '', '.' );
+		?>
+		<?= ps_setting( 'currency' );
 	}
 
 	public function column_payments( $item ) {
 		$payments = $item['info'];
 		$payments = json_decode( $payments, true );
-		echo $payments[0]['pay'];
+		echo esc_html( $payments[0]['pay'] );
 	}
 
 	public function column_action( $item ) {
@@ -342,13 +340,13 @@ class Table extends \WP_List_Table {
 		if ( empty( $item['push_erp'] ) || ! isset( $statuses[ $item['push_erp'] ] ) ) {
 			return;
 		}
-		$status   = $statuses[ $item['push_erp'] ];
+		$status = $statuses[ $item['push_erp'] ];
 		printf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $item['push_message'] );
 	}
 
 	public function column_user_update( $item ) {
 		if ( ! empty( $item['update_log'] ) ) {
-			$log = json_decode( $item['update_log'] );
+			$log       = json_decode( $item['update_log'] );
 			$user_name = get_user_meta( $log->user_update, 'user_name', true );
 			echo '<a href="' . get_edit_user_link( $log->user_update ) . '">' . $user_name . '</a>';
 		}
@@ -356,9 +354,9 @@ class Table extends \WP_List_Table {
 
 	public function column_time_update( $item ) {
 		if ( ! empty( $item['update_log'] ) ) {
-			$log = json_decode( $item['update_log'] );
+			$log         = json_decode( $item['update_log'] );
 			$date_update = strtotime( $log->date );
-			echo date( 'd.m.Y H:i', $date_update );
+			echo esc_html( date( 'd.m.Y H:i', $date_update ) );
 		}
 	}
 
@@ -513,7 +511,7 @@ class Table extends \WP_List_Table {
 			$wpdb->orders,
 			[
 				'push_erp'     => $status,
-				'push_message' => $message
+				'push_message' => $message,
 			],
 			[ 'id' => $id ],
 			[ '%s' ]

@@ -6,15 +6,15 @@ class Views {
 		add_filter( 'views_users', [ $this, 'add_views' ] );
 		add_action( 'admin_bar_menu', [ $this, 'admin_bar_notification' ], 99 );
 
-		add_action( 'restrict_manage_users', [ $this, 'filter_user_restrict'] );
+		add_action( 'restrict_manage_users', [ $this, 'filter_user_restrict' ] );
 		add_action( 'pre_get_users', [ $this, 'filter_users' ] );
 	}
 
 	public function add_views( $views ) {
-		$type = filter_input( INPUT_GET, 'gtt-type' );
-		$views['inactive'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'inactive' ? 'current' : '' ) . '">KH chưa kích hoạt <span class="count">(' . $this->get_inactive_count() . ')</span></a>';
+		$type                    = filter_input( INPUT_GET, 'gtt-type' );
+		$views['inactive']       = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'inactive' ? 'current' : '' ) . '">KH chưa kích hoạt <span class="count">(' . $this->get_inactive_count() . ')</span></a>';
 		$views['today-inactive'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-inactive' ? 'current' : '' ) . '">KH mới chưa kích hoạt <span class="count">(' . $this->get_today_inactive_count() . ')</span></a>';
-		$views['today-active'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-active', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-active' ? 'current' : '' ) . '">KH mới đã kích hoạt <span class="count">(' . $this->get_today_active_count() . ')</span></a>';
+		$views['today-active']   = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-active', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-active' ? 'current' : '' ) . '">KH mới đã kích hoạt <span class="count">(' . $this->get_today_active_count() . ')</span></a>';
 
 		return $views;
 	}
@@ -27,19 +27,19 @@ class Views {
 		] );
 	}
 
-	public function filter_user_restrict ( $which ) {
+	public function filter_user_restrict( $which ) {
 		$date_start = '<input type="date" name="start_date_%s" id="user_date" value="" style="margin-left: 10px">';
-		$date_end = '<input type="date" name="end_date_%s" id="user_date" value="" style="margin-left: 10px">';
-		$ct = '<select name="city_%s" id="city" style="float:none;margin-left:10px;">
+		$date_end   = '<input type="date" name="end_date_%s" id="user_date" value="" style="margin-left: 10px">';
+		$ct         = '<select name="city_%s" id="city" style="float:none;margin-left:10px;">
 					<option value="">%s</option>%s</select>';
-		$cities = get_cities_array();
-		$options = [];
+		$cities     = get_cities_array();
+		$options    = [];
 		foreach ( $cities as $city ) {
-			$id = $city['key'];
-			$name = $city['value'];
-			$options .= '<option value="'. $id .'">'.$name.'</option>';
+			$id       = $city['key'];
+			$name     = $city['value'];
+			$options .= '<option value="' . $id . '">' . $name . '</option>';
 		}
-		$select = sprintf( $ct, $which, __( 'Thành phố' ), $options );
+		$select  = sprintf( $ct, $which, __( 'Thành phố' ), $options );
 		$date_st = sprintf( $date_start, $which );
 		$date_ed = sprintf( $date_end, $which );
 		echo $date_st;
@@ -51,22 +51,24 @@ class Views {
 	public function filter_users( \WP_User_Query $query ) {
 		$city_top         = isset( $_GET['city_top'] ) ? $_GET['city_top'] : null;
 		$city_bottom      = isset( $_GET['city_bottom'] ) ? $_GET['city_bottom'] : null;
-		$dateStart_top    = isset( $_GET['start_date_top']  )? $_GET['start_date_top'] : null;
+		$dateStart_top    = isset( $_GET['start_date_top'] ) ? $_GET['start_date_top'] : null;
 		$dateStart_bottom = isset( $_GET['start_date_bottom'] ) ? $_GET['start_date_bottom'] : null;
 		$dateEnd_top      = isset( $_GET['end_date_top'] ) ? $_GET['end_date_top'] : null;
 		$dateEnd_bottom   = isset( $_GET['end_date_bottom'] ) ? $_GET['end_date_bottom'] : null;
-		if ( !empty( $city_top ) OR !empty( $city_bottom ) ) {
-			$city = !empty( $city_top ) ? $city_top : $city_bottom;
-			$meta_query = array( array(
-				'key'     => 'user_province',
-				'value'   => $city,
-				'compare' => 'LIKE'
-			 ));
+		if ( ! empty( $city_top ) or ! empty( $city_bottom ) ) {
+			$city       = ! empty( $city_top ) ? $city_top : $city_bottom;
+			$meta_query = array(
+				array(
+					'key'     => 'user_province',
+					'value'   => $city,
+					'compare' => 'LIKE',
+				),
+			);
 			 $query->set( 'meta_query', $meta_query );
 		}
-		if ( !empty( $dateStart_top ) && !empty( $dateEnd_top ) OR !empty( $dateStart_bottom ) && !empty( $dateEnd_bottom ) ) {
-			$dateStart 	= !empty( $dateStart_top ) ? $dateStart_top : $dateStart_bottom;
-			$dateEnd 	= !empty( $dateEnd_top ) ? $dateEnd_top : $dateEnd_bottom;
+		if ( ! empty( $dateStart_top ) && ! empty( $dateEnd_top ) or ! empty( $dateStart_bottom ) && ! empty( $dateEnd_bottom ) ) {
+			$dateStart  = ! empty( $dateStart_top ) ? $dateStart_top : $dateStart_bottom;
+			$dateEnd    = ! empty( $dateEnd_top ) ? $dateEnd_top : $dateEnd_bottom;
 			$date_query = array(
 				'relation' => 'AND',
 				array(
@@ -157,7 +159,7 @@ class Views {
 					'compare' => 'NOT EXISTS',
 				],
 			],
-			'fields' => 'ID',
+			'fields'     => 'ID',
 		] );
 
 		return count( $users );
@@ -173,7 +175,7 @@ class Views {
 					'compare' => 'NOT EXISTS',
 				],
 			],
-			'fields' => 'ID',
+			'fields'     => 'ID',
 		] );
 
 		return count( $users );
