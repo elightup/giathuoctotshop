@@ -191,7 +191,11 @@ class Table extends \WP_List_Table {
 			$user_ids   = $wpdb->get_col( $sql );
 
 			$user_ids = implode( ',', $user_ids );
-			$where[]  = '`user` IN ( ' . $user_ids . ' )';
+			if ( substr( $s, 0, 1 ) === '#' ) {
+				$where[] = '`id` =' . substr( $s, 1 );
+			} else {
+				$where[] = '`user` IN ( ' . $user_ids . ' )';
+			}
 		}
 		return $where ? 'WHERE ' . implode( ' ', $where ) : '';
 	}
@@ -283,7 +287,7 @@ class Table extends \WP_List_Table {
 
 		echo esc_html( $info->name ) . '<br>';
 		if ( $user_data ) {
-			echo 'Login: ' . $user_data->user_login . '(' . $status_user . ')';
+			echo 'Login: ' . esc_html( $user_data->user_login ) . '(' . esc_html( $status_user ) . ')';
 		} else {
 			echo 'KH chưa đăng nhập';
 		}
@@ -292,7 +296,7 @@ class Table extends \WP_List_Table {
 	public function column_amount( $item ) {
 		$voucher = json_decode( $item['voucher'], true );
 		if ( ! $voucher ) {
-			echo number_format_i18n( $item['amount'], 0 ) . ' ' . ps_setting( 'currency' );
+			echo esc_html( number_format_i18n( $item['amount'], 0 ) ) . ' ' . esc_html( ps_setting( 'currency' ) );
 			return;
 		}
 		$giam_gia = 0;
@@ -304,7 +308,7 @@ class Table extends \WP_List_Table {
 		$amount = $item['amount'] - $giam_gia;
 		echo number_format( $amount, 0, '', '.' );
 		?>
-		<?= ps_setting( 'currency' );
+		<?= esc_html( ps_setting( 'currency' ) );
 	}
 
 	public function column_payments( $item ) {
@@ -317,18 +321,18 @@ class Table extends \WP_List_Table {
 		if ( 'pending' === $item['status'] ) {
 			printf(
 				'<a href="#" class="gtt-button gtt-close" data-id="%d" title="Đánh dấu hoàn thành"><span class="dashicons dashicons-yes"></span></a>',
-				$item['id']
+				esc_attr( $item['id'] )
 			);
 		} elseif ( 'completed' === $item['status'] ) {
 			printf(
 				'<a href="#" class="gtt-button gtt-open" data-id="%d" title="Đánh dấu đang xử lý"><span class="dashicons dashicons-hourglass"></span></a>',
-				$item['id']
+				esc_attr( $item['id'] )
 			);
 		}
 
 		printf(
 			'<a href="#" class="gtt-button gtt-repush" data-id="%d" title="Đẩy lại lên ERP"><span class="dashicons dashicons-cloud-upload"></span></a>',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
@@ -341,14 +345,14 @@ class Table extends \WP_List_Table {
 			return;
 		}
 		$status = $statuses[ $item['push_erp'] ];
-		printf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $item['push_message'] );
+		printf( '<span class="%s">%s</span><br>%s', esc_attr( $status[0] ), esc_html( $status[1] ), esc_html( $item['push_message'] ) );
 	}
 
 	public function column_user_update( $item ) {
 		if ( ! empty( $item['update_log'] ) ) {
 			$log       = json_decode( $item['update_log'] );
 			$user_name = get_user_meta( $log->user_update, 'user_name', true );
-			echo '<a href="' . get_edit_user_link( $log->user_update ) . '">' . $user_name . '</a>';
+			echo '<a href="' . esc_url( get_edit_user_link( $log->user_update ) ) . '">' . esc_html( $user_name ) . '</a>';
 		}
 	}
 
