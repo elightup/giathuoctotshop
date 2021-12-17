@@ -17,8 +17,8 @@ class Settings {
 			'style'       => 'no-boxes',
 			'columns'     => true,
 			'tabs'        => [
-				'general'  => __( 'Chung', 'gtt-shop' ),
-				'payment'  => __( 'Thanh toán', 'gtt-shop' ),
+				'general' => __( 'Chung', 'gtt-shop' ),
+				'payment' => __( 'Thanh toán', 'gtt-shop' ),
 			],
 		];
 		$settings_pages[] = [
@@ -150,10 +150,10 @@ class Settings {
 							'type' => 'number',
 						],
 						[
-							'name'      => __( 'Ngày hết hạn', 'gtt-shop' ),
-							'id'        => 'voucher_expiration_date',
-							'type'      => 'date',
-							'timestamp' => true,
+							'name'       => __( 'Ngày hết hạn', 'gtt-shop' ),
+							'id'         => 'voucher_expiration_date',
+							'type'       => 'date',
+							'timestamp'  => true,
 							'js_options' => [
 								'dateFormat' => 'dd-mm-yy',
 							],

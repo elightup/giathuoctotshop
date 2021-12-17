@@ -1,6 +1,7 @@
 <?php
 
 namespace ELUSHOP\User;
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -34,13 +35,13 @@ class export {
 	 **/
 	public function generate_xlsx() {
 
-		if (  ! isset( $_POST['_wpnonce-export-users'] ) || ! isset( $_POST['user_fields'] ) ) {
+		if ( ! isset( $_POST['_wpnonce-export-users'] ) || ! isset( $_POST['user_fields'] ) ) {
 			return;
 		}
 
 		check_admin_referer( 'export-users', '_wpnonce-export-users' );
 
-		$file = 'export-user-' . date( 'd-m-Y' ) . ".xlsx";
+		$file = 'export-user-' . date( 'd-m-Y' ) . '.xlsx';
 
 		/**
 		 * Generate .xlsx file using PHP_XLSXWriter class
@@ -49,7 +50,7 @@ class export {
 
 		// Create new PHPExcel object
 		$spreadsheet = new Spreadsheet();
-		$sheet = $spreadsheet->getActiveSheet();
+		$sheet       = $spreadsheet->getActiveSheet();
 
 		// Add some data
 		$sheet->setCellValue( 'A1', 'STT' )
@@ -67,58 +68,57 @@ class export {
 				->setCellValue( 'M1', 'Ngày ra đơn cuối cùng' );
 
 		global $wpdb;
-		$start_date 	= $_POST['start_date'];
-		$end_date 		= $_POST['end_date'];
-		$address 		= $_POST['address-users'];
-		$active_user 	= $_POST['user_active'];
-		$erp_active		= $_POST['erp_active'];
+		$start_date  = $_POST['start_date'];
+		$end_date    = $_POST['end_date'];
+		$address     = $_POST['address-users'];
+		$active_user = $_POST['user_active'];
+		$erp_active  = $_POST['erp_active'];
 
-		$date_query 	= array(
+		$date_query = array(
 			'relation' => 'AND',
 			array(
-				'before'        => $end_date,
-				'after'         => $start_date,
-				'inclusive'     => true,
+				'before'    => $end_date,
+				'after'     => $start_date,
+				'inclusive' => true,
 			),
 		);
 		if ( $active_user == 1 ) {
 			$active = [
-				'key'	 => 'active_user',
-				'value'  => $active_user,
+				'key'   => 'active_user',
+				'value' => $active_user,
 			];
 		} else {
 			$active = [
-				'key'	 	=> 'active_user',
-				'value'  	=> $active_user,
-				'compare' 	=> 'NOT EXISTS',
+				'key'     => 'active_user',
+				'value'   => $active_user,
+				'compare' => 'NOT EXISTS',
 			];
 		}
 
 		if ( $erp_active == 1 ) {
 			$active_erp = [
-				'key'	 => 'erp_response',
-				'value'  => $erp_active,
+				'key'   => 'erp_response',
+				'value' => $erp_active,
 			];
 		} else {
 			$active_erp = [
-				'key'	 	=> 'erp_response',
-				'value'  	=> $erp_active,
-				'compare' 	=> 'NOT EXISTS',
+				'key'     => 'erp_response',
+				'value'   => $erp_active,
+				'compare' => 'NOT EXISTS',
 			];
 		}
 		$args = array(
-			'meta_query'	=> array(
+			'meta_query'   => array(
 				[
-					'key'	 => 'user_province',
-					'value'  => $address,
+					'key'   => 'user_province',
+					'value' => $address,
 				],
 				$active,
 				$active_erp,
 			),
-			'date_query' 	=> $date_query,
-			'meta_compare'	=> 'LIKE',
-		 );
-
+			'date_query'   => $date_query,
+			'meta_compare' => 'LIKE',
+		);
 
 		$users = get_users( $args );
 		// $users = get_users( [] );
@@ -129,8 +129,8 @@ class export {
 			foreach ( $_POST['user_fields'] as $fields ) {
 
 				if ( 'user_display_name' == $fields ) {
-					$last_name  = get_user_meta( $user->ID, 'last_name', true );
-					$first_name = get_user_meta( $user->ID, 'first_name', true );
+					$last_name         = get_user_meta( $user->ID, 'last_name', true );
+					$first_name        = get_user_meta( $user->ID, 'first_name', true );
 					$user_display_name = $last_name . $first_name;
 				}
 
@@ -147,10 +147,10 @@ class export {
 					$user_hinhthuc_kd = get_user_meta( $user->ID, 'user_hinhthuc_kd', true );
 				}
 				if ( 'user_province' == $fields ) {
-					$cities = get_cities_array();
+					$cities      = get_cities_array();
 					$province_id = get_user_meta( $user->ID, 'user_province', true );
 					foreach ( $cities as $city ) {
-						$key = $city['key'];
+						$key  = $city['key'];
 						$name = $city['value'];
 						if ( $province_id == $key ) {
 							$user_province = $name;
@@ -166,11 +166,11 @@ class export {
 				if ( 'user_registered' == $fields ) {
 					$user_registered = date( 'd.m.Y', strtotime( $user->user_registered ) );
 				}
-				if( 'last_date'	== $fields ) {
-					$order_date 		= $wpdb->get_col( $wpdb->prepare(
-						"SELECT `date` FROM $wpdb->orders WHERE `user` = $user->ID;",
+				if ( 'last_date' == $fields ) {
+					$order_date = $wpdb->get_col( $wpdb->prepare(
+						"SELECT `date` FROM $wpdb->orders WHERE `user` = $user->ID"
 					) );
-					$last_date = date( 'd.m.Y', strtotime( end($order_date) ) );
+					$last_date  = date( 'd.m.Y', strtotime( end( $order_date ) ) );
 				}
 			}
 
@@ -191,7 +191,6 @@ class export {
 					->setCellValue( 'M' . $row, $last_date );
 
 		}
-
 
 		$writer = new Xlsx( $spreadsheet );
 		ob_end_clean();

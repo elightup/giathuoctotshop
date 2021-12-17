@@ -49,13 +49,13 @@ class Views {
 	}
 
 	public function filter_users( \WP_User_Query $query ) {
-		$city_top         = isset( $_GET['city_top'] ) ? $_GET['city_top'] : null;
-		$city_bottom      = isset( $_GET['city_bottom'] ) ? $_GET['city_bottom'] : null;
-		$dateStart_top    = isset( $_GET['start_date_top'] ) ? $_GET['start_date_top'] : null;
-		$dateStart_bottom = isset( $_GET['start_date_bottom'] ) ? $_GET['start_date_bottom'] : null;
-		$dateEnd_top      = isset( $_GET['end_date_top'] ) ? $_GET['end_date_top'] : null;
-		$dateEnd_bottom   = isset( $_GET['end_date_bottom'] ) ? $_GET['end_date_bottom'] : null;
-		if ( ! empty( $city_top ) or ! empty( $city_bottom ) ) {
+		$city_top          = isset( $_GET['city_top'] ) ? $_GET['city_top'] : null;
+		$city_bottom       = isset( $_GET['city_bottom'] ) ? $_GET['city_bottom'] : null;
+		$date_start_top    = isset( $_GET['start_date_top'] ) ? $_GET['start_date_top'] : null;
+		$date_start_bottom = isset( $_GET['start_date_bottom'] ) ? $_GET['start_date_bottom'] : null;
+		$date_end_top      = isset( $_GET['end_date_top'] ) ? $_GET['end_date_top'] : null;
+		$date_end_bottom   = isset( $_GET['end_date_bottom'] ) ? $_GET['end_date_bottom'] : null;
+		if ( ! empty( $city_top ) || ! empty( $city_bottom ) ) {
 			$city       = ! empty( $city_top ) ? $city_top : $city_bottom;
 			$meta_query = array(
 				array(
@@ -66,14 +66,14 @@ class Views {
 			);
 			 $query->set( 'meta_query', $meta_query );
 		}
-		if ( ! empty( $dateStart_top ) && ! empty( $dateEnd_top ) or ! empty( $dateStart_bottom ) && ! empty( $dateEnd_bottom ) ) {
-			$dateStart  = ! empty( $dateStart_top ) ? $dateStart_top : $dateStart_bottom;
-			$dateEnd    = ! empty( $dateEnd_top ) ? $dateEnd_top : $dateEnd_bottom;
+		if ( ! empty( $date_start_top ) && ! empty( $date_end_top ) || ! empty( $date_start_bottom ) && ! empty( $date_end_bottom ) ) {
+			$date_start = ! empty( $date_start_top ) ? $date_start_top : $date_start_bottom;
+			$date_end   = ! empty( $date_end_top ) ? $date_end_top : $date_end_bottom;
 			$date_query = array(
 				'relation' => 'AND',
 				array(
-					'before'    => $dateEnd,
-					'after'     => $dateStart,
+					'before'    => $date_end,
+					'after'     => $date_start,
 					'inclusive' => true,
 				),
 			);

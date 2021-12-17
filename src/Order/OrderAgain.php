@@ -1,5 +1,6 @@
 <?php
 namespace ELUSHOP\Order;
+
 use ELUSHOP\Assets;
 use ELUSHOP\SaveLog\SaveLog;
 
@@ -24,10 +25,10 @@ class OrderAgain {
 	public function place_checkout_again() {
 		global $wpdb;
 		$user_id      = get_current_user_id();
-		$old_order_id = (int)$_POST['old_order_id'];
+		$old_order_id = (int) $_POST['old_order_id'];
 		$item         = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $old_order_id ) );
-		$data = $item->data;
-		$data = json_decode( $data, true );
+		$data         = $item->data;
+		$data         = json_decode( $data, true );
 
 		$url = add_query_arg(
 			[
@@ -43,7 +44,6 @@ class OrderAgain {
 		if ( empty( $cart ) || ! is_array( $cart ) ) {
 			$cart = [];
 		}
-		
 
 		// B2: merge cart và data hiện đang có. Giá trị $cart sẽ được update.
 		foreach ( $data as $key => $value ) {
@@ -52,7 +52,7 @@ class OrderAgain {
 				continue;
 			}
 			if ( ! isset( $cart[ $key ]['quantity'] ) ) {
-				$cart[ $key ]['quantity'] = 0;	
+				$cart[ $key ]['quantity'] = 0;
 			}
 			if ( isset( $value['quantity'] ) ) {
 				$cart[ $key ]['quantity'] += $value['quantity'];

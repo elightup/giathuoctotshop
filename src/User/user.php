@@ -40,7 +40,7 @@ class user {
 		if ( $response == '1' ) {
 			// Update user to ERP
 			$token = json_decode( $this->get_user_token( $user_id ) );
-			$data = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/user/change_profile', array(
+			$data  = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/user/change_profile', array(
 				'headers' => [
 					'Content-Type'  => 'application/json',
 					'Authorization' => 'Bearer ' . $token->data->access_token,
@@ -58,7 +58,7 @@ class user {
 	public function user_search_by_multiple_parameters( $query ) {
 		global $wpdb;
 
-		if ( empty( $_REQUEST['s'] ) ){
+		if ( empty( $_REQUEST['s'] ) ) {
 			return;
 		}
 		$query->query_from .= ' LEFT JOIN ' . $wpdb->usermeta . ' ON ' . $wpdb->usermeta . '.user_id = ' . $wpdb->users . '.ID';
@@ -90,17 +90,17 @@ class user {
 	/**
 	 * Change columns for users
 	 *
-	 * @param array $columns List of columns in users screen
+	 * @param array $columns List of columns in users screen.
 	 *
 	 * @return array
 	 */
 	public function users_columns( $columns ) {
-		$columns['user_name'] 	= 'Khách hàng';
-		$columns['address'] 	= 'Địa chỉ';
-		$columns['orders'] 		= 'Số đơn hàng';
-		$columns['registered'] 	= 'Thời gian tạo';
-		$columns['action']     	= 'Tác vụ';
-		$columns['message']    	= 'Chi tiết lỗi';
+		$columns['user_name']   = 'Khách hàng';
+		$columns['address']     = 'Địa chỉ';
+		$columns['orders']      = 'Số đơn hàng';
+		$columns['registered']  = 'Thời gian tạo';
+		$columns['action']      = 'Tác vụ';
+		$columns['message']     = 'Chi tiết lỗi';
 		$columns['user_update'] = 'Người cập nhật';
 		$columns['time_update'] = 'Thời gian cập nhật';
 		unset( $columns['posts'] );
@@ -111,7 +111,7 @@ class user {
 	/**
 	 * Change sortable columns for users
 	 *
-	 * @param array $columns List of columns in users screen
+	 * @param array $columns List of columns in users screen.
 	 *
 	 * @return array
 	 */
@@ -133,8 +133,8 @@ class user {
 	 */
 	public function show_users_columns( $output, $column, $user_id ) {
 		global $wpdb;
-		$user = get_userdata( $user_id );
-		$update_log = get_user_meta( $user_id, 'update_log', true );
+		$user        = get_userdata( $user_id );
+		$update_log  = get_user_meta( $user_id, 'update_log', true );
 		$count_order = $wpdb->get_col( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->orders WHERE `user` = $user_id;" ) );
 
 		switch ( $column ) {
@@ -145,19 +145,19 @@ class user {
 				$response = get_user_meta( $user_id, 'erp_response', true );
 
 				if ( ! $response ) {
-					$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
+					$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
 					$output .= '<a href="' . $url . '" class="button" title="ERP">Đẩy user lên ERP</a>';
 				} elseif ( $response == 1 ) {
 					$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: #28a745; padding: 5px; border-radius: 3px;">Đã đẩy lên ERP</span>';
 				} else {
 					$output .= '<span class="badge badge--success" style="display: inline-block; color: #fff; background: red; padding: 5px; margin-right: 5px; border-radius: 3px;">Có lỗi khi đẩy lên ERP</span>';
-					$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
+					$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=push_user_to_erp&user_id=' . $user_id ), 'account' );
 					$output .= '<a href="' . $url . '" class="button" title="ERP">Thử lại</a>';
 				}
 
 				$user_active = get_user_meta( $user_id, 'active_user', true );
 				if ( ! $user_active ) {
-					$url = wp_nonce_url( admin_url( 'admin-ajax.php?action=active_user&user_id=' . $user_id ), 'account' );
+					$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=active_user&user_id=' . $user_id ), 'account' );
 					$output .= '<br><a style="margin-top: 5px;" href="' . $url . '" class="button" title="ERP">Kích hoạt TK</a>';
 				} else {
 					$output .= '<br><span class="badge badge--success" style="display: inline-block; color: #fff; background: #28a745; padding: 5px; border-radius: 3px; margin-top: 5px;">Đã kích hoạt TK</span>';
@@ -167,8 +167,8 @@ class user {
 			case 'registered':
 				if ( $user->user_registered ) {
 					$registered = strtotime( $user->user_registered ) + 7 * 3600; // sửa lại ngày đăng kí theo múi giờ Việt Nam
-					$output = date( 'd.m.Y', $registered ) . '<br>';
-					$output .= date ( 'H:i', $registered );
+					$output     = date( 'd.m.Y', $registered ) . '<br>';
+					$output    .= date( 'H:i', $registered );
 				}
 				break;
 			case 'message':
@@ -183,14 +183,14 @@ class user {
 			case 'user_update':
 				if ( ! empty( $update_log['user_update'] ) ) {
 					$user_name = get_user_meta( $update_log['user_update'], 'user_name', true );
-					$output .= '<a href="' . get_edit_user_link( $update_log['user_update'] ) . '">' . $user_name . '</a>';
+					$output   .= '<a href="' . get_edit_user_link( $update_log['user_update'] ) . '">' . $user_name . '</a>';
 				}
 				break;
 			case 'time_update':
 				if ( ! empty( $update_log['date'] ) ) {
 					$date_update = strtotime( $update_log['date'] );
-					$output = date( 'd.m.Y', $date_update ) . '<br>';
-					$output .= date( 'H:i', $date_update );
+					$output      = date( 'd.m.Y', $date_update ) . '<br>';
+					$output     .= date( 'H:i', $date_update );
 				}
 				break;
 		}
@@ -219,22 +219,22 @@ class user {
 		$user_meta   = get_user_meta( $user_id );
 		$user_data   = get_userdata( $user_id );
 		$user_phone  = $user_meta['user_phone2'][0] ?? $user_meta['user_sdt'][0];
-		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
+		$prefix_user = rwmb_meta( 'prefix_user_erp', [ 'object_type' => 'setting' ], 'setting' );
 
 		$data_string = json_encode( array(
 			'login'            => $prefix_user . $user_meta['user_sdt'][0],
-			'password'         => "111111",
-			'confirm_password' => "111111",
+			'password'         => '111111',
+			'confirm_password' => '111111',
 			'name'             => $user_meta['user_name'][0],
 			'drugstore_name'   => $user_meta['user_ten_csdk'][0],
 			'phone'            => $user_phone,
 			'mail'             => $user_data->user_email,
 			'street'           => $user_meta['user_address'][0],
-			'state_id'         => (int)$user_meta['user_province'][0],
+			'state_id'         => (int) $user_meta['user_province'][0],
 		), JSON_UNESCAPED_UNICODE );
 
-		$token = json_decode( $this->get_token_api() );
-		$data = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/register', array(
+		$token       = json_decode( $this->get_token_api() );
+		$data        = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/register', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
 				'Authorization' => 'Bearer ' . $token->data->access_token,
@@ -243,7 +243,7 @@ class user {
 			'body'    => $data_string,
 			'timeout' => 15,
 		) );
-		$response = json_decode( $data['body'], true );
+		$response    = json_decode( $data['body'], true );
 		$erp_message = $response['code'] == 1 ? '' : $response['message'];
 		update_user_meta( $user_id, 'erp_response', $response['code'] );
 		update_user_meta( $user_id, 'erp_message', $erp_message );
@@ -262,7 +262,7 @@ class user {
 
 		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/login', array(
 			'headers' => [
-				'Content-Type'  => 'application/json',
+				'Content-Type' => 'application/json',
 			],
 			'method'  => 'POST',
 			'body'    => $data_string,
@@ -274,7 +274,7 @@ class user {
 
 	public function get_user_token( $user_id ) {
 		$user_meta   = get_user_meta( $user_id );
-		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
+		$prefix_user = rwmb_meta( 'prefix_user_erp', [ 'object_type' => 'setting' ], 'setting' );
 
 		$data_string = json_encode( array(
 			'login'    => $prefix_user . $user_meta['user_sdt'][0],
@@ -283,7 +283,7 @@ class user {
 
 		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/login', array(
 			'headers' => [
-				'Content-Type'  => 'application/json',
+				'Content-Type' => 'application/json',
 			],
 			'method'  => 'POST',
 			'body'    => $data_string,

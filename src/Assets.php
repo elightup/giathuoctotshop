@@ -10,13 +10,13 @@ class Assets {
 		wp_enqueue_style( $path, trailingslashit( ELU_SHOP_URL ) . "assets/css/$path.css", $deps, filemtime( trailingslashit( ELU_SHOP_DIR ) . "assets/css/$path.css" ) );
 	}
 
-	public static function enqueue_script( $path, $deps = ['jquery'] ) {
+	public static function enqueue_script( $path, $deps = [ 'jquery' ] ) {
 		wp_enqueue_script( $path, trailingslashit( ELU_SHOP_URL ) . "assets/js/$path.js", $deps, filemtime( trailingslashit( ELU_SHOP_DIR ) . "assets/js/$path.js" ), true );
 	}
 
 	public static function localize( $path, $data, $name = null ) {
 		if ( ! $name ) {
-			$name = str_replace( ' ', '', ucwords( str_replace( ['/', '-', '_'], ' ', $path ) ) );
+			$name = str_replace( ' ', '', ucwords( str_replace( [ '/', '-', '_' ], ' ', $path ) ) );
 		}
 		wp_localize_script( $path, $name, $data );
 	}

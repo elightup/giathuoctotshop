@@ -19,8 +19,8 @@ class Notification {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return;
 		}
-		wp_enqueue_style('gts-style', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css');
-		wp_enqueue_script('gts_select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js');
+		wp_enqueue_style( 'gts-style', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', [], '4.1' );
+		wp_enqueue_script( 'gts_select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', [], '4.1', true );
 		Assets::enqueue_script( 'export' );
 		Assets::enqueue_script( 'order-notification' );
 		Assets::localize( 'order-notification', [

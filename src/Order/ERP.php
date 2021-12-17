@@ -8,7 +8,7 @@ class ERP {
 		$data     = $order['data'];
 		$data     = json_decode( $data, true );
 		$products = [];
-		$role = is_user_logged_in() ? get_userdata( $order['user'] )->roles[0] : '';
+		$role     = is_user_logged_in() ? get_userdata( $order['user'] )->roles[0] : '';
 		foreach ( $data as $product ) {
 			$price = $product['price'];
 			switch ( $role ) {
@@ -62,8 +62,8 @@ class ERP {
 			'giathuoctot'  => 'True',
 		], JSON_UNESCAPED_UNICODE );
 
-		$token   = json_decode( self::get_user_token( $order['user'] ) );
-		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/pre_order/create', [
+		$token    = json_decode( self::get_user_token( $order['user'] ) );
+		$request  = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/pre_order/create', [
 			'headers' => [
 				'Content-Type'  => 'application/json',
 				'Authorization' => 'Bearer ' . $token->data->access_token,
@@ -96,7 +96,7 @@ class ERP {
 
 	private static function get_user_token( $user_id ) {
 		$phone  = get_user_meta( $user_id, 'user_sdt', true );
-		$prefix = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
+		$prefix = rwmb_meta( 'prefix_user_erp', [ 'object_type' => 'setting' ], 'setting' );
 
 		$body = json_encode( [
 			'login'    => $prefix . $phone,
@@ -122,7 +122,7 @@ class ERP {
 			$wpdb->orders,
 			[
 				'push_erp'     => $status,
-				'push_message' => $message
+				'push_message' => $message,
 			],
 			[ 'id' => $id ]
 		);

@@ -38,8 +38,8 @@ endif;
 	</tr>
 	<?php foreach ( $items as $item ) : ?>
 	<tr>
-		<td>#<?= $item->id; ?></td>
-		<td><?= $item->date; ?></td>
+		<td>#<?= esc_html( $item->id ); ?></td>
+		<td><?= esc_html( $item->date ); ?></td>
 		<td>
 			<?php
 				$statuses     = [

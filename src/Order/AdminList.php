@@ -5,9 +5,6 @@ namespace ELUSHOP\Order;
 use ELUSHOP\Assets;
 
 class AdminList {
-	/**
-	 * @var Table
-	 */
 	protected $table;
 
 	public function init() {
@@ -60,17 +57,17 @@ class AdminList {
 
 	public function render() {
 		if ( isset( $_GET['action'] ) && 'view' === $_GET['action'] && ! empty( $_GET['id'] ) ) {
-			$this->renderItem();
+			$this->render_item();
 		} else {
-			$this->renderList();
+			$this->render_list();
 		}
 	}
 
-	protected function renderItem() {
+	protected function render_item() {
 		include ELU_SHOP_DIR . 'templates/admin/order.php';
 	}
 
-	protected function renderList() {
+	protected function render_list() {
 		include ELU_SHOP_DIR . 'templates/admin/orders.php';
 	}
 }

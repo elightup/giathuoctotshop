@@ -21,7 +21,7 @@ class Ajax {
 
 		wp_send_json_success( [
 			'button' => '<a href="#" class="gtt-button gtt-open" data-id="' . $id . '" title="Đánh dấu đang xử lý"><span class="dashicons dashicons-hourglass"></span></a>',
-			'status' => '<span class="badge badge--success">Đã hoàn thành</span>'
+			'status' => '<span class="badge badge--success">Đã hoàn thành</span>',
 		] );
 	}
 
@@ -38,7 +38,7 @@ class Ajax {
 
 		wp_send_json_success( [
 			'button' => '<a href="#" class="gtt-button gtt-close" data-id="' . $id . '" title="Đánh dấu hoàn thành"><span class="dashicons dashicons-yes"></span></a>',
-			'status' => '<span class="badge">Đang xử lý</span>'
+			'status' => '<span class="badge">Đang xử lý</span>',
 		] );
 	}
 
@@ -50,17 +50,17 @@ class Ajax {
 		}
 		$data = ERP::push( $id );
 
-		$statuses = [
+		$statuses       = [
 			'pending'   => [ 'badge', __( 'Có lỗi khi đẩy lên ERP', 'elu-shop' ) ],
 			'completed' => [ 'badge badge--success', __( 'Đã đẩy lên ERP', 'elu-shop' ) ],
 		];
-		$status = $statuses[ $data['status'] ];
-		$status = sprintf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $data['message'] );
+		$status         = $statuses[ $data['status'] ];
+		$status         = sprintf( '<span class="%s">%s</span><br>%s', $status[0], $status[1], $data['message'] );
 		$data['status'] = $status;
 
 		// Update log order
 		$this->update_logs_order( $id );
-		
+
 		wp_send_json_success( $data );
 	}
 
@@ -78,7 +78,7 @@ class Ajax {
 	private function update_logs_order( $id ) {
 		global $wpdb;
 		$current_user = get_current_user_id();
-		$data_log = [
+		$data_log     = [
 			'user_update' => $current_user,
 			'date'        => current_time( 'mysql' ),
 		];
