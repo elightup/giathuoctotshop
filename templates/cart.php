@@ -17,7 +17,8 @@
 			<div class="col-md-7">
 				<#
 				data.products.forEach( product => {
-					let price = product.price;
+					let package = product.package;
+					let price   = product.price;
 					switch( CartParams.role ) {
 						case 'vip2':
 							price = product.price_vip2;
@@ -35,6 +36,11 @@
 							price = product.price_vip6;
 							break;
 					}
+					if ( package.price > 0 && package.number > 0 ) {
+						if ( product.quantity >= package.number ) {
+							price = package.price;
+						}
+					}
 
 					total += price * product.quantity;
 					#>
@@ -47,7 +53,7 @@
 							<h3 class="entry-title"><a href="{{ product.link }}">{{ product.title }}</a></h3>
 						</div>
 						<div class="product-price">
-							<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( price )) }} <?= $symbol; ?></p>
+							<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( price )) }} <?= esc_html( $symbol ); ?></p>
 						</div>
 						<div class="quantity" data-product="{{ product.id }}">
 							<span class="button-minus">-</span>
@@ -81,13 +87,13 @@
 										giam_gia = data.voucher.voucher_price * total / 100;
 									}
 									#>
-									<p>Tạm tính: <span class="total__number has-voucher"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }}</span> <?= $symbol; ?></span></p>
-									<p>Giảm giá: <span class="total__number giam_gia"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( giam_gia )) }}</span> <?= $symbol; ?></span><a href="" class="remove-voucher">[Xóa]</a></p>
+									<p>Tạm tính: <span class="total__number has-voucher"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( total )) }}</span> <?= esc_html( $symbol ); ?></span></p>
+									<p>Giảm giá: <span class="total__number giam_gia"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( giam_gia )) }}</span> <?= esc_html( $symbol ); ?></span><a href="" class="remove-voucher">[Xóa]</a></p>
 									<#
 								}
 								cartSubtotal = total - giam_gia;
 								#>
-								<p>Tổng: <span class="total__number no-voucher"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( cartSubtotal )) }}</span> <?= $symbol; ?></span></p>
+								<p>Tổng: <span class="total__number no-voucher"><span>{{ eFormatNumber(0, 3, '.', ',', parseFloat( cartSubtotal )) }}</span> <?= esc_html( $symbol ); ?></span></p>
 							</div>
 						</div>
 					</div>
@@ -104,10 +110,10 @@
 
 					<div class="field payment-methods">
 						<?php $payment_methods = ps_setting( 'payment_methods' ); ?>
-						<?php if ( $payment_methods ): ?>
+						<?php if ( $payment_methods ) : ?>
 							<label>Phương thức thanh toán</label>
 							<?php foreach ( $payment_methods as $payment_method ) : ?>
-								<?php $payment_id = $payment_method['payment_method_title'] === 'Thanh toán tiền mặt' ? 'cash' : 'bank' ; ?>
+								<?php $payment_id = $payment_method['payment_method_title'] === 'Thanh toán tiền mặt' ? 'cash' : 'bank'; ?>
 								<div class="payment-methods__fields">
 									<label class="payment-method">
 										<input type="radio" name="payment_method" value="<?= esc_attr( $payment_id ) ?>">

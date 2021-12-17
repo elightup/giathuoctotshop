@@ -11,7 +11,7 @@ class PostType {
 	}
 
 	public function register_post_type() {
-		$labels = [
+		$labels  = [
 			'name'               => __( 'Sản phẩm', 'gtt-shop' ),
 			'singular_name'      => __( 'Sản phẩm', 'gtt-shop' ),
 			'add_new'            => _x( 'Thêm Sản phẩm mới', 'Sản phẩm', 'gtt-shop' ),
@@ -27,9 +27,9 @@ class PostType {
 			'all_items'          => __( 'Tất cả Sản phẩm', 'gtt-shop' ),
 		];
 		$options = get_option( 'gtt_shop' );
-		$slug    = isset( $options[ 'product_slug' ] ) ? $options[ 'product_slug' ] : 'product';
+		$slug    = isset( $options['product_slug'] ) ? $options['product_slug'] : 'product';
 
-		$args   = [
+		$args = [
 			'label'       => __( 'Sản phẩm', 'gtt-shop' ),
 			'labels'      => $labels,
 			'supports'    => [ 'title', 'editor', 'excerpt', 'thumbnail', 'comments' ],
@@ -68,8 +68,8 @@ class PostType {
 			'show_ui'           => true,
 			'show_admin_column' => true,
 		];
-		$options  = get_option( 'gtt_shop' );
-		$tag_slug = isset( $options[ 'product_tag_slug' ] ) ? $options[ 'product_tag_slug' ] : 'product-tag';
+		$options    = get_option( 'gtt_shop' );
+		$tag_slug   = isset( $options['product_tag_slug'] ) ? $options['product_tag_slug'] : 'product-tag';
 		register_taxonomy( $tag_slug, 'product', $tag_args );
 
 		$type_labels = [
@@ -97,8 +97,8 @@ class PostType {
 			'hierarchical'      => true,
 			'show_admin_column' => true,
 		];
-		$options  = get_option( 'gtt_shop' );
-		$type_slug = isset( $options[ 'product_type_slug' ] ) ? $options[ 'product_type_slug' ] : 'product-type';
+		$options     = get_option( 'gtt_shop' );
+		$type_slug   = isset( $options['product_type_slug'] ) ? $options['product_type_slug'] : 'product-type';
 		register_taxonomy( $type_slug, 'product', $type_args );
 
 		$manufacturers_labels = [
@@ -126,8 +126,8 @@ class PostType {
 			'hierarchical'      => true,
 			'show_admin_column' => true,
 		];
-		$options  = get_option( 'gtt_shop' );
-		$manufacturers_slug = isset( $options[ 'manufacturers_slug' ] ) ? $options[ 'manufacturers_slug' ] : 'manufacturers';
+		$options              = get_option( 'gtt_shop' );
+		$manufacturers_slug   = isset( $options['manufacturers_slug'] ) ? $options['manufacturers_slug'] : 'manufacturers';
 		register_taxonomy( $manufacturers_slug, 'product', $manufacturers_args );
 
 		$ingredients_labels = [
@@ -155,13 +155,13 @@ class PostType {
 			'hierarchical'      => true,
 			'show_admin_column' => true,
 		];
-		$options  = get_option( 'gtt_shop' );
-		$ingredients_slug = isset( $options[ 'ingredients_slug' ] ) ? $options[ 'ingredients_slug' ] : 'ingredients';
+		$options            = get_option( 'gtt_shop' );
+		$ingredients_slug   = isset( $options['ingredients_slug'] ) ? $options['ingredients_slug'] : 'ingredients';
 		register_taxonomy( $ingredients_slug, 'product', $ingredients_args );
 	}
 
 	public function register_meta_boxes( $meta_boxes ) {
-		$product_id = isset( $_REQUEST['post'] ) ? $_REQUEST['post'] : '';
+		$product_id   = isset( $_REQUEST['post'] ) ? $_REQUEST['post'] : '';
 		$meta_boxes[] = [
 			'id'         => 'product_info',
 			'title'      => 'Thông tin sản phẩm',
@@ -176,7 +176,7 @@ class PostType {
 				[
 					'name'    => 'Giá VIP 1 cũ',
 					'type'    => 'custom_html',
-					'std'     => get_post_meta( $product_id , 'price_old', true ) ? get_post_meta( $product_id , 'price_old', true ) . ' (nghìn đồng)' : 'Chưa có',
+					'std'     => get_post_meta( $product_id, 'price_old', true ) ? get_post_meta( $product_id, 'price_old', true ) . ' (nghìn đồng)' : 'Chưa có',
 					'columns' => 6,
 				],
 				[
@@ -188,7 +188,7 @@ class PostType {
 				[
 					'name'    => 'Giá VIP 2 cũ',
 					'type'    => 'custom_html',
-					'std'     => get_post_meta( $product_id , 'price_vip2_old', true ) ? get_post_meta( $product_id , 'price_vip2_old', true ) . ' (nghìn đồng)' : 'Chưa có',
+					'std'     => get_post_meta( $product_id, 'price_vip2_old', true ) ? get_post_meta( $product_id, 'price_vip2_old', true ) . ' (nghìn đồng)' : 'Chưa có',
 					'columns' => 6,
 				],
 				[
@@ -200,7 +200,7 @@ class PostType {
 				[
 					'name'    => 'Giá VIP 3 cũ',
 					'type'    => 'custom_html',
-					'std'     => get_post_meta( $product_id , 'price_vip3_old', true ) ? get_post_meta( $product_id , 'price_vip3_old', true ) . ' (nghìn đồng)' : 'Chưa có',
+					'std'     => get_post_meta( $product_id, 'price_vip3_old', true ) ? get_post_meta( $product_id, 'price_vip3_old', true ) . ' (nghìn đồng)' : 'Chưa có',
 					'columns' => 6,
 				],
 				[
@@ -212,7 +212,7 @@ class PostType {
 				[
 					'name'    => 'Giá VIP 4 cũ',
 					'type'    => 'custom_html',
-					'std'     => get_post_meta( $product_id , 'price_vip4_old', true ) ? get_post_meta( $product_id , 'price_vip4_old', true ) . ' (nghìn đồng)' : 'Chưa có',
+					'std'     => get_post_meta( $product_id, 'price_vip4_old', true ) ? get_post_meta( $product_id, 'price_vip4_old', true ) . ' (nghìn đồng)' : 'Chưa có',
 					'columns' => 6,
 				],
 				[
@@ -224,7 +224,7 @@ class PostType {
 				[
 					'name'    => 'Giá VIP 5 cũ',
 					'type'    => 'custom_html',
-					'std'     => get_post_meta( $product_id , 'price_vip5_old', true ) ? get_post_meta( $product_id , 'price_vip5_old', true ) . ' (nghìn đồng)' : 'Chưa có',
+					'std'     => get_post_meta( $product_id, 'price_vip5_old', true ) ? get_post_meta( $product_id, 'price_vip5_old', true ) . ' (nghìn đồng)' : 'Chưa có',
 					'columns' => 6,
 				],
 				[
@@ -236,7 +236,7 @@ class PostType {
 				[
 					'name'    => 'Giá VIP 6 cũ',
 					'type'    => 'custom_html',
-					'std'     => get_post_meta( $product_id , 'price_vip6_old', true ) ? get_post_meta( $product_id , 'price_vip6_old', true ) . ' (nghìn đồng)' : 'Chưa có',
+					'std'     => get_post_meta( $product_id, 'price_vip6_old', true ) ? get_post_meta( $product_id, 'price_vip6_old', true ) . ' (nghìn đồng)' : 'Chưa có',
 					'columns' => 6,
 				],
 				[
@@ -271,46 +271,65 @@ class PostType {
 				],
 			],
 		];
+
+		$meta_boxes[] = [
+			'id'         => 'product_package',
+			'title'      => 'Thông tin kiện',
+			'post_types' => [ 'product' ],
+			'fields'     => [
+				[
+					'id'      => 'price_package',
+					'name'    => 'Giá kiện',
+					'append'  => 'nghìn đồng',
+					'columns' => 6,
+				],
+				[
+					'id'      => 'condition_package',
+					'name'    => 'Số lượng để áp dụng giá kiện',
+					'type'    => 'number',
+					'columns' => 6,
+				],
+			],
+		];
 		return $meta_boxes;
 	}
 
 	/**
 	 * Lưu giá cũ của giá thường, vip1, vip2
-	 *
 	 */
 	public function save_old_price( $post_id ) {
 		$submit_price = rwmb_request()->post( 'price' );
-		$old_price = get_post_meta( $post_id, 'price', true );
+		$old_price    = get_post_meta( $post_id, 'price', true );
 		if ( $submit_price != $old_price ) {
 			update_post_meta( $post_id, 'price_old', $old_price );
 		}
 
 		$submit_price_vip2 = rwmb_request()->post( 'price_vip2' );
-		$old_price_vip2 = get_post_meta( $post_id, 'price_vip2', true );
+		$old_price_vip2    = get_post_meta( $post_id, 'price_vip2', true );
 		if ( $submit_price_vip2 != $old_price_vip2 ) {
 			update_post_meta( $post_id, 'price_vip2_old', $old_price_vip2 );
 		}
 
 		$submit_price_vip3 = rwmb_request()->post( 'price_vip3' );
-		$old_price_vip3 = get_post_meta( $post_id, 'price_vip3', true );
+		$old_price_vip3    = get_post_meta( $post_id, 'price_vip3', true );
 		if ( $submit_price_vip3 != $old_price_vip3 ) {
 			update_post_meta( $post_id, 'price_vip3_old', $old_price_vip3 );
 		}
 
 		$submit_price_vip4 = rwmb_request()->post( 'price_vip4' );
-		$old_price_vip4 = get_post_meta( $post_id, 'price_vip4', true );
+		$old_price_vip4    = get_post_meta( $post_id, 'price_vip4', true );
 		if ( $submit_price_vip4 != $old_price_vip4 ) {
 			update_post_meta( $post_id, 'price_vip4_old', $old_price_vip4 );
 		}
 
 		$submit_price_vip5 = rwmb_request()->post( 'price_vip5' );
-		$old_price_vip5 = get_post_meta( $post_id, 'price_vip5', true );
+		$old_price_vip5    = get_post_meta( $post_id, 'price_vip5', true );
 		if ( $submit_price_vip5 != $old_price_vip5 ) {
 			update_post_meta( $post_id, 'price_vip5_old', $old_price_vip5 );
 		}
 
 		$submit_price_vip6 = rwmb_request()->post( 'price_vip6' );
-		$old_price_vip6 = get_post_meta( $post_id, 'price_vip6', true );
+		$old_price_vip6    = get_post_meta( $post_id, 'price_vip6', true );
 		if ( $submit_price_vip6 != $old_price_vip6 ) {
 			update_post_meta( $post_id, 'price_vip6_old', $old_price_vip6 );
 		}

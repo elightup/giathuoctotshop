@@ -20,7 +20,7 @@ class Cart {
 			Assets::enqueue_style( 'cart' );
 		}
 
-		wp_enqueue_script( 'cart', trailingslashit( ELU_SHOP_URL ) . 'assets/js/cart.js', ['jquery'], uniqid(), true );
+		wp_enqueue_script( 'cart', trailingslashit( ELU_SHOP_URL ) . 'assets/js/cart.js', [ 'jquery' ], uniqid(), true );
 		Assets::localize( 'cart', [
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'cartUrl' => get_permalink( ps_setting( 'cart_page' ) ),
@@ -45,6 +45,10 @@ class Cart {
 		$price_vip4 = get_post_meta( $id, 'price_vip4', true ) ?: $price;
 		$price_vip5 = get_post_meta( $id, 'price_vip5', true ) ?: $price;
 		$price_vip6 = get_post_meta( $id, 'price_vip6', true ) ?: $price;
+		$package    = [
+			'price'  => get_post_meta( $id, 'price_package', true ) ? intval( get_post_meta( $id, 'price_package', true ) * 1000 ) : 0,
+			'number' => get_post_meta( $id, 'condition_package', true ) ? intval( get_post_meta( $id, 'condition_package', true ) ) : 0,
+		];
 
 		$price_sale = (float) get_post_meta( $id, 'flash_sale_price', true );
 		$time_start = (int) rwmb_meta( 'flash_sale_time_start', '', $id );
@@ -64,6 +68,7 @@ class Cart {
 			'price_vip4' => intval( $price_vip4 * 1000 ),
 			'price_vip5' => intval( $price_vip5 * 1000 ),
 			'price_vip6' => intval( $price_vip6 * 1000 ),
+			'package'    => $package,
 			'url'        => get_post_meta( $id, 'image_url', true ),
 			'link'       => get_permalink( $id ),
 			'ma_sp'      => get_post_meta( $id, 'ma_sp', true ),
@@ -218,7 +223,7 @@ class Cart {
 				continue;
 			}
 			$product['quantity'] = (int) $product['quantity'];
-			$product = array_merge( $product, self::get_product_info( $product_id ) );
+			$product             = array_merge( $product, self::get_product_info( $product_id ) );
 		}
 	}
 }

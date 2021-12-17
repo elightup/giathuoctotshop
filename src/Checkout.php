@@ -76,10 +76,10 @@ class Checkout {
 				continue;
 			}
 			$product['quantity'] = (int) $product['quantity'];
-			$product = array_merge( $product, Cart::get_product_info( $product_id ) );
+			$product             = array_merge( $product, Cart::get_product_info( $product_id ) );
 
 			$price = $product['price'];
-			$role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
+			$role  = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
 			switch ( $role ) {
 				case 'vip2':
 					$price = $product['price_vip2'];
@@ -97,6 +97,12 @@ class Checkout {
 					$price = $product['price_vip6'];
 					break;
 			}
+			$package = $product['package'];
+			if ( $package['price'] > 0 && $package['number'] > 0 ) {
+				if ( $product['quantity'] >= $package['number'] ) {
+					$price = $package['price'];
+				}
+			}
 			$amount += $price * $product['quantity'];
 		}
 
@@ -105,23 +111,23 @@ class Checkout {
 			'phone'          => $user->user_login,
 			'address'        => get_user_meta( $id, 'user_address', true ),
 			'payment_method' => $payment_method,
-			'province' => get_user_meta( $id, 'user_province', true ),
+			'province'       => get_user_meta( $id, 'user_province', true ),
 		];
 
 		global $wpdb;
 		$wpdb->insert(
 			$wpdb->orders,
 			[
-				'date'          => current_time( 'mysql' ),
-				'status'        => 'pending',
-				'push_erp'      => 'pending',
-				'push_message'  => '',
-				'user'          => $id,
-				'amount'        => $amount,
-				'note'          => $note,
-				'info'          => json_encode( $info ),
-				'data'          => json_encode( $data ),
-				'voucher'       => $voucher,
+				'date'         => current_time( 'mysql' ),
+				'status'       => 'pending',
+				'push_erp'     => 'pending',
+				'push_message' => '',
+				'user'         => $id,
+				'amount'       => $amount,
+				'note'         => $note,
+				'info'         => json_encode( $info ),
+				'data'         => json_encode( $data ),
+				'voucher'      => $voucher,
 			]
 		);
 
@@ -133,7 +139,7 @@ class Checkout {
 
 		if ( $voucher ) {
 			$voucher_id  = json_decode( $voucher )->voucher_id;
-			$old_voucher = (int)get_option( 'voucher_' . $voucher_id );
+			$old_voucher = (int) get_option( 'voucher_' . $voucher_id );
 			update_option( 'voucher_' . $voucher_id, $old_voucher + 1 );
 		}
 
@@ -171,24 +177,24 @@ class Checkout {
 
 			if ( $true_choice && $total_price < $voucher['voucher_dieukien'] ) {
 				$message = 'Voucher không hợp lệ';
-				$result = [];
+				$result  = [];
 			}
 
 			if ( $true_choice && $expiration_date < $time_now ) {
 				$message = 'Mã voucher đã hết hạn';
-				$result = [];
+				$result  = [];
 			}
 
 			$voucher_used   = (int) get_option( 'voucher_' . $voucher['voucher_id'] );
 			$voucher_number = (int) $voucher['voucher_soluong'];
 			if ( $true_choice && $voucher_used >= $voucher_number ) {
 				$message = 'Đã hết số lượng voucher này';
-				$result = [];
+				$result  = [];
 			}
 		}
 		if ( $i == 0 ) {
 			$message = 'Mã voucher không khớp';
-			$result = [];
+			$result  = [];
 		}
 		if ( empty( $result ) ) {
 			wp_send_json_error( $message );

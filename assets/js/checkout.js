@@ -84,6 +84,7 @@
 
 		updateCartHtml();
 		$d.on( 'cart-loaded', updateCartHtml );
+		$d.on( 'update_quantity', updateCartHtml );
 
 		// Remove an item from cart.
 		$d.on( 'click', '.cart__remove', function( e ) {

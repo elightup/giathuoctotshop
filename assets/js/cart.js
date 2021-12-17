@@ -101,12 +101,14 @@
 			}
 			cart.data = Array.isArray( response.data ) ? {} : response.data;
 			cart.updateMiniCart();
+			$d.trigger( 'update_quantity' );
 		},
 		updateMiniCart() {
 			let count = Object.values( cart.data ).length;
 			let total = 0;
 			Object.values( cart.data ).forEach( product => {
-				let price = product[ 'price' ];
+				let price   = product[ 'price' ];
+				let package = product[ 'package' ];
 				switch ( CartParams.role ) {
 					case 'vip2':
 						price = product[ 'price_vip2' ];
@@ -123,6 +125,11 @@
 					case 'vip6':
 						price = product[ 'price_vip6' ];
 						break;
+				}
+				if ( package.price > 0 && package.number > 0 ) {
+					if ( product[ 'quantity' ] >= package.number ) {
+						price = package.price;
+					}
 				}
 
 				total += price ? parseInt( price ) * parseInt( product[ 'quantity' ] ) : 0;
