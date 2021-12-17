@@ -1,17 +1,17 @@
 <?php
-$id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
-if ( ! $id ) {
+$order_id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+if ( ! $order_id ) {
 	return;
 }
 
 global $wpdb;
-$item          = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $id ) );
+$item          = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $order_id ) );
 $info          = json_decode( $item->info, true );
 $info_shipping = json_decode( $item->info_shipping, true );
 $voucher       = json_decode( $item->voucher, true );
 ?>
 <div class="wrap">
-	<h1><?php esc_html_e( 'Chi tiết đơn hàng', 'gtt-shop' ) . ' #' . esc_html( $id ); ?></h1>
+	<h1><?php esc_html_e( 'Chi tiết đơn hàng', 'gtt-shop' ) . ' #' . esc_html( $order_id ); ?></h1>
 	<div class="info-order">
 		<h3><?php esc_html_e( 'Thông tin đơn hàng', 'gtt-shop' ); ?></h3>
 		<table class="widefat">
@@ -23,29 +23,29 @@ $voucher       = json_decode( $item->voucher, true );
 				<td><?php esc_html_e( 'Trạng thái', 'gtt-shop' ); ?></td>
 				<td>
 					<?php
-					$statuses = [
-						'pending' => [ 'badge', __( 'Đang xử lý', 'gtt-shop' ) ],
-						'completed'  => [ 'badge badge--success', __( 'Đã hoàn thành', 'gtt-shop' ) ],
-						'trash'   => [ 'badge badge--danger', __( 'Đã Xoá', 'gtt-shop' ) ],
+					$statuses     = [
+						'pending'   => [ 'badge', __( 'Đang xử lý', 'gtt-shop' ) ],
+						'completed' => [ 'badge badge--success', __( 'Đã hoàn thành', 'gtt-shop' ) ],
+						'trash'     => [ 'badge badge--danger', __( 'Đã Xoá', 'gtt-shop' ) ],
 					];
-					$status   	= $statuses[ $item->status ];
-					$user 		= get_userdata( $item->user );
-					$payments 	= $item->info;
-					$payments   = json_decode( $payments, true );
+					$order_status = $statuses[ $item->status ];
+					$user         = get_userdata( $item->user );
+					$payments     = $item->info;
+					$payments     = json_decode( $payments, true );
 
-					printf( '<span class="%s">%s</span>', esc_attr( $status[0] ), esc_html( $status[1] ) );
+					printf( '<span class="%s">%s</span>', esc_attr( $order_status[0] ), esc_html( $order_status[1] ) );
 
 					if ( 'pending' === $item->status ) {
-						printf( '<a href="%s" class="button">' . esc_html__( 'Đã hoàn thành', 'gtt-shop' ) .'</a>', add_query_arg( [
+						printf( '<a href="%s" class="button">' . esc_html__( 'Đã hoàn thành', 'gtt-shop' ) . '</a>', add_query_arg( [
 							'action'   => 'close',
-							'id'       => $id,
+							'id'       => $order_id,
 							'_wpnonce' => wp_create_nonce( 'ps_close_order' ),
 						], admin_url( 'edit.php?page=orders&post_type=product' ) ) );
 					}
 					if ( 'completed' === $item->status ) {
 						printf( '<a href="%s" class="button">' . esc_html__( 'Đang xử lý', 'gtt-shop' ) . '</a>', add_query_arg( [
 							'action'   => 'open',
-							'id'       => $id,
+							'id'       => $order_id,
 							'_wpnonce' => wp_create_nonce( 'ps_open_order' ),
 						], admin_url( 'edit.php?page=orders&post_type=product' ) ) );
 					}
@@ -62,24 +62,25 @@ $voucher       = json_decode( $item->voucher, true );
 			</tr>
 			<tr>
 				<td><?php esc_html_e( 'Tổng tiền', 'gtt-shop' ) ?></td>
-				<td><?= number_format_i18n( $item->amount, 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
+				<td><?= esc_html( number_format_i18n( $item->amount, 0 ) ) . esc_html( ps_setting( 'currency' ) ); ?></td>
 			</tr>
-			<?php if ( $voucher ) :
+			<?php
+			if ( $voucher ) :
 				$giam_gia = 0;
-				if( $voucher['voucher_type'] == 'by_price' ) {
+				if ( $voucher['voucher_type'] == 'by_price' ) {
 					$giam_gia = $voucher['voucher_price'];
 				} else {
 					$giam_gia = $voucher['voucher_price'] * $item->amount / 100;
 				}
 				$amount = $item->amount - $giam_gia;
-			?>
+				?>
 				<tr>
 					<th>Voucher:</th>
-					<td><?= number_format( $giam_gia, 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?> ( Mã: <?= $voucher['voucher_id']; ?> )</td>
+					<td><?= number_format( $giam_gia, 0, '', '.' ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?> ( Mã: <?= esc_html( $voucher['voucher_id'] ); ?> )</td>
 				</tr>
 				<tr>
 					<th>Thành tiền:</th>
-					<td><?= number_format( $amount, 0, '', '.' ); ?> <?= ps_setting( 'currency' ); ?></td>
+					<td><?= number_format( $amount, 0, '', '.' ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
 				</tr>
 			<?php endif; ?>
 		</table>
@@ -118,9 +119,10 @@ $voucher       = json_decode( $item->voucher, true );
 			<?php
 			$products = json_decode( $item->data, true );
 			foreach ( $products as $product ) :
-				$price = $product['price'];
-				$role = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
-				switch ( $role ) {
+				$price     = $product['price'];
+				$user_role = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
+				$package   = $product['package'];
+				switch ( $user_role ) {
 					case 'vip2':
 						$price = $product['price_vip2'];
 						break;
@@ -141,8 +143,29 @@ $voucher       = json_decode( $item->voucher, true );
 				<tr>
 					<td><?= esc_html( $product['title'] ); ?></td>
 					<td><?= esc_html( $product['quantity'] ); ?></td>
-					<td><?= number_format_i18n( $price, 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
-					<td><?= number_format_i18n( $product['quantity'] * $price, 0 ); ?> <?= esc_html( ps_setting( 'currency' ) ); ?></td>
+					<td>
+						<?php
+						echo esc_html( number_format_i18n( $price, 0 ) ) . esc_html( ps_setting( 'currency' ) ) . ' ';
+						if ( $package['price'] > 0 && $package['number'] > 0 ) {
+							if ( $product['quantity'] >= $package['number'] ) {
+								echo '(Giá kiện: ' . esc_html( number_format_i18n( $package['price'] ) ) . esc_html( ps_setting( 'currency' ) ) . ')';
+							}
+						}
+						?>
+					</td>
+					<td>
+						<?php
+						if ( $package['price'] > 0 && $package['number'] > 0 ) {
+							if ( $product['quantity'] >= $package['number'] ) {
+								echo esc_html( number_format_i18n( $product['quantity'] * $package['price'], 0 ) ) . esc_html( ps_setting( 'currency' ) );
+							} else {
+								echo esc_html( number_format_i18n( $product['quantity'] * $price, 0 ) ) . esc_html( ps_setting( 'currency' ) );
+							}
+						} else {
+							echo esc_html( number_format_i18n( $product['quantity'] * $price, 0 ) ) . esc_html( ps_setting( 'currency' ) );
+						}
+						?>
+					</td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
