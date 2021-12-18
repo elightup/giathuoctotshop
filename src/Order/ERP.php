@@ -28,6 +28,12 @@ class ERP {
 					$price = $product['price_vip6'];
 					break;
 			}
+			$package = $product['package'];
+			if ( $package['price'] > 0 && $package['number'] > 0 ) {
+				if ( $product['quantity'] >= $package['number'] ) {
+					$price = $package['price'];
+				}
+			}
 			$products[] = [
 				'product_code' => $product['ma_sp'],
 				'qty'          => (int) $product['quantity'],
