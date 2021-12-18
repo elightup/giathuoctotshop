@@ -109,7 +109,6 @@ class Cart {
 		}
 
 		$this->refresh_cart_data( $data );
-
 		update_user_meta( $id, 'cart', $data );
 
 		wp_send_json_success( $data );
@@ -143,6 +142,7 @@ class Cart {
 		}
 		$cart[ $product_id ] = $data;
 
+		$this->refresh_cart_data( $cart );
 		update_user_meta( $id, 'cart', $cart );
 
 		wp_send_json_success( $cart );
@@ -174,6 +174,7 @@ class Cart {
 
 		$cart[ $product_id ]['quantity'] = $quantity;
 
+		$this->refresh_cart_data( $cart );
 		update_user_meta( $id, 'cart', $cart );
 
 		wp_send_json_success( $cart );
@@ -216,7 +217,7 @@ class Cart {
 		wp_send_json_success( [] );
 	}
 
-	private function refresh_cart_data( &$data ) {
+	public static function refresh_cart_data( &$data ) {
 		foreach ( $data as $product_id => &$product ) {
 			if ( empty( $product['quantity'] ) ) {
 				unset( $data[ $product_id ] );

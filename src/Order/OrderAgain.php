@@ -3,6 +3,7 @@ namespace ELUSHOP\Order;
 
 use ELUSHOP\Assets;
 use ELUSHOP\SaveLog\SaveLog;
+use ELUSHOP\Cart;
 
 class OrderAgain {
 	public function __construct() {
@@ -60,8 +61,9 @@ class OrderAgain {
 		}
 
 		// B3: update cart.
-		update_user_meta( $user_id, 'cart', $cart );
 
+		Cart::refresh_cart_data( $cart );
+		update_user_meta( $user_id, 'cart', $cart );
 		$return = [
 			'cart' => $cart,
 			'url'  => get_permalink( ps_setting( 'cart_page' ) ),
