@@ -28,7 +28,7 @@ class user {
 		$user_phone = $user_meta['user_phone2'][0] ?? $user_meta['user_sdt'][0];
 
 		$data_string = json_encode( array(
-			'name'           => $user_meta['user_name'][0],
+			'name'           => $user_meta['user_name2'][0],
 			'birthday'       => date( 'Y-m-d', strtotime( $birthday ) ),
 			'drugstore_name' => $user_meta['user_ten_csdk'][0],
 			'phone'          => $user_phone,
@@ -225,7 +225,7 @@ class user {
 			'login'            => $prefix_user . $user_meta['user_sdt'][0],
 			'password'         => '111111',
 			'confirm_password' => '111111',
-			'name'             => $user_meta['user_name'][0],
+			'name'             => $user_meta['user_name2'][0],
 			'drugstore_name'   => $user_meta['user_ten_csdk'][0],
 			'phone'            => $user_phone,
 			'mail'             => $user_data->user_email,
