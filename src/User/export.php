@@ -26,7 +26,7 @@ class export {
 	public function add_admin_pages() {
 		// add_users_page( 'Export user', 'Export user', 'list_users', 'export-users', array( $this, 'show' ) );
 		add_menu_page( 'Export User', 'Xuất dữ liệu', 'list_users', 'export', [ $this, 'show' ], 'dashicons-download', 30 );
-		add_submenu_page( 'export', 'Xuất Sản phẩm', 'Xuất Sản phẩm', 'list_users', 'export_order', [ $this, 'show' ] );
+		add_submenu_page( 'export', 'Xuất dữ liệu khách hàng', 'Xuất dữ liệu khách hàng', 'list_users', 'export_user', [ $this, 'show' ] );
 
 	}
 
