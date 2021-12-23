@@ -139,7 +139,7 @@ class user {
 
 		switch ( $column ) {
 			case 'user_name':
-				$output .= get_user_meta( $user_id, 'user_name', true );
+				$output .= get_user_meta( $user_id, 'user_name2', true ) ?? '';
 				break;
 			case 'action':
 				$response = get_user_meta( $user_id, 'erp_response', true );
