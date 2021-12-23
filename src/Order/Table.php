@@ -265,7 +265,7 @@ class Table extends \WP_List_Table {
 		$payments = $item['info'];
 		$payments = json_decode( $payments, true );
 
-		printf( '<span class="%s">%s</span>', $status[0], $status[1] );
+		printf( '<span class="%s">%s</span>', esc_attr( $status[0] ), esc_html( $status[1] ) );
 	}
 
 	public function column_products( $item ) {

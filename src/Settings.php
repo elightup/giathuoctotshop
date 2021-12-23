@@ -14,6 +14,7 @@ class Settings {
 			'option_name' => 'gtt_shop',
 			'menu_title'  => __( 'Cài đặt', 'gtt-shop' ),
 			'parent'      => 'edit.php?post_type=product',
+			'capability'  => 'edit_posts',
 			'style'       => 'no-boxes',
 			'columns'     => true,
 			'tabs'        => [
