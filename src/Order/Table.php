@@ -279,13 +279,14 @@ class Table extends \WP_List_Table {
 	}
 
 	public function column_customer( $item ) {
-		$info        = json_decode( $item['info'] );
-		$user_id     = $item['user'];
-		$user_data   = get_userdata( $user_id );
-		$status_user = get_user_meta( $user_id, 'erp_response', true );
-		$status_user = ! isset( $status_user ) || $status_user != 1 ? 'Chưa đẩy lên ERP' : 'Đã đẩy lên ERP';
+		$info          = json_decode( $item['info'] );
+		$user_id       = $item['user'];
+		$user_name_erp = get_user_meta( $user_id, 'user_name2' )[0] ?? '';
+		$user_data     = get_userdata( $user_id );
+		$status_user   = get_user_meta( $user_id, 'erp_response', true );
+		$status_user   = ! isset( $status_user ) || $status_user != 1 ? 'Chưa đẩy lên ERP' : 'Đã đẩy lên ERP';
 
-		echo esc_html( $info->name ) . '<br>';
+		echo esc_html( $user_name_erp ) . '<br>';
 		if ( $user_data ) {
 			echo 'Login: ' . esc_html( $user_data->user_login ) . '(' . esc_html( $status_user ) . ')';
 		} else {
