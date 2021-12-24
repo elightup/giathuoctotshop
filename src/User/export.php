@@ -71,9 +71,17 @@ class export {
 				->setCellValue( 'M1', 'Ngày ra đơn cuối cùng' );
 
 		global $wpdb;
-		$start_date  = $_POST['start_date'];
-		$end_date    = $_POST['end_date'];
-		$address     = $_POST['address-users'];
+		$start_date = $_POST['start_date'];
+		$end_date   = $_POST['end_date'];
+		$address    = $_POST['address-users'];
+		if ( $address ) {
+			$address_arr = [
+				'key'   => 'user_province',
+				'value' => $address,
+			];
+		} else {
+			$address_arr = [];
+		}
 		$active_user = $_POST['user_active'];
 		$erp_active  = $_POST['erp_active'];
 
@@ -85,7 +93,9 @@ class export {
 				'inclusive' => true,
 			),
 		);
-		if ( $active_user == 1 ) {
+		if ( ! $active_user ) {
+			$active = [];
+		} elseif ( $active_user == 1 ) {
 			$active = [
 				'key'   => 'active_user',
 				'value' => $active_user,
@@ -98,7 +108,9 @@ class export {
 			];
 		}
 
-		if ( $erp_active == 1 ) {
+		if ( ! $erp_active ) {
+			$active_erp = [];
+		} elseif ( $erp_active == 1 ) {
 			$active_erp = [
 				'key'   => 'erp_response',
 				'value' => $erp_active,
@@ -112,10 +124,7 @@ class export {
 		}
 		$args = array(
 			'meta_query'   => array(
-				[
-					'key'   => 'user_province',
-					'value' => $address,
-				],
+				$address_arr,
 				$active,
 				$active_erp,
 			),
@@ -152,6 +161,9 @@ class export {
 				if ( 'user_province' == $fields ) {
 					$cities      = get_cities_array();
 					$province_id = get_user_meta( $user->ID, 'user_province', true );
+					if ( ! $province_id ) {
+						$user_province = '';
+					}
 					foreach ( $cities as $city ) {
 						$key  = $city['key'];
 						$name = $city['value'];
@@ -173,7 +185,7 @@ class export {
 					$order_date = $wpdb->get_col( $wpdb->prepare(
 						"SELECT `date` FROM $wpdb->orders WHERE `user` = $user->ID"
 					) );
-					$last_date  = date( 'd.m.Y', strtotime( end( $order_date ) ) );
+					$last_date  = $order_date ? date( 'd.m.Y', strtotime( end( $order_date ) ) ) : '';
 				}
 			}
 
@@ -306,8 +318,9 @@ class export {
 					<input type="date" class="date" id="end_date" name="end_date" style="width: 90%">
 				</div>
 				<div class="user_active" style="width: 20%;">
-					<label>Khách hàng:</label><br>
+					<label>Trạng thái:</label><br>
 					<select name="user_active" id="user_active" style="width: 90%">
+						<option value="">Tất cả</option>
 						<option value="1">Khách hàng đã kích hoạt</option>
 						<option value="0">Khách hàng chưa kích hoạt</option>
 					</select>
@@ -315,8 +328,9 @@ class export {
 				<div class="user_active" style="width: 20%;">
 					<label>ERP:</label><br>
 					<select name="erp_active" id="erp_active" style="width: 90%">
-						<option value="1">Đã kích hoạt ERP</option>
-						<option value="0">Chưa kích hoạt ERP</option>
+						<option value="">Tất cả</option>
+						<option value="1">Đã đẩy lên ERP</option>
+						<option value="0">Chưa đẩy lên ERP</option>
 					</select>
 				</div>
 			</div>
