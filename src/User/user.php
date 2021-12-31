@@ -222,22 +222,21 @@ class user {
 		$prefix_user = rwmb_meta( 'prefix_user_erp', [ 'object_type' => 'setting' ], 'setting' );
 
 		$data_string = json_encode( array(
-			'login'            => $prefix_user . $user_meta['user_sdt'][0],
-			'password'         => '111111',
-			'confirm_password' => '111111',
-			'name'             => $user_meta['user_name2'][0],
-			'drugstore_name'   => $user_meta['user_ten_csdk'][0],
-			'phone'            => $user_phone,
-			'mail'             => $user_data->user_email,
-			'street'           => $user_meta['user_address'][0],
-			'state_id'         => (int) $user_meta['user_province'][0],
+			'login'          => $prefix_user . $user_meta['user_sdt'][0],
+			'name'           => $user_meta['user_name2'][0],
+			'drugstore_name' => $user_meta['user_ten_csdk'][0],
+			'phone'          => $user_phone,
+			'dob'            => $user_meta['user_date_birth'][0],
+			'email'          => $user_data->user_email,
+			'address'        => $user_meta['user_address'][0],
+			'business_form'  => $user_meta['user_hinhthuc_kd'][0],
+			'channel_sale'   => 'giathuoc_v2',
+			'user_market'    => $user_meta['user_nvpt'][0],
 		), JSON_UNESCAPED_UNICODE );
 
-		$token       = json_decode( $this->get_token_api() );
-		$data        = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/register', array(
+		$data = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/user/register', array(
 			'headers' => [
 				'Content-Type'  => 'application/json',
-				'Authorization' => 'Bearer ' . $token->data->access_token,
 			],
 			'method'  => 'POST',
 			'body'    => $data_string,
@@ -253,23 +252,6 @@ class user {
 
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
-	}
-	public function get_token_api() {
-		$data_string = json_encode( array(
-			'login'    => 'xuannt@nodo.vn',
-			'password' => '111555',
-		), JSON_UNESCAPED_UNICODE );
-
-		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/login', array(
-			'headers' => [
-				'Content-Type' => 'application/json',
-			],
-			'method'  => 'POST',
-			'body'    => $data_string,
-			'timeout' => 15,
-		) );
-
-		return wp_remote_retrieve_body( $request );
 	}
 
 	public function get_user_token( $user_id ) {

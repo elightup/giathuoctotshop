@@ -57,8 +57,11 @@ class ERP {
 		}
 
 		$voucher_name = isset( $voucher ) ? $voucher['voucher_id'] : '';
+		$user_meta    = get_user_meta( $order['user'] );
+		$prefix_user  = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
 
 		$body = json_encode( [
+			'login_name'   => $prefix_user . $user_meta['user_sdt'][0],
 			'note'         => $order['note'],
 			'payment_term' => $info['payment_method'],
 			'products'     => $products,
@@ -68,11 +71,9 @@ class ERP {
 			'giathuoctot'  => 'True',
 		], JSON_UNESCAPED_UNICODE );
 
-		$token    = json_decode( self::get_user_token( $order['user'] ) );
-		$request  = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/pre_order/create', [
+		$request = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/Sale Order/create', [
 			'headers' => [
 				'Content-Type'  => 'application/json',
-				'Authorization' => 'Bearer ' . $token->data->access_token,
 			],
 			'method'  => 'POST',
 			'body'    => $body,
@@ -98,27 +99,6 @@ class ERP {
 		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->orders WHERE `id`=%d", $id );
 
 		return $wpdb->get_row( $sql, 'ARRAY_A' );
-	}
-
-	private static function get_user_token( $user_id ) {
-		$phone  = get_user_meta( $user_id, 'user_sdt', true );
-		$prefix = rwmb_meta( 'prefix_user_erp', [ 'object_type' => 'setting' ], 'setting' );
-
-		$body = json_encode( [
-			'login'    => $prefix . $phone,
-			'password' => '111111',
-		], JSON_UNESCAPED_UNICODE );
-
-		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/login', [
-			'headers' => [
-				'Content-Type' => 'application/json',
-			],
-			'method'  => 'POST',
-			'body'    => $body,
-			'timeout' => 15,
-		] );
-
-		return wp_remote_retrieve_body( $request );
 	}
 
 	private static function update_status( $id, $status, $message ) {
