@@ -23,27 +23,30 @@ class user {
 	}
 
 	public function update_user( $user_id, $old_user_data ) {
-		$user_meta  = get_user_meta( $user_id );
-		$birthday   = $user_meta['user_date_birth'][0];
-		$user_phone = $user_meta['user_phone2'][0] ?? $user_meta['user_sdt'][0];
+		$user_meta   = get_user_meta( $user_id );
+		$user_data   = get_userdata( $user_id );
+		$user_phone  = $user_meta['user_phone2'][0] ?? $user_meta['user_sdt'][0];
+		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
 
 		$data_string = json_encode( array(
+			'login'          => $prefix_user . $user_meta['user_sdt'][0],
 			'name'           => $user_meta['user_name2'][0],
-			'birthday'       => date( 'Y-m-d', strtotime( $birthday ) ),
 			'drugstore_name' => $user_meta['user_ten_csdk'][0],
 			'phone'          => $user_phone,
-			'street'         => $user_meta['user_address'][0],
-			// 'state_id'       => (int)$user_meta['user_province'][0],
+			'dob'            => $user_meta['user_date_birth'][0],
+			'email'          => $user_data->user_email,
+			'address'        => $user_meta['user_address'][0],
+			'business_form'  => $user_meta['user_hinhthuc_kd'][0],
+			'channel_sale'   => 'giathuocthuoc',
+			'user_market'    => $user_meta['user_nvpt'][0],
 		), JSON_UNESCAPED_UNICODE );
 
 		$response = get_user_meta( $user_id, 'erp_response', true );
 		if ( $response == '1' ) {
 			// Update user to ERP
-			$token = json_decode( $this->get_user_token( $user_id ) );
-			$data  = wp_remote_get( 'https://erp.hapu.vn/api/v1/private/user/change_profile', array(
+			$data  = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/user/register', array(
 				'headers' => [
 					'Content-Type'  => 'application/json',
-					'Authorization' => 'Bearer ' . $token->data->access_token,
 				],
 				'method'  => 'POST',
 				'body'    => $data_string,
@@ -252,27 +255,6 @@ class user {
 
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
-	}
-
-	public function get_user_token( $user_id ) {
-		$user_meta   = get_user_meta( $user_id );
-		$prefix_user = rwmb_meta( 'prefix_user_erp', [ 'object_type' => 'setting' ], 'setting' );
-
-		$data_string = json_encode( array(
-			'login'    => $prefix_user . $user_meta['user_sdt'][0],
-			'password' => '111111',
-		), JSON_UNESCAPED_UNICODE );
-
-		$request = wp_remote_get( 'https://erp.hapu.vn/api/v1/public/Authentication/login', array(
-			'headers' => [
-				'Content-Type' => 'application/json',
-			],
-			'method'  => 'POST',
-			'body'    => $data_string,
-			'timeout' => 15,
-		) );
-
-		return wp_remote_retrieve_body( $request );
 	}
 
 	public function logs_user( $user_id ) {
