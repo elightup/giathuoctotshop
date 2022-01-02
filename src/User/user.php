@@ -37,7 +37,7 @@ class user {
 			'email'          => $user_data->user_email,
 			'address'        => $user_meta['user_address'][0],
 			'business_form'  => $user_meta['user_hinhthuc_kd'][0],
-			'channel_sale'   => 'giathuocthuoc',
+			'channel_sale'   => 'giathuoc',
 			'user_market'    => $user_meta['user_nvpt'][0],
 		), JSON_UNESCAPED_UNICODE );
 
