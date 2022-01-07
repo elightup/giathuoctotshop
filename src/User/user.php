@@ -26,7 +26,7 @@ class user {
 		$user_meta   = get_user_meta( $user_id );
 		$user_data   = get_userdata( $user_id );
 		$user_phone  = $user_meta['user_phone2'][0] ?? $user_meta['user_sdt'][0];
-		$prefix_user = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
+		$prefix_user = rwmb_meta( 'prefix_user_erp', [ 'object_type' => 'setting' ], 'setting' );
 
 		$data_string = json_encode( array(
 			'login'          => $prefix_user . $user_meta['user_sdt'][0],
@@ -44,9 +44,9 @@ class user {
 		$response = get_user_meta( $user_id, 'erp_response', true );
 		if ( $response == '1' ) {
 			// Update user to ERP
-			$data  = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/user/register', array(
+			$data = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/user/register', array(
 				'headers' => [
-					'Content-Type'  => 'application/json',
+					'Content-Type' => 'application/json',
 				],
 				'method'  => 'POST',
 				'body'    => $data_string,
@@ -234,12 +234,13 @@ class user {
 			'address'        => $user_meta['user_address'][0],
 			'business_form'  => $user_meta['user_hinhthuc_kd'][0],
 			'channel_sale'   => 'giathuoc',
+			'partner_code'   => $user_meta['user_code'][0],
 			'user_market'    => $user_meta['user_nvpt'][0],
 		), JSON_UNESCAPED_UNICODE );
 
-		$data = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/user/register', array(
+		$data        = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/user/register', array(
 			'headers' => [
-				'Content-Type'  => 'application/json',
+				'Content-Type' => 'application/json',
 			],
 			'method'  => 'POST',
 			'body'    => $data_string,
