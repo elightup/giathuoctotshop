@@ -235,7 +235,8 @@
 			</div>`;
 
 			$( 'body' ).append( toast ).fadeTo( 2000, 1, function() {
-				$( '.toast' ).css( 'z-index', '0' ).fadeTo( 1000, 0 );
+				// $( '.toast' ).css( 'z-index', '0' ).fadeTo( 1000, 0 );
+				$( '.toast' ).remove();
 			} );
 		},
 		showConfirmDelete( productId ) {
