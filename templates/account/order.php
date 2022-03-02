@@ -13,7 +13,7 @@ $voucher       = json_decode( $item->voucher, true );
 <div class="info-order text-center">
 	<?php esc_html_e( 'Chi tiết đơn hàng', 'gtt-shop' ); ?>
 </div>
-<div class="detail-order">
+<div class="detail-order row col-lg-12">
 	<div class="line-items col-lg-6">
 		<h4><?php esc_html_e( 'Đơn hàng số', 'gtt-shop' ); ?> #<?= esc_html( $order_id ); ?></h4>
 		<table class="order table">
@@ -87,24 +87,124 @@ $voucher       = json_decode( $item->voucher, true );
 		</table>
 	</div>
 </div>
+
+<?php if ( $item->data_update ) : ?>
+	<div class="order-list col-lg-12 clear">
+		<h4>Danh sách sản phẩm chưa giao</h4>
+		<table class="order-products table">
+			<thead>
+			<tr>
+				<th>Tên sản phẩm</th>
+				<th>Số lượng</th>
+				<th>Giá</th>
+				<th>Tổng tiền</th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php
+			$products_update     = json_decode( $item->data_update, true );
+			$products            = json_decode( $item->data, true );
+			$total_not_delivered = 0;
+
+			// Clone products[] to products_not_delivered[].
+			$products_not_delivered = [];
+			foreach ( $products as $key => $product ) {
+				$ma_sp = rwmb_meta( 'ma_sp', '', $key );
+				if ( empty( $products_update[ $ma_sp ] ) ) {
+					$products_not_delivered[ $key ] = $product;
+				}
+				if ( $product['quantity'] > $products_update[ $ma_sp ]['quantity'] ) {
+					$quantity_not_delivered                     = $product['quantity'] - $products_update[ $ma_sp ]['quantity'];
+					$products_not_delivered[ $key ]             = $product;
+					$products_not_delivered[ $key ]['quantity'] = $quantity_not_delivered;
+				}
+			}
+
+
+			foreach ( $products_not_delivered as $key => $product ) :
+				$product_id = $wpdb->get_row( $wpdb->prepare( "SELECT `post_id` FROM {$wpdb->prefix}postmeta WHERE `meta_key` = 'ma_sp' AND `meta_value`=%d", $key ) )->post_id;
+				$price      = $product['price'];
+				$user_role  = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
+				$package    = $product['package'];
+				switch ( $user_role ) {
+					case 'vip2':
+						$price = $product['price_vip2'];
+						break;
+					case 'vip3':
+						$price = $product['price_vip3'];
+						break;
+					case 'vip4':
+						$price = $product['price_vip4'];
+						break;
+					case 'vip5':
+						$price = $product['price_vip5'];
+						break;
+					case 'vip6':
+						$price = $product['price_vip6'];
+						break;
+				}
+				?>
+				<tr>
+					<td><?= esc_html( $product['title'] ); ?></td>
+					<td><?= esc_html( $product['quantity'] ); ?></td>
+					<td>
+						<?php
+						echo esc_html( number_format_i18n( $price, 0 ) ) . esc_html( ps_setting( 'currency' ) ) . ' ';
+						if ( $package['price'] > 0 && $package['number'] > 0 ) {
+							if ( $product['quantity'] >= $package['number'] ) {
+								echo '(Giá kiện: ' . esc_html( number_format_i18n( $package['price'] ) ) . esc_html( ps_setting( 'currency' ) ) . ')';
+							}
+						}
+						?>
+					</td>
+					<td>
+						<?php
+						if ( $package['price'] > 0 && $package['number'] > 0 ) {
+							if ( $product['quantity'] >= $package['number'] ) {
+								$total_not_delivered += $product['quantity'] * $package['price'];
+								echo esc_html( number_format_i18n( $product['quantity'] * $package['price'], 0 ) ) . esc_html( ps_setting( 'currency' ) );
+							} else {
+								$total_not_delivered += $product['quantity'] * $price;
+								echo esc_html( number_format_i18n( $product['quantity'] * $price, 0 ) ) . esc_html( ps_setting( 'currency' ) );
+							}
+						} else {
+							$total_not_delivered += $product['quantity'] * $price;
+							echo esc_html( number_format_i18n( $product['quantity'] * $price, 0 ) ) . esc_html( ps_setting( 'currency' ) );
+						}
+						?>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+		<div class="total-not-delivered" style="text-align: right;">
+			<b>Tổng tiền: </b>
+			<?php echo esc_html( number_format_i18n( $total_not_delivered ) ) . esc_html( ps_setting( 'currency' ) ); ?>
+		</div>
+	</div>
+<?php endif; ?>
 <div class="order-list col-lg-12 clear">
-	<h4>Chi tiết sản phẩm</h4>
+	<h4>Danh sách sản phẩm đã đặt</h4>
 	<table class="order-products table">
 		<thead>
 		<tr>
 			<th>Tên sản phẩm</th>
 			<th>Số lượng</th>
+			<th>Số lượng thực nhận</th>
 			<th>Giá</th>
 			<th>Tổng tiền</th>
 		</tr>
 		</thead>
 		<tbody>
 		<?php
-		$products = json_decode( $item->data, true );
-		foreach ( $products as $product ) :
-			$price     = $product['price'];
-			$user_role = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
-			$package   = $product['package'];
+		$total_delivered = 0;
+		$products        = json_decode( $item->data, true );
+		foreach ( $products as $key => $product ) :
+			$price              = $product['price'];
+			$ma_sp              = rwmb_meta( 'ma_sp', '', $key );
+			$quantity_delivered = empty( $products_update[ $ma_sp ] ) ? 0 : $products_update[ $ma_sp ]['quantity'];
+			$user_role          = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
+			$package            = $product['package'];
 			switch ( $user_role ) {
 				case 'vip2':
 					$price = $product['price_vip2'];
@@ -126,6 +226,7 @@ $voucher       = json_decode( $item->voucher, true );
 			<tr>
 				<td><?= esc_html( $product['title'] ); ?></td>
 				<td><?= esc_html( $product['quantity'] ); ?></td>
+				<td><?= esc_html( $quantity_delivered ); ?></td>
 				<td>
 					<?php
 					echo esc_html( number_format_i18n( $price, 0 ) ) . esc_html( ps_setting( 'currency' ) ) . ' ';
@@ -140,11 +241,14 @@ $voucher       = json_decode( $item->voucher, true );
 					<?php
 					if ( $package['price'] > 0 && $package['number'] > 0 ) {
 						if ( $product['quantity'] >= $package['number'] ) {
+							$total_delivered += $product['quantity'] * $package['price'];
 							echo esc_html( number_format_i18n( $product['quantity'] * $package['price'], 0 ) ) . esc_html( ps_setting( 'currency' ) );
 						} else {
+							$total_delivered += $product['quantity'] * $price;
 							echo esc_html( number_format_i18n( $product['quantity'] * $price, 0 ) ) . esc_html( ps_setting( 'currency' ) );
 						}
 					} else {
+						$total_delivered += $product['quantity'] * $price;
 						echo esc_html( number_format_i18n( $product['quantity'] * $price, 0 ) ) . esc_html( ps_setting( 'currency' ) );
 					}
 					?>
@@ -153,6 +257,20 @@ $voucher       = json_decode( $item->voucher, true );
 		<?php endforeach; ?>
 		</tbody>
 	</table>
+	<div class="total-delivered" style="text-align: right;">
+		<p>
+			<b>Tạm tính: </b>
+			<?php echo esc_html( number_format_i18n( $total_delivered ) ) . esc_html( ps_setting( 'currency' ) ); ?>
+		</p>
+		<p>
+			<b>SP Chưa giao: </b>
+			<?php echo esc_html( number_format_i18n( $total_not_delivered ) ) . esc_html( ps_setting( 'currency' ) ); ?>
+		</p>
+		<p style="font-size: 16px; font-weight: 700">
+			<b>Tổng cộng: </b>
+			<?php echo esc_html( number_format_i18n( $total_delivered - $total_not_delivered ) ) . esc_html( ps_setting( 'currency' ) ); ?>
+		</p>
+	</div>
 </div>
 <?php if ( ! isset( $_GET['type'] ) ) : ?>
 	<button class="place-checkout-again btn-success">Đặt hàng lại</button>

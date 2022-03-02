@@ -27,6 +27,7 @@ new Schema;
 new Cart;
 new Checkout;
 new Order\OrderAgain;
+new Order\UpdateOrder;
 ( new Order\Notification() )->init();
 ( new User\invoice() )->init();
 ( new Account() )->init();
