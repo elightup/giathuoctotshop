@@ -30,6 +30,7 @@ class Schema {
 				`info` longtext,
 				`info_shipping` longtext,
 				`data` longtext,
+				`data_update` longtext,
 				PRIMARY KEY  (`id`),
 				KEY `date` (`date`),
 				KEY `status` (`status`),
