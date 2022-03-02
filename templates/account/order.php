@@ -202,7 +202,7 @@ $voucher       = json_decode( $item->voucher, true );
 		foreach ( $products as $key => $product ) :
 			$price = $product['price'];
 			$ma_sp = rwmb_meta( 'ma_sp', '', $key );
-			if ( $item->data_update ) {
+			if ( ! $item->data_update ) {
 				$quantity_delivered = $product['quantity'];
 			} else {
 				$quantity_delivered = empty( $products_update[ $ma_sp ] ) ? 0 : $products_update[ $ma_sp ]['quantity'];
