@@ -200,11 +200,15 @@ $voucher       = json_decode( $item->voucher, true );
 		$total_delivered = 0;
 		$products        = json_decode( $item->data, true );
 		foreach ( $products as $key => $product ) :
-			$price              = $product['price'];
-			$ma_sp              = rwmb_meta( 'ma_sp', '', $key );
-			$quantity_delivered = empty( $products_update[ $ma_sp ] ) ? 0 : $products_update[ $ma_sp ]['quantity'];
-			$user_role          = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
-			$package            = $product['package'];
+			$price = $product['price'];
+			$ma_sp = rwmb_meta( 'ma_sp', '', $key );
+			if ( $item->data_update ) {
+				$quantity_delivered = $product['quantity'];
+			} else {
+				$quantity_delivered = empty( $products_update[ $ma_sp ] ) ? 0 : $products_update[ $ma_sp ]['quantity'];
+			}
+			$user_role = is_user_logged_in() ? get_userdata( $item->user )->roles[0] : '';
+			$package   = $product['package'];
 			switch ( $user_role ) {
 				case 'vip2':
 					$price = $product['price_vip2'];
