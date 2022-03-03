@@ -190,7 +190,9 @@ $voucher       = json_decode( $item->voucher, true );
 		<tr>
 			<th>Tên sản phẩm</th>
 			<th>Số lượng</th>
-			<th>Số lượng thực nhận</th>
+			<?php if ( $item->data_update ) : ?>
+				<th>Số lượng thực nhận</th>
+			<?php endif; ?>
 			<th>Giá</th>
 			<th>Tổng tiền</th>
 		</tr>
@@ -230,7 +232,9 @@ $voucher       = json_decode( $item->voucher, true );
 			<tr>
 				<td><?= esc_html( $product['title'] ); ?></td>
 				<td><?= esc_html( $product['quantity'] ); ?></td>
-				<td><?= esc_html( $quantity_delivered ); ?></td>
+				<?php if ( $item->data_update ) : ?>
+					<td><?= esc_html( $quantity_delivered ); ?></td>
+				<?php endif; ?>
 				<td>
 					<?php
 					echo esc_html( number_format_i18n( $price, 0 ) ) . esc_html( ps_setting( 'currency' ) ) . ' ';
@@ -266,13 +270,21 @@ $voucher       = json_decode( $item->voucher, true );
 			<b>Tạm tính: </b>
 			<?php echo esc_html( number_format_i18n( $total_delivered ) ) . esc_html( ps_setting( 'currency' ) ); ?>
 		</p>
+		<?php if ( $item->data_update ) : ?>
 		<p>
 			<b>SP Chưa giao: </b>
 			<?php echo esc_html( number_format_i18n( $total_not_delivered ) ) . esc_html( ps_setting( 'currency' ) ); ?>
 		</p>
+		<?php endif; ?>
 		<p style="font-size: 16px; font-weight: 700">
 			<b>Tổng cộng: </b>
-			<?php echo esc_html( number_format_i18n( $total_delivered - $total_not_delivered ) ) . esc_html( ps_setting( 'currency' ) ); ?>
+			<?php
+			if ( $item->data_update ) {
+				echo esc_html( number_format_i18n( $total_delivered - $total_not_delivered ) ) . esc_html( ps_setting( 'currency' ) );
+			} else {
+				echo esc_html( number_format_i18n( $total_delivered ) ) . esc_html( ps_setting( 'currency' ) );
+			}
+			?>
 		</p>
 	</div>
 </div>
