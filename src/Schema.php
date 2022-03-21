@@ -4,8 +4,9 @@ namespace ELUSHOP;
 class Schema {
 	public function __construct() {
 		global $wpdb;
-		$wpdb->tables[] = 'orders';
-		$wpdb->orders   = $wpdb->prefix . 'orders';
+		$wpdb->tables[]      = 'orders';
+		$wpdb->orders        = $wpdb->prefix . 'orders';
+		$wpdb->notifications = $wpdb->prefix . 'notifications';
 
 		$this->create_tables();
 	}
@@ -15,7 +16,7 @@ class Schema {
 		global $wpdb;
 
 		// Orders table.
-		$sql = "
+		$sql      = "
 			CREATE TABLE $wpdb->orders (
 				`id` mediumint unsigned NOT NULL auto_increment,
 				`date` datetime NOT NULL,
@@ -37,6 +38,19 @@ class Schema {
 				KEY `user` (`user`)
 			);
 		";
+		$sql_noti = "
+			CREATE TABLE $wpdb->notifications (
+				`id` mediumint unsigned NOT NULL auto_increment,
+				`user` mediumint NOT NULL,
+				`order_id` mediumint NOT NULL,
+				`date` datetime NOT NULL,
+				`status` varchar(12),
+				`note` text,
+				PRIMARY KEY  (`id`)
+			);
+		";
+
 		dbDelta( $sql );
+		dbDelta( $sql_noti );
 	}
 }
