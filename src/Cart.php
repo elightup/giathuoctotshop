@@ -72,6 +72,7 @@ class Cart {
 			'url'        => get_post_meta( $id, 'image_url', true ),
 			'link'       => get_permalink( $id ),
 			'ma_sp'      => get_post_meta( $id, 'ma_sp', true ),
+			'max_number' => get_post_meta( $id, 'product_max_number', true ),
 		];
 	}
 

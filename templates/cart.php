@@ -17,8 +17,8 @@
 			<div class="col-md-7">
 				<#
 				data.products.forEach( product => {
-					let package = product.package;
-					let price   = product.price;
+					let package = product.package,
+						price   = product.price;
 					switch( CartParams.role ) {
 						case 'vip2':
 							price = product.price_vip2;
@@ -55,12 +55,30 @@
 						<div class="product-price">
 							<p class="price">{{ eFormatNumber(0, 3, '.', ',', parseFloat( price )) }} <?= esc_html( $symbol ); ?></p>
 						</div>
-						<div class="quantity" data-product="{{ product.id }}">
-							<span class="button-minus">-</span>
-							<input type="text" class="quantity_products" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
-							<span class="button-plus">+</span>
+						<div class="product-last-column">
+							<div class="quantity" data-product="{{ product.id }}" data-max-number="{{ product.max_number }}">
+								<span class="button-minus">-</span>
+								<input type="text" class="quantity_products" size="4" pattern="[0-9]*" value="{{ product.quantity }}">
+								<#
+								if ( product.quantity >= product.max_number && product.max_number ) {
+									#>
+									<span class="button-plus btn-disabled" disabled>+</span>
+									<#
+								} else {
+									#>
+									<span class="button-plus">+</span>
+									<#
+								}
+								#>
+							</div>
+							<#
+							if ( product.max_number ) {
+								#>
+								<p class="product-max-number">Đặt tối đa {{ product.max_number }} </p>
+								<#
+							}
+							#>
 						</div>
-
 						<div class="cart__remove-product">
 							<span class="cart__remove" data-product_id="{{ product.id }}" title="Xóa sản phẩm này">&times;</span>
 						</div>

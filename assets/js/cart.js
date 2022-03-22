@@ -176,16 +176,28 @@
 		onIncreaseDecrease( e ) {
 			e.preventDefault();
 
-			const $this = $( this ),
-				$parent = $this.parent(),
+			const $this        = $( this ),
+				$parent        = $this.parent(),
 				$quantityInput = $parent.find( '.quantity_products' ),
-				amount = $this.hasClass( 'button-minus' ) ? -1 : 1;
+				amount         = $this.hasClass( 'button-minus' ) ? -1 : 1;
 
-			let quantity = parseInt( $quantityInput.val(), 10 );
+			let quantity   = parseInt( $quantityInput.val(), 10 ),
+				max_number = $parent.data( 'max-number' );
+
 			quantity = quantity + amount;
 			if ( quantity < 0 ) {
 				quantity = 0;
 			}
+			// Check max number
+			if ( quantity > max_number && max_number ) {
+				$parent.find( '.button-plus' ).prop( 'disabled', true );
+				$parent.find( '.button-plus' ).addClass( 'btn-disabled' );
+				return;
+			} else {
+				$parent.find( '.button-plus' ).prop( 'disabled', false );
+				$parent.find( '.button-plus' ).removeClass( 'btn-disabled' );
+			}
+
 			$quantityInput.val( quantity );
 
 			const productId = $parent.data( 'product' );
@@ -216,6 +228,20 @@
 				quantity = $this.val(),
 				$parent = $this.parent(),
 				productId = $parent.data( 'product' );
+
+			let max_number = $parent.data( 'max-number' );
+
+			// Check max number
+			if ( quantity > max_number && max_number ) {
+				$this.val( max_number );
+				cart.updateProduct( productId, max_number );
+				$this.next().prop( 'disabled', true );
+				$this.next().addClass( 'btn-disabled' );
+				return;
+			} else {
+				$this.next().prop( 'disabled', false );
+				$this.next().removeClass( 'btn-disabled' );
+			}
 
 			if ( cart.hasProduct( productId ) ) {
 				cart.updateProduct( productId, quantity );

@@ -269,6 +269,11 @@ class PostType {
 					'name'    => 'Hóa đơn',
 					'columns' => 6,
 				],
+				[
+					'id'      => 'product_max_number',
+					'name'    => 'Giới hạn đặt tối đa',
+					'columns' => 6,
+				],
 			],
 		];
 
