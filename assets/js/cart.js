@@ -234,7 +234,11 @@
 			// Check max number
 			if ( quantity > max_number && max_number ) {
 				$this.val( max_number );
-				cart.updateProduct( productId, max_number );
+				if ( cart.hasProduct( productId ) ) {
+					cart.updateProduct( productId, max_number );
+				} else {
+					cart.addProduct( productId, max_number );
+				}
 				$this.next().prop( 'disabled', true );
 				$this.next().addClass( 'btn-disabled' );
 				return;
