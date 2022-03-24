@@ -29,7 +29,9 @@ class UpdateOrder {
 			[ 'id' => $id ]
 		);
 
-		$user_id = $wpdb->get_row( $wpdb->prepare( "SELECT `user` FROM {$wpdb->prefix}orders WHERE `id`=%d", $id ) );
+		$user_id   = $wpdb->get_row( $wpdb->prepare( "SELECT `user` FROM {$wpdb->prefix}orders WHERE `id`=%d", $id ) );
+		$note      = 'Đơn hàng #' . $id . ' của bạn đã được hoàn thành. Xem ngay!';
+		$link_noti = get_permalink( ps_setting( 'confirmation_page' ) ) . '?view=order&id=' . $id;
 		$wpdb->insert(
 			$wpdb->notifications,
 			[
@@ -37,7 +39,8 @@ class UpdateOrder {
 				'order_id' => $id,
 				'date'     => current_time( 'mysql' ),
 				'status'   => 'unread',
-				'note'     => '',
+				'note'     => $note,
+				'link'     => $link_noti,
 			]
 		);
 		$output['message'] = 'Đã update order thành công';

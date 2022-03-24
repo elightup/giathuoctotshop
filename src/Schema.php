@@ -45,6 +45,7 @@ class Schema {
 				`order_id` mediumint NOT NULL,
 				`date` datetime NOT NULL,
 				`status` varchar(12),
+				`link` text,
 				`note` text,
 				PRIMARY KEY  (`id`)
 			);
