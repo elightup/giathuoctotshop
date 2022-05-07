@@ -58,7 +58,7 @@ class ERP {
 
 		$voucher_name = isset( $voucher ) ? $voucher['voucher_id'] : '';
 		$user_meta    = get_user_meta( $order['user'] );
-		$prefix_user  = rwmb_meta( 'prefix_user_erp', ['object_type' => 'setting'], 'setting' );
+		$prefix_user  = rwmb_meta( 'prefix_user_erp', [ 'object_type' => 'setting' ], 'setting' );
 
 		$body = json_encode( [
 			'login_name'   => $prefix_user . $user_meta['user_sdt'][0],
@@ -71,9 +71,9 @@ class ERP {
 			'giathuoctot'  => 'True',
 		], JSON_UNESCAPED_UNICODE );
 
-		$request = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/Sale Order/create', [
+		$request  = wp_remote_get( 'https://erp.hapu.vn/rest_api/public/Sale Order/create', [
 			'headers' => [
-				'Content-Type'  => 'application/json',
+				'Content-Type' => 'application/json',
 			],
 			'method'  => 'POST',
 			'body'    => $body,

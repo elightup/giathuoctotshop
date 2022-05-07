@@ -102,6 +102,7 @@ class user {
 		$columns['address']     = 'Địa chỉ';
 		$columns['orders']      = 'Số đơn hàng';
 		$columns['registered']  = 'Thời gian tạo';
+		$columns['gioithieu']   = 'Người giới thiệu';
 		$columns['action']      = 'Tác vụ';
 		$columns['message']     = 'Chi tiết lỗi';
 		$columns['user_update'] = 'Người cập nhật';
@@ -173,6 +174,9 @@ class user {
 					$output     = date( 'd.m.Y', $registered ) . '<br>';
 					$output    .= date( 'H:i', $registered );
 				}
+				break;
+			case 'gioithieu':
+				$output .= get_user_meta( $user_id, 'user_nguoi_gioithieu', true );
 				break;
 			case 'message':
 				$output .= get_user_meta( $user_id, 'erp_message', true );
