@@ -20,6 +20,10 @@ class user {
 		add_action( 'wp_ajax_active_user', [ $this, 'active_user' ] );
 		add_action( 'profile_update', [ $this, 'update_user' ], 99, 2 );
 		add_action( 'pre_user_query', [ $this, 'user_search_by_multiple_parameters' ] );
+		add_action( 'wp_ajax_set_activiti_user', [ $this, 'set_activiti_user' ] );
+		add_action( 'wp_ajax_soft_delete_user', [ $this, 'soft_delete_user' ] );
+		add_action( 'user_row_actions', [ $this, 'set_row_action' ] );
+
 	}
 
 	public function update_user( $user_id, $old_user_data ) {
@@ -105,6 +109,7 @@ class user {
 		$columns['gioithieu']   = 'Người giới thiệu';
 		$columns['action']      = 'Tác vụ';
 		$columns['message']     = 'Chi tiết lỗi';
+		$columns['trash']     	= 'Trạng thái';
 		$columns['user_update'] = 'Người cập nhật';
 		$columns['time_update'] = 'Thời gian cập nhật';
 		unset( $columns['posts'] );
@@ -187,6 +192,18 @@ class user {
 			case 'orders':
 				$output .= $count_order[0];
 				break;
+			case 'trash':
+				$status = get_user_meta( $user_id, 'trash_user', true );
+				if($status == 1){
+					$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=set_activiti_user&user_id=' . $user_id ), 'account' );
+					$output .= '<a  href="' . $url . '" style="display: inline-block; color: #fff; background: #28a745; padding: 5px; cursor: pointer; border-radius: 3px;">Khôi phục KH</a>';
+				}else{
+
+					$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=soft_delete_user&user_id=' . $user_id ), 'account' );
+					$output .= '<a href="' . $url . '" class="soft_delete_user" style="display: inline-block; color: #fff; background: red; padding: 5px; border-radius: 3px; cursor: pointer;">Xóa tạm KH</a>';
+				}
+
+				break;
 			case 'user_update':
 				if ( ! empty( $update_log['user_update'] ) ) {
 					$user_name = get_user_meta( $update_log['user_update'], 'user_name', true );
@@ -215,7 +232,21 @@ class user {
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
 		die;
 	}
+	public function set_activiti_user(){
+		$user_id = $_GET['user_id'];
+		update_user_meta( $user_id, 'trash_user', 0 );
 
+		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
+		die;
+
+	}
+	public function soft_delete_user(){
+		$user_id = $_GET['user_id'];
+		update_user_meta( $user_id, 'trash_user', 1 );
+		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'users.php' ) );
+		die;
+
+	}
 	/**
 	 * Enable or disable account
 	 *
@@ -270,5 +301,12 @@ class user {
 			'date'        => current_time( 'mysql' ),
 		];
 		update_user_meta( $user_id, 'update_log', $data_log );
+	}
+	public function set_row_action($actions){
+		if(isset($_GET['gtt-type']) && $_GET['gtt-type'] == 'trash' ){
+			return $actions;
+		};
+		unset($actions['delete']);
+		return $actions;
 	}
 }

@@ -15,6 +15,7 @@ class Views {
 		$views['inactive']       = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'inactive' ? 'current' : '' ) . '">KH chưa kích hoạt <span class="count">(' . $this->get_inactive_count() . ')</span></a>';
 		$views['today-inactive'] = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-inactive', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-inactive' ? 'current' : '' ) . '">KH mới chưa kích hoạt <span class="count">(' . $this->get_today_inactive_count() . ')</span></a>';
 		$views['today-active']   = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'today-active', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'today-active' ? 'current' : '' ) . '">KH mới đã kích hoạt <span class="count">(' . $this->get_today_active_count() . ')</span></a>';
+		$views['trash']   = '<a href="' . esc_url( add_query_arg( 'gtt-type', 'trash', admin_url( 'users.php' ) ) ) . '" class="' . ( $type === 'trash' ? 'current' : '' ) . '">KH xóa <span class="count">(' . $this->get_trash_user_count() . ')</span></a>';
 
 		return $views;
 	}
@@ -142,6 +143,18 @@ class Views {
 			];
 			$query->set( 'meta_query', $meta_query );
 		}
+		if ( $type === 'trash' ) {
+			$meta_query = $query->get( 'meta_query' );
+			if ( empty( $meta_query ) ) {
+				$meta_query = [];
+			}
+			$meta_query[] = [
+				'key'     => 'trash_user',
+				'value'   => 1,
+
+			];
+			$query->set( 'meta_query', $meta_query );
+		}
 	}
 
 	private function get_today_inactive_count() {
@@ -193,6 +206,21 @@ class Views {
 				[
 					'key'   => 'active_user',
 					'value' => 1,
+				],
+			],
+			'fields'     => 'ID',
+		] );
+
+		return count( $users );
+	}
+	private function get_trash_user_count(){
+		$users = get_users( [
+			'gtt_custom' => true,
+			'meta_query' => [
+				[
+					'key'     => 'trash_user',
+					'value'   => 1,
+
 				],
 			],
 			'fields'     => 'ID',
