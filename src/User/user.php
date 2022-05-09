@@ -22,7 +22,7 @@ class user {
 		add_action( 'pre_user_query', [ $this, 'user_search_by_multiple_parameters' ] );
 		add_action( 'wp_ajax_set_activiti_user', [ $this, 'set_activiti_user' ] );
 		add_action( 'wp_ajax_soft_delete_user', [ $this, 'soft_delete_user' ] );
-		add_action( 'user_row_actions', [ $this, 'set_row_action' ] );
+		add_action( 'user_row_actions', [ $this, 'set_row_action' ],10,2 );
 
 	}
 
@@ -109,7 +109,7 @@ class user {
 		$columns['gioithieu']   = 'Người giới thiệu';
 		$columns['action']      = 'Tác vụ';
 		$columns['message']     = 'Chi tiết lỗi';
-		$columns['trash']     	= 'Trạng thái';
+
 		$columns['user_update'] = 'Người cập nhật';
 		$columns['time_update'] = 'Thời gian cập nhật';
 		unset( $columns['posts'] );
@@ -192,18 +192,7 @@ class user {
 			case 'orders':
 				$output .= $count_order[0];
 				break;
-			case 'trash':
-				$status = get_user_meta( $user_id, 'trash_user', true );
-				if($status == 1){
-					$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=set_activiti_user&user_id=' . $user_id ), 'account' );
-					$output .= '<a  href="' . $url . '" style="display: inline-block; color: #fff; background: #28a745; padding: 5px; cursor: pointer; border-radius: 3px;">Khôi phục KH</a>';
-				}else{
 
-					$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=soft_delete_user&user_id=' . $user_id ), 'account' );
-					$output .= '<a href="' . $url . '" class="soft_delete_user" style="display: inline-block; color: #fff; background: red; padding: 5px; border-radius: 3px; cursor: pointer;">Xóa tạm KH</a>';
-				}
-
-				break;
 			case 'user_update':
 				if ( ! empty( $update_log['user_update'] ) ) {
 					$user_name = get_user_meta( $update_log['user_update'], 'user_name', true );
@@ -302,11 +291,20 @@ class user {
 		];
 		update_user_meta( $user_id, 'update_log', $data_log );
 	}
-	public function set_row_action($actions){
-		if(isset($_GET['gtt-type']) && $_GET['gtt-type'] == 'trash' ){
+	public function set_row_action($actions,$user_object){
+
+		$status = get_user_meta( $user_object->ID, 'trash_user', true );
+
+		if($status == 1){
+			$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=set_activiti_user&user_id=' . $user_object->ID ), 'account' );
+			$actions['set_activiti_user'] = "<a style='color:#28a745' href='" .$url . "'>Khôi phục KH</a>";
 			return $actions;
-		};
-		unset($actions['delete']);
+		}else{
+			$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=soft_delete_user&user_id=' . $user_object->ID ), 'account' );
+		$actions['soft_delete_user'] = "<a style='color:red' href='" .$url . "'>Xóa tạm KH</a>";
 		return $actions;
+
+		}
+
 	}
 }
