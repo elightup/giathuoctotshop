@@ -45,6 +45,13 @@ class UpdateOrder {
 		);
 		$output['message'] = 'Đã update order thành công';
 
+		$wpdb->update(
+			$wpdb->orders,
+			[ 'status' => 'completed' ],
+			[ 'id' => $id ],
+			[ '%s' ]
+		);
+
 		return $output;
 	}
 

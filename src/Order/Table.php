@@ -49,7 +49,7 @@ class Table extends \WP_List_Table {
 		$statuses = [
 			'completed' => __( 'Đã hoàn thành', 'elu-shop' ),
 			'pending'   => __( 'Đang xử lý', 'elu-shop' ),
-			'trash'     => __( 'Thùng rác', 'elu-shop' ),
+			'trash'     => __( 'Đã hủy', 'elu-shop' ),
 		];
 		foreach ( $statuses as $key => $label ) {
 			$class         = $key === $status ? ' class="current"' : '';
@@ -240,6 +240,10 @@ class Table extends \WP_List_Table {
 	}
 
 	public function column_id( $item ) {
+		// $actions = array(
+		// 'edit'   => sprintf( '<a href="?page=%s&action=%s&testimonial=%s">Edit</a>', $_REQUEST['page'], 'edit', $item['ID'] ),
+		// 'delete' => sprintf( '<a href="?page=%s&action=%s&testimonial=%s">Delete</a>', $_REQUEST['page'], 'delete', $item['ID'] ),
+		// );
 		$title = sprintf(
 			'<a href="%s"><strong>' . __( 'Đơn hàng', 'elu-shop' ) . ': #%d</strong></a>',
 			add_query_arg( [
@@ -259,7 +263,7 @@ class Table extends \WP_List_Table {
 		$statuses = [
 			'pending'   => [ 'badge', __( 'Đang xử lý', 'elu-shop' ) ],
 			'completed' => [ 'badge badge--success', __( 'Đã hoàn thành', 'elu-shop' ) ],
-			'trash'     => [ 'badge badge--danger', __( 'Đã xoá', 'elu-shop' ) ],
+			'trash'     => [ 'badge badge--danger', __( 'Đã hủy', 'elu-shop' ) ],
 		];
 		$status   = $statuses[ $item['status'] ];
 		$payments = $item['info'];
@@ -392,7 +396,7 @@ class Table extends \WP_List_Table {
 			);
 		} else {
 			$actions['trash'] = sprintf(
-				'<a href="%s">' . esc_html__( 'Xoá', 'elu-shop' ) . '</a>',
+				'<a href="%s">' . esc_html__( 'Hủy', 'elu-shop' ) . '</a>',
 				add_query_arg(
 					[
 						'action'   => 'trash',
@@ -403,17 +407,17 @@ class Table extends \WP_List_Table {
 				)
 			);
 		}
-		$actions['delete'] = sprintf(
-			'<a href="%s">' . esc_html__( 'Xoá vĩnh viễn', 'elu-shop' ) . '</a>',
-			add_query_arg(
-				[
-					'action'   => 'delete',
-					'id'       => $item['id'],
-					'_wpnonce' => wp_create_nonce( 'ps_delete_order' ),
-				],
-				$this->base_url
-			)
-		);
+		// $actions['delete'] = sprintf(
+		// '<a href="%s">' . esc_html__( 'Xoá vĩnh viễn', 'elu-shop' ) . '</a>',
+		// add_query_arg(
+		// [
+		// 'action'   => 'delete',
+		// 'id'       => $item['id'],
+		// '_wpnonce' => wp_create_nonce( 'ps_delete_order' ),
+		// ],
+		// $this->base_url
+		// )
+		// );
 		return $actions;
 	}
 
