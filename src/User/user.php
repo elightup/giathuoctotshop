@@ -294,6 +294,7 @@ class user {
 	public function set_row_action($actions,$user_object){
 
 		$status = get_user_meta( $user_object->ID, 'trash_user', true );
+		unset($actions['delete']);
 
 		if($status == 1){
 			$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=set_activiti_user&user_id=' . $user_object->ID ), 'account' );
@@ -301,7 +302,7 @@ class user {
 			return $actions;
 		}else{
 			$url     = wp_nonce_url( admin_url( 'admin-ajax.php?action=soft_delete_user&user_id=' . $user_object->ID ), 'account' );
-		$actions['soft_delete_user'] = "<a style='color:red' href='" .$url . "'>Xóa tạm KH</a>";
+		$actions['soft_delete_user'] = "<a style='color:red' href='" .$url . "'>Xóa</a>";
 		return $actions;
 
 		}
